@@ -950,3 +950,50 @@ input[type="checkbox"] {
 .clear-btn:hover {
     background: #cc0000;
 }
+/* Enhanced Map Styling */
+#nh-map {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.county {
+    stroke: #2c5530;
+    stroke-width: 2.5;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(2px 2px 6px rgba(0,0,0,0.15));
+}
+
+.county:hover {
+    stroke: #ff6b35;
+    stroke-width: 4;
+    filter: drop-shadow(4px 4px 12px rgba(0,0,0,0.3));
+    transform: scale(1.03);
+}
+
+.county-label {
+    font-size: 13px;
+    font-weight: 700;
+    fill: #2c5530;
+    text-anchor: middle;
+    pointer-events: none;
+    text-shadow: 1px 1px 3px rgba(255,255,255,0.9);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Geographic Icons */
+.geo-icon {
+    font-size: 16px;
+    pointer-events: none;
+}
+
+.mountain-icon { fill: #8b4513; }
+.lake-icon { fill: #4682b4; }
+.forest-icon { fill: #228b22; }
+.coast-icon { fill: #20b2aa; }
