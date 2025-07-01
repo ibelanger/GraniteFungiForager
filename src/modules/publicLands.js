@@ -873,3 +873,12 @@ export function updateRecommendations(county, speciesKey, publicLandData) {
     }
     recDiv.innerHTML = html;
 }
+
+/**
+ * Get public land recommendations for a specific county
+ * @param {string} county - County name
+ * @returns {Object} County-specific land data  
+ */
+export function getCountyLandData(county) {
+    return publicLandData[county] || null;
+}

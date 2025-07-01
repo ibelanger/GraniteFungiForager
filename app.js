@@ -115,7 +115,7 @@ class MushroomApp {
      */
     async refreshWeatherData() {
         try {
-            const weatherModule = await import('./weather.js');
+            const weatherModule = await import('./src/modules/weather.js');
             await weatherModule.fetchWeatherData(
                 () => console.log('Auto-refresh completed'),
                 weatherModule.updateWeatherDisplay
