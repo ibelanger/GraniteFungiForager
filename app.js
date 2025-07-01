@@ -1,8 +1,8 @@
 // app.js - Main application controller and initialization
 
-import { initWeather } from './weather.js';
-import { initMapCalculations } from './mapCalculations.js';
-import { initInteractions } from './interactions.js';
+import { initWeather } from './src/modules/weather.js';
+import { initMapCalculations } from './src/modules/mapCalculations.js';
+import { initInteractions } from './src/modules/interactions.js';
 
 /**
  * Application configuration
