@@ -9,7 +9,7 @@ export function getProbabilityColor(probability) {
     return '#FF6B6B'; // Very Low - Light Red
 }
 
-// Probability calculation
+// Probability calculation (unchanged, matches V8 logic)
 export function calculateProbability(regionName, selectedSpecies, conditions, speciesData) {
     let baseProbs = [];
     if (selectedSpecies === 'all') {
@@ -38,8 +38,8 @@ export function calculateProbability(regionName, selectedSpecies, conditions, sp
     return prob;
 }
 
-// Setup map event listeners and update logic
-export function setupMap({regions, speciesSelect, countyWeatherData, currentWeatherData, speciesData, updateWeatherDisplay, updateRecommendations}) {
+// Setup map event listeners and update logic (matches V8: only attaches listeners, does not generate SVG)
+export function setupMap({regions, speciesSelect, countyWeatherData, currentWeatherData, speciesData, updateWeatherDisplay, updateRecommendations, publicLandData}) {
     regions.forEach(region => {
         region.setAttribute('tabindex', '0');
         region.setAttribute('role', 'button');
@@ -47,24 +47,24 @@ export function setupMap({regions, speciesSelect, countyWeatherData, currentWeat
         region.addEventListener('click', function() {
             const selectedCounty = this.getAttribute('data-region');
             updateWeatherDisplay(selectedCounty);
-            updateRecommendations(selectedCounty, speciesSelect.value);
+            updateRecommendations(selectedCounty, speciesSelect.value, publicLandData);
         });
         region.addEventListener('focus', function() {
             const selectedCounty = this.getAttribute('data-region');
             updateWeatherDisplay(selectedCounty);
-            updateRecommendations(selectedCounty, speciesSelect.value);
+            updateRecommendations(selectedCounty, speciesSelect.value, publicLandData);
         });
         region.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' || e.key === ' ') {
                 const selectedCounty = this.getAttribute('data-region');
                 updateWeatherDisplay(selectedCounty);
-                updateRecommendations(selectedCounty, speciesSelect.value);
+                updateRecommendations(selectedCounty, speciesSelect.value, publicLandData);
             }
         });
     });
 }
 
-// Update map coloring
+// Update map coloring (matches V8: only colors existing SVG regions)
 export function updateMap({regions, speciesSelect, countyWeatherData, currentWeatherData, speciesData}) {
     const selectedSpecies = speciesSelect.value;
     regions.forEach(region => {

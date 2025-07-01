@@ -85,6 +85,38 @@ export function fetchWeatherData(countyTowns, statusText, weatherStatus, updateW
 }
 
 // Placeholder for updateWeatherDisplay (to be implemented in main.js or here)
-export function updateWeatherDisplay() {
-    // To be implemented: update DOM with weather data
+export function updateWeatherDisplay(county = null) {
+    // Get DOM elements
+    const rainfallDisplay = document.getElementById('rainfall-display');
+    const soilTempDisplay = document.getElementById('soil-temp-display');
+    const airTempDisplay = document.getElementById('air-temp-display');
+    const statusText = document.getElementById('status-text');
+    const autoWeatherCheckbox = document.getElementById('auto-weather');
+
+    let weather = currentWeatherData;
+    let countyLabel = '';
+    if (county && countyWeatherData[county]) {
+        weather = countyWeatherData[county];
+        countyLabel = ` (${county})`;
+    }
+    const { rainfall, soilTemp, airTemp, lastUpdated } = weather || {};
+    const rainfallStr = (rainfall !== undefined && rainfall !== null) ? `${rainfall.toFixed(2)} inches` : 'N/A';
+    const soilTempStr = (soilTemp !== undefined && soilTemp !== null) ? `${soilTemp}°F` : 'N/A';
+    const airTempStr = (airTemp !== undefined && airTemp !== null) ? `${airTemp}°F` : 'N/A';
+
+    if (rainfallDisplay) rainfallDisplay.textContent = `Rainfall${countyLabel}: ${rainfallStr}`;
+    if (soilTempDisplay) soilTempDisplay.textContent = `Soil Temp${countyLabel}: ${soilTempStr}`;
+    if (airTempDisplay) airTempDisplay.textContent = `Air Temp${countyLabel}: ${airTempStr}`;
+
+    let source = '';
+    if (autoWeatherCheckbox && autoWeatherCheckbox.checked) {
+        source = 'Data Source: wttr.in';
+        if (lastUpdated) {
+            const date = new Date(lastUpdated);
+            source += ` (updated ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})})`;
+        }
+    } else {
+        source = 'Data Source: Manual Override';
+    }
+    if (statusText) statusText.textContent = source + (county ? ` for ${county}` : '');
 }

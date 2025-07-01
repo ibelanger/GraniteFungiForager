@@ -1,5 +1,5 @@
 // main.js - Entry point for the NH Mushroom Map App
-import { setupWeather, fetchWeatherData, currentWeatherData, countyWeatherData } from './weather.js';
+import { setupWeather, fetchWeatherData, currentWeatherData, countyWeatherData, updateWeatherDisplay, countyTowns } from './weather.js';
 import { setupMap, updateMap } from './map.js';
 import { speciesData, updateSpeciesDisplay } from './species.js';
 import { publicLandData, updateRecommendations } from './publicLand.js';
@@ -31,14 +31,84 @@ window.addEventListener('DOMContentLoaded', () => {
     setupWeather();
 
     // Setup map (attach region listeners)
-    setupMap({regions, speciesSelect, countyWeatherData, currentWeatherData, speciesData, updateWeatherDisplay, updateRecommendations});
+    setupMap({regions, speciesSelect, countyWeatherData, currentWeatherData, speciesData, updateWeatherDisplay, updateRecommendations, publicLandData});
 
-    // Debounced slider listeners
+    // --- Populate dropdowns ---
+    function populateSeasonDropdown(seasonSelect) {
+        const seasons = [
+            { value: 'spring', label: 'Spring (April-May)' },
+            { value: 'summer', label: 'Summer (June-August)' },
+            { value: 'fall', label: 'Fall (September-November)' }
+        ];
+        seasonSelect.innerHTML = '';
+        seasons.forEach(season => {
+            const option = document.createElement('option');
+            option.value = season.value;
+            option.textContent = season.label;
+            if (season.value === 'summer') option.selected = true;
+            seasonSelect.appendChild(option);
+        });
+    }
+    function populateSpeciesDropdown(speciesSelect, speciesData) {
+        speciesSelect.innerHTML = '';
+        const allOption = document.createElement('option');
+        allOption.value = 'all';
+        allOption.textContent = 'All Tier 1 Species';
+        speciesSelect.appendChild(allOption);
+        for (const key in speciesData) {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = speciesData[key].name;
+            speciesSelect.appendChild(option);
+        }
+    }
+    populateSeasonDropdown(seasonSelect);
+    populateSpeciesDropdown(speciesSelect, speciesData);
+
+    let selectedCounty = null;
+
+    // --- Region (county) click: update selected county and weather display ---
+    regions.forEach(region => {
+        region.addEventListener('click', function() {
+            selectedCounty = this.getAttribute('data-county') || this.getAttribute('data-name') || null;
+            updateWeatherDisplay(selectedCounty);
+        });
+    });
+
+    // --- Weather fetch on load ---
+    fetchWeatherData(countyTowns, statusText, weatherStatus, () => updateWeatherDisplay(selectedCounty), () => {
+        updateMap({regions, speciesSelect, countyWeatherData, currentWeatherData, speciesData});
+        updateWeatherDisplay(selectedCounty);
+    });
+
+    // --- Manual controls toggle ---
+    autoWeatherCheckbox.addEventListener('change', function() {
+        manualControls.style.display = this.checked ? 'none' : '';
+        if (this.checked) {
+            // If auto-weather is enabled, fetch weather again
+            fetchWeatherData(countyTowns, statusText, weatherStatus, () => updateWeatherDisplay(selectedCounty), () => {
+                updateMap({regions, speciesSelect, countyWeatherData, currentWeatherData, speciesData});
+                updateWeatherDisplay(selectedCounty);
+            });
+        } else {
+            // If manual, update map with manual slider values
+            updateMap({regions, speciesSelect, countyWeatherData, currentWeatherData, speciesData});
+            updateWeatherDisplay(selectedCounty);
+        }
+    });
+
+    // --- Manual slider listeners (show/hide manual controls) ---
+    function updateManualWeatherDisplay() {
+        rainfallValue.textContent = rainfallSlider.value;
+        soilTempValue.textContent = soilTempSlider.value + '°F';
+        airTempValue.textContent = airTempSlider.value + '°F';
+    }
     rainfallSlider.addEventListener('input', debounce(function() {
         rainfallValue.textContent = this.value;
         if (!autoWeatherCheckbox.checked) {
             currentWeatherData.rainfall = parseFloat(this.value);
             updateMap({regions, speciesSelect, countyWeatherData, currentWeatherData, speciesData});
+            updateWeatherDisplay(selectedCounty);
         }
     }, 200));
     soilTempSlider.addEventListener('input', debounce(function() {
@@ -46,6 +116,7 @@ window.addEventListener('DOMContentLoaded', () => {
         if (!autoWeatherCheckbox.checked) {
             currentWeatherData.soilTemp = parseInt(this.value);
             updateMap({regions, speciesSelect, countyWeatherData, currentWeatherData, speciesData});
+            updateWeatherDisplay(selectedCounty);
         }
     }, 200));
     airTempSlider.addEventListener('input', debounce(function() {
@@ -53,31 +124,26 @@ window.addEventListener('DOMContentLoaded', () => {
         if (!autoWeatherCheckbox.checked) {
             currentWeatherData.airTemp = parseInt(this.value);
             updateMap({regions, speciesSelect, countyWeatherData, currentWeatherData, speciesData});
+            updateWeatherDisplay(selectedCounty);
         }
     }, 200));
 
-    // Species select change
+    // --- Species select change ---
     speciesSelect.addEventListener('change', function() {
         updateRecommendations(null, speciesSelect.value, publicLandData);
         updateSpeciesDisplay(speciesSelect.value, speciesData);
         updateMap({regions, speciesSelect, countyWeatherData, currentWeatherData, speciesData});
+        updateWeatherDisplay(selectedCounty);
     });
 
-    // Season select change
+    // --- Season select change ---
     seasonSelect.addEventListener('change', function() {
         currentWeatherData.season = this.value;
         updateMap({regions, speciesSelect, countyWeatherData, currentWeatherData, speciesData});
+        updateWeatherDisplay(selectedCounty);
     });
 
-    // Auto weather checkbox
-    autoWeatherCheckbox.addEventListener('change', function() {
-        // Implement toggleWeatherMode logic here if needed
-    });
-
-    // Initial map/weather
-    // You must pass the required arguments to fetchWeatherData
-    // For example, if you have countyTowns, pass it here:
-    // fetchWeatherData(countyTowns, statusText, weatherStatus, () => updateWeatherDisplay(), () => updateMap({regions, speciesSelect, countyWeatherData, currentWeatherData, speciesData}));
-    // For now, just call updateMap to ensure the map is colored on load
+    // --- Initial map/weather (ensure map is colored on load) ---
     updateMap({regions, speciesSelect, countyWeatherData, currentWeatherData, speciesData});
+    updateWeatherDisplay(selectedCounty);
 });
