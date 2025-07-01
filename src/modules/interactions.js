@@ -163,21 +163,37 @@ export function displayCountyInfo(county) {
             <div class="public-lands">
                 <h4>🏞️ General Foraging Tips</h4>
                 <ul>
-                    ${landData.generalTips.map(tip => `<li>${tip}</li>`).join('')}
+                    ${landData && landData.general ? `
+                        <li>Climate: ${landData.general.climate}</li>
+                        <li>Soils: ${landData.general.soils}</li>
+                        <li>Best Months: ${landData.general.bestMonths}</li>
+                        <li>Total Acres: ${landData.general.totalAcres}</li>
+                    ` : '<li>No general information available</li>'}
                 </ul>
                 
                 <h4>📍 Specific Locations</h4>
                 <div class="locations-grid">
-                    ${landData.locations.map(location => `
-                        <div class="location-card">
-                            <h5>${location.name}</h5>
-                            <p class="location-type">${location.type}</p>
-                            <p><strong>Access:</strong> ${location.access}</p>
-                            <p><strong>Target Species:</strong> ${location.species.join(', ')}</p>
-                            <p><strong>Microhabitats:</strong> ${location.microhabitats.join(', ')}</p>
-                            ${location.notes ? `<p class="location-notes">${location.notes}</p>` : ''}
-                        </div>
-                    `).join('')}
+${landData && landData.landsBySpecies ? `
+    <h4>📍 Specific Locations by Species</h4>
+    <div class="locations-grid">
+        ${Object.entries(landData.landsBySpecies).map(([species, locations]) => `
+            <div class="species-section">
+                <h5>🍄 ${species.charAt(0).toUpperCase() + species.slice(1)}</h5>
+                ${locations.map(location => `
+                    <div class="location-card">
+                        <h6>${location.name}</h6>
+                        ${location.gps ? `<p><strong>GPS:</strong> ${location.gps}</p>` : ''}
+                        ${location.access ? `<p><strong>Access:</strong> ${location.access}</p>` : ''}
+                        ${location.habitat ? `<p><strong>Habitat:</strong> ${location.habitat}</p>` : ''}
+                        ${location.timing ? `<p><strong>Best Timing:</strong> ${location.timing}</p>` : ''}
+                        ${location.contact ? `<p><strong>Contact:</strong> ${location.contact}</p>` : ''}
+                        ${location.note ? `<p class="location-notes">${location.note}</p>` : ''}
+                    </div>
+                `).join('')}
+            </div>
+        `).join('')}
+    </div>
+` : '<p>No specific locations available for this county</p>'}
                 </div>
             </div>
             ` : ''}
