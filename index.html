@@ -96,67 +96,72 @@
             
             <!-- Map and Information Section -->
             <div class="map-section">
-                <div class="map-container">
-                    <h3>🗺️ New Hampshire County Probability Map</h3>
-                    <div class="map-wrapper">
-                        <!-- NH SVG Map -->
-                        <svg id="nh-map" viewBox="0 0 400 300" role="img" aria-label="New Hampshire county map showing mushroom probabilities">
-                            <!-- Counties will be styled dynamically -->
-                            <g id="counties">
-                                <!-- Coos County -->
-                                <polygon data-county="Coos County" points="100,20 200,20 200,80 150,80 100,70" class="county" tabindex="0" aria-label="Coos County"></polygon>
-                                
-                                <!-- Grafton County -->
-                                <polygon data-county="Grafton County" points="50,70 150,80 150,140 100,150 50,130" class="county" tabindex="0" aria-label="Grafton County"></polygon>
-                                
-                                <!-- Carroll County -->
-                                <polygon data-county="Carroll County" points="200,20 300,30 280,90 200,80" class="county" tabindex="0" aria-label="Carroll County"></polygon>
-                                
-                                <!-- Sullivan County -->
-                                <polygon data-county="Sullivan County" points="50,130 100,150 100,200 50,190" class="county" tabindex="0" aria-label="Sullivan County"></polygon>
-                                
-                                <!-- Merrimack County -->
-                                <polygon data-county="Merrimack County" points="100,150 200,140 200,200 150,210 100,200" class="county" tabindex="0" aria-label="Merrimack County"></polygon>
-                                
-                                <!-- Belknap County -->
-                                <polygon data-county="Belknap County" points="200,140 280,130 270,180 200,190" class="county" tabindex="0" aria-label="Belknap County"></polygon>
-                                
-                                <!-- Cheshire County -->
-                                <polygon data-county="Cheshire County" points="50,190 100,200 100,260 50,250" class="county" tabindex="0" aria-label="Cheshire County"></polygon>
-                                
-                                <!-- Hillsborough County -->
-                                <polygon data-county="Hillsborough County" points="100,200 200,200 200,250 150,260 100,250" class="county" tabindex="0" aria-label="Hillsborough County"></polygon>
-                                
-                                <!-- Strafford County -->
-                                <polygon data-county="Strafford County" points="200,190 280,180 300,230 220,240 200,220" class="county" tabindex="0" aria-label="Strafford County"></polygon>
-                                
-                                <!-- Rockingham County -->
-                                <polygon data-county="Rockingham County" points="200,220 300,230 320,280 200,270" class="county" tabindex="0" aria-label="Rockingham County"></polygon>
-                            </g>
-                            
-                            <!-- County Labels -->
-                            <g id="county-labels" class="county-labels">
-                                <text x="150" y="50" class="county-label">Coos</text>
-                                <text x="100" y="110" class="county-label">Grafton</text>
-                                <text x="240" y="55" class="county-label">Carroll</text>
-                                <text x="75" y="170" class="county-label">Sullivan</text>
-                                <text x="150" y="175" class="county-label">Merrimack</text>
-                                <text x="235" y="165" class="county-label">Belknap</text>
-                                <text x="75" y="225" class="county-label">Cheshire</text>
-                                <text x="150" y="230" class="county-label">Hillsborough</text>
-                                <text x="240" y="210" class="county-label">Strafford</text>
-                                <text x="260" y="255" class="county-label">Rockingham</text>
-                            </g>
-                        </svg>
-                        
-                        <!-- Map Legend -->
-                        <div id="map-legend" class="map-legend">
-                            <h4>Probability Scale</h4>
-                            <!-- Populated by JavaScript -->
-                        </div>
-                    </div>
-                    <p class="map-instructions">Click on any county for detailed foraging information and public land recommendations.</p>
-                </div>
+                <!-- In your existing index.html, replace the map container section -->
+<div class="map-container">
+    <h3>🗺️ Interactive County Map</h3>
+    <svg id="nh-map" viewBox="0 0 450 350">
+        <!-- Clean Grid Layout: No Overlapping Counties -->
+        
+        <!-- Row 1: COOS (spans 3 columns, centered) -->
+        <rect class="county" data-county="coos" fill="#4CAF50" 
+              x="125" y="20" width="200" height="70" rx="12"/>
+        <text class="county-label" x="225" y="60">COOS</text>
+        <text class="geo-icon forest-icon" x="200" y="45">🌲</text>
+        <text class="geo-icon mountain-icon" x="250" y="45">🏔️</text>
+        
+        <!-- Row 2: GRAFTON | BELKNAP | CARROLL -->
+        <rect class="county" data-county="grafton" fill="#66BB6A"
+              x="20" y="110" width="130" height="70" rx="12"/>
+        <text class="county-label" x="85" y="150">GRAFTON</text>
+        <text class="geo-icon mountain-icon" x="120" y="135">🏔️</text>
+        
+        <rect class="county" data-county="belknap" fill="#A5D6A7"
+              x="170" y="110" width="110" height="70" rx="12"/>
+        <text class="county-label" x="225" y="150">BELKNAP</text>
+        <text class="geo-icon lake-icon" x="245" y="135">🌊</text>
+        
+        <rect class="county" data-county="carroll" fill="#81C784"
+              x="300" y="110" width="130" height="70" rx="12"/>
+        <text class="county-label" x="365" y="150">CARROLL</text>
+        <text class="geo-icon mountain-icon" x="340" y="135">🏔️</text>
+        
+        <!-- Row 3: SULLIVAN | MERRIMACK | STRAFFORD -->
+        <rect class="county" data-county="sullivan" fill="#DCEDC8"
+              x="20" y="200" width="130" height="70" rx="12"/>
+        <text class="county-label" x="85" y="240">SULLIVAN</text>
+        <text class="geo-icon forest-icon" x="60" y="225">🌲</text>
+        
+        <rect class="county" data-county="merrimack" fill="#C8E6C9"
+              x="170" y="200" width="110" height="70" rx="12"/>
+        <text class="county-label" x="225" y="240">MERRIMACK</text>
+        <text class="geo-icon forest-icon" x="205" y="225">🌲</text>
+        
+        <rect class="county" data-county="strafford" fill="#C8E6C9"
+              x="300" y="200" width="130" height="70" rx="12"/>
+        <text class="county-label" x="365" y="240">STRAFFORD</text>
+        <text class="geo-icon forest-icon" x="340" y="225">🌲</text>
+        
+        <!-- Row 4: CHESHIRE | HILLSBOROUGH | ROCKINGHAM -->
+        <rect class="county" data-county="cheshire" fill="#E8F5E8"
+              x="20" y="290" width="130" height="70" rx="12"/>
+        <text class="county-label" x="85" y="330">CHESHIRE</text>
+        <text class="geo-icon forest-icon" x="60" y="315">🌲</text>
+        
+        <rect class="county" data-county="hillsborough" fill="#F1F8E9"
+              x="170" y="290" width="110" height="70" rx="12"/>
+        <text class="county-label" x="225" y="325">HILLSBOROUGH</text>
+        <text class="geo-icon city-icon" x="205" y="310">🏙️</text>
+        
+        <rect class="county" data-county="rockingham" fill="#A5D6A7"
+              x="300" y="290" width="130" height="70" rx="12"/>
+        <text class="county-label" x="365" y="330">ROCKINGHAM</text>
+        <text class="geo-icon coast-icon" x="400" y="315">🌊</text>
+    </svg>
+    
+    <p style="text-align: center; margin-top: 15px; font-style: italic; color: #666;">
+        Click any county for detailed foraging recommendations
+    </p>
+</div>
                 
                 <!-- Species Information Panel -->
                 <div id="species-info" class="species-info">
