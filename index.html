@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NH Tier 1 Wild Mushroom Probability Map</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🍄 New Hampshire Tier 1 Wild Mushroom Probability Map</h1>
+        
+        <div class="controls">
+            <div class="control-group">
+                <h3>Data Source</h3>
+                <div id="weather-status" style="margin-top: 10px; font-size: 0.9em;">
+                    <span id="status-text"></span>
+                </div>
+                <button class="update-btn" id="refresh-weather">Refresh Weather</button>
+            </div>
+            <div class="control-group">
+                <h3>Manual Override</h3>
+                <label for="season">Season:</label>
+                <select id="season"></select>
+                <button class="update-btn" id="update-map">Update Map</button>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <h3>Weather Conditions</h3>
+                <div id="weather-display">
+                    <div id="rainfall-display"></div>
+                    <div id="soil-temp-display"></div>
+                    <div id="air-temp-display"></div>
+                </div>
+            </div>
+            <div class="control-group" id="manual-controls" style="display: none;">
+                <label for="rainfall">Rainfall (in): <span id="rainfall-value">2.0</span></label>
+                <input type="range" id="rainfall" min="0" max="5" step="0.1" value="2.0">
+                <label for="soil-temp">Soil Temp (°F): <span id="soil-temp-value">65</span></label>
+                <input type="range" id="soil-temp" min="40" max="80" step="1" value="65">
+                <label for="air-temp">Air Temp (°F): <span id="air-temp-value">70</span></label>
+                <input type="range" id="air-temp" min="40" max="90" step="1" value="70">
+            </div>
+            <div class="control-group">
+                <label for="species">Species:</label>
+                <select id="species"></select>
+            </div>
+        </div>
+        
+        <div class="control-group" id="species-info-card" style="display: none;">
+            <h3 id="species-card-title">🍄 Species Information</h3>
+            <div id="species-basic-info"></div>
+            <div id="species-habitat"></div>
+            <div id="species-timing"></div>
+            <div id="species-identification"></div>
+        </div>
+        
+        <div class="control-group">
+            <h3>Public Land Recommendations</h3>
+            <div id="rec-text" style="margin-top: 10px; font-size: 0.9em; max-height: 200px; overflow-y: auto;"></div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item"><span class="legend-color" style="background:#228B22"></span> Very High</div>
+            <div class="legend-item"><span class="legend-color" style="background:#90EE90"></span> High</div>
+            <div class="legend-item"><span class="legend-color" style="background:#FFD700"></span> Moderate</div>
+            <div class="legend-item"><span class="legend-color" style="background:#FFA500"></span> Low</div>
+            <div class="legend-item"><span class="legend-color" style="background:#FF6B6B"></span> Very Low</div>
+        </div>
+        
+        <div class="map-container">
+            <svg id="nh-map" viewBox="0 0 400 500">
+                <g class="region" data-region="Coos County">
+                    <path class="zone" d="M50,50 L100,50 L100,120 L50,120 Z" fill="#ccc" stroke="#333" stroke-width="1"/>
+                    <title>Coos County</title>
+                </g>
+                <g class="region" data-region="Grafton County">
+                    <path class="zone" d="M110,60 L180,60 L180,130 L110,130 Z" fill="#ccc" stroke="#333" stroke-width="1"/>
+                    <title>Grafton County</title>
+                </g>
+                <g class="region" data-region="Carroll County">
+                    <path class="zone" d="M190,70 L250,70 L250,140 L190,140 Z" fill="#ccc" stroke="#333" stroke-width="1"/>
+                    <title>Carroll County</title>
+                </g>
+                <g class="region" data-region="Sullivan County">
+                    <path class="zone" d="M60,130 L120,130 L120,200 L60,200 Z" fill="#ccc" stroke="#333" stroke-width="1"/>
+                    <title>Sullivan County</title>
+                </g>
+                <g class="region" data-region="Merrimack County">
+                    <path class="zone" d="M130,140 L200,140 L200,210 L130,210 Z" fill="#ccc" stroke="#333" stroke-width="1"/>
+                    <title>Merrimack County</title>
+                </g>
+                <g class="region" data-region="Belknap County">
+                    <path class="zone" d="M210,150 L270,150 L270,220 L210,220 Z" fill="#ccc" stroke="#333" stroke-width="1"/>
+                    <title>Belknap County</title>
+                </g>
+                <g class="region" data-region="Cheshire County">
+                    <path class="zone" d="M70,210 L130,210 L130,280 L70,280 Z" fill="#ccc" stroke="#333" stroke-width="1"/>
+                    <title>Cheshire County</title>
+                </g>
+                <g class="region" data-region="Hillsborough County">
+                    <path class="zone" d="M140,220 L210,220 L210,290 L140,290 Z" fill="#ccc" stroke="#333" stroke-width="1"/>
+                    <title>Hillsborough County</title>
+                </g>
+                <g class="region" data-region="Strafford County">
+                    <path class="zone" d="M220,230 L280,230 L280,300 L220,300 Z" fill="#ccc" stroke="#333" stroke-width="1"/>
+                    <title>Strafford County</title>
+                </g>
+                <g class="region" data-region="Rockingham County">
+                    <path class="zone" d="M230,310 L300,310 L300,380 L230,380 Z" fill="#ccc" stroke="#333" stroke-width="1"/>
+                    <title>Rockingham County</title>
+                </g>
+            </svg>
+        </div>
+        
+        <div class="disclaimer">
+            <strong>⚠️ Important Disclaimer:</strong> This map provides probability estimates based on ecological factors. "Recent rainfall" refers to precipitation in the past 7-10 days, which is the typical timeframe for mushroom fruiting response. Always verify mushroom identification with experts before consumption. Only licensed foragers can legally sell wild mushrooms in NH. Never eat any mushroom unless you are 100% certain of its identification.
+        </div>
+    </div>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
