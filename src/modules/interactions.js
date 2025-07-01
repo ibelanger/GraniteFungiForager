@@ -102,7 +102,7 @@ export function displaySpeciesInfo(speciesKey) {
 }
 
 /**
- * Display county-specific information
+ * Display county-specific information on main page
  * @param {string} county - County name
  */
 export function displayCountyInfo(county) {
@@ -113,21 +113,37 @@ export function displayCountyInfo(county) {
     const countyInfo = getCountyInfo(county, currentSpecies);
     const landData = getCountyLandData(county);
     
-    const modal = document.getElementById('county-modal');
-    const modalContent = document.getElementById('county-modal-content');
+    // Find or create county info panel on main page
+    let countyPanel = document.getElementById('county-info');
+    if (!countyPanel) {
+        // Create county info panel if it doesn't exist
+        countyPanel = document.createElement('div');
+        countyPanel.id = 'county-info';
+        countyPanel.className = 'county-info-panel';
+        
+        // Insert after the species info panel
+        const speciesInfo = document.getElementById('species-info');
+        if (speciesInfo) {
+            speciesInfo.parentNode.insertBefore(countyPanel, speciesInfo.nextSibling);
+        } else {
+            // Fallback: add to map section
+            const mapSection = document.querySelector('.map-section');
+            if (mapSection) {
+                mapSection.appendChild(countyPanel);
+            }
+        }
+    }
     
-    if (!modal || !modalContent) return;
-    
-    // Create county information HTML
-    const modalHTML = `
+    // Update county panel content
+    const countyHTML = `
         <div class="county-details">
             <div class="county-header">
-                <h2>${county}</h2>
-                <button class="close-btn" onclick="closeCountyModal()">&times;</button>
+                <h3>📍 ${county} Information</h3>
+                <button class="clear-btn" onclick="clearCountyInfo()">Clear</button>
             </div>
             
             <div class="probability-display" style="background-color: ${countyInfo.color};">
-                <h3>${countyInfo.species} Probability: ${(countyInfo.probability * 100).toFixed(1)}%</h3>
+                <h4>${countyInfo.species} Probability: ${(countyInfo.probability * 100).toFixed(1)}%</h4>
             </div>
             
             <div class="current-conditions">
@@ -145,10 +161,6 @@ export function displayCountyInfo(county) {
                         <span class="condition-label">Air Temperature:</span>
                         <span class="condition-value">${countyInfo.weather.airTemp || 'N/A'}°F</span>
                     </div>
-                    <div class="condition-item">
-                        <span class="condition-label">Season:</span>
-                        <span class="condition-value">${countyInfo.weather.season}</span>
-                    </div>
                 </div>
             </div>
             
@@ -159,49 +171,47 @@ export function displayCountyInfo(county) {
                 </ul>
             </div>
             
-            ${landData ? `
-            <div class="public-lands">
-                <h4>🏞️ General Foraging Tips</h4>
+            ${landData && landData.general ? `
+            <div class="general-info">
+                <h4>🏞️ General Information</h4>
                 <ul>
-                    ${landData && landData.general ? `
-                        <li>Climate: ${landData.general.climate}</li>
-                        <li>Soils: ${landData.general.soils}</li>
-                        <li>Best Months: ${landData.general.bestMonths}</li>
-                        <li>Total Acres: ${landData.general.totalAcres}</li>
-                    ` : '<li>No general information available</li>'}
+                    <li><strong>Climate:</strong> ${landData.general.climate}</li>
+                    <li><strong>Soils:</strong> ${landData.general.soils}</li>
+                    <li><strong>Best Months:</strong> ${landData.general.bestMonths}</li>
+                    <li><strong>Total Acres:</strong> ${landData.general.totalAcres}</li>
                 </ul>
-                
-                <h4>📍 Specific Locations</h4>
-                <div class="locations-grid">
-${landData && landData.landsBySpecies ? `
-    <h4>📍 Specific Locations by Species</h4>
-    <div class="locations-grid">
-        ${Object.entries(landData.landsBySpecies).map(([species, locations]) => `
-            <div class="species-section">
-                <h5>🍄 ${species.charAt(0).toUpperCase() + species.slice(1)}</h5>
-                ${locations.map(location => `
-                    <div class="location-card">
-                        <h6>${location.name}</h6>
-                        ${location.gps ? `<p><strong>GPS:</strong> ${location.gps}</p>` : ''}
-                        ${location.access ? `<p><strong>Access:</strong> ${location.access}</p>` : ''}
-                        ${location.habitat ? `<p><strong>Habitat:</strong> ${location.habitat}</p>` : ''}
-                        ${location.timing ? `<p><strong>Best Timing:</strong> ${location.timing}</p>` : ''}
-                        ${location.contact ? `<p><strong>Contact:</strong> ${location.contact}</p>` : ''}
-                        ${location.note ? `<p class="location-notes">${location.note}</p>` : ''}
-                    </div>
-                `).join('')}
             </div>
-        `).join('')}
-    </div>
-` : '<p>No specific locations available for this county</p>'}
+            ` : ''}
+            
+            ${landData && landData.landsBySpecies ? `
+            <div class="locations-info">
+                <h4>📍 Specific Locations by Species</h4>
+                <div class="locations-grid">
+                    ${Object.entries(landData.landsBySpecies).slice(0, 2).map(([species, locations]) => `
+                        <div class="species-section">
+                            <h5>🍄 ${species.charAt(0).toUpperCase() + species.slice(1)}</h5>
+                            ${locations.slice(0, 2).map(location => `
+                                <div class="location-card">
+                                    <h6>${location.name}</h6>
+                                    ${location.gps ? `<p><strong>GPS:</strong> ${location.gps}</p>` : ''}
+                                    ${location.access ? `<p><strong>Access:</strong> ${location.access}</p>` : ''}
+                                    ${location.timing ? `<p><strong>Best Timing:</strong> ${location.timing}</p>` : ''}
+                                    ${location.note ? `<p class="location-notes">${location.note}</p>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `).join('')}
                 </div>
             </div>
             ` : ''}
         </div>
     `;
     
-    modalContent.innerHTML = modalHTML;
-    modal.style.display = 'block';
+    countyPanel.innerHTML = countyHTML;
+    countyPanel.style.display = 'block';
+    
+    // Scroll to county info
+    countyPanel.scrollIntoView({ behavior: 'smooth' });
     
     // Update weather display for this county
     updateWeatherDisplay(county);
@@ -230,7 +240,18 @@ export function handleCountyClick(event) {
         displayCountyInfo(county);
     }
 }
-
+/**
+ * Clear county information from main page
+ */
+export function clearCountyInfo() {
+    const countyPanel = document.getElementById('county-info');
+    if (countyPanel) {
+        countyPanel.style.display = 'none';
+    }
+    
+    // Reset weather display to general data
+    updateWeatherDisplay();
+}
 /**
  * Handle species selection change
  * @param {Event} event - Change event
@@ -345,3 +366,5 @@ export function initInteractions() {
     
     console.log('UI interactions initialized');
 }
+// Make clear function globally available for onclick
+window.clearCountyInfo = clearCountyInfo;

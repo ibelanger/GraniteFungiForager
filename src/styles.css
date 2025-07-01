@@ -917,3 +917,42 @@ input[type="checkbox"] {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem
+}
+/* County Info Panel */
+.county-info-panel {
+    background: var(--card-background);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    backdrop-filter: blur(10px);
+    margin-top: 1.5rem;
+    display: none;
+}
+
+.county-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.county-header h3 {
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.clear-btn {
+    background: var(--danger-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.clear-btn:hover {
+    background: #cc0000;
+}
