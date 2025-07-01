@@ -368,3 +368,72 @@ export function initInteractions() {
 }
 // Make clear function globally available for onclick
 window.clearCountyInfo = clearCountyInfo;
+
+// Add to your existing interactions.js module
+export function initEnhancedMapInteractions() {
+    const counties = document.querySelectorAll('.county');
+    
+    counties.forEach(county => {
+        // Enhanced hover effects
+        county.addEventListener('mouseenter', (e) => {
+            const countyName = e.target.dataset.county;
+            showCountyTooltip(e, countyName);
+        });
+        
+        county.addEventListener('mouseleave', hideCountyTooltip);
+        
+        // Enhanced click handling
+        county.addEventListener('click', (e) => {
+            const countyName = e.target.dataset.county;
+            selectCounty(countyName);
+            showCountyRecommendations(countyName);
+        });
+        
+        // Keyboard accessibility
+        county.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                county.click();
+            }
+        });
+        
+        // Make focusable for keyboard navigation
+        county.setAttribute('tabindex', '0');
+        county.setAttribute('role', 'button');
+        county.setAttribute('aria-label', `View ${countyName} county recommendations`);
+    });
+}
+
+function showCountyTooltip(event, countyName) {
+    // Enhanced tooltip with probability info
+    const tooltip = document.createElement('div');
+    tooltip.className = 'enhanced-tooltip';
+    tooltip.innerHTML = `
+        <strong>${countyName.toUpperCase()} COUNTY</strong><br>
+        <em>Click for detailed recommendations</em>
+    `;
+    
+    // Position and style tooltip
+    tooltip.style.cssText = `
+        position: absolute;
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        pointer-events: none;
+        z-index: 1000;
+        left: ${event.pageX + 10}px;
+        top: ${event.pageY - 10}px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    `;
+    
+    document.body.appendChild(tooltip);
+}
+
+function hideCountyTooltip() {
+    const tooltip = document.querySelector('.enhanced-tooltip');
+    if (tooltip) {
+        tooltip.remove();
+    }
+}

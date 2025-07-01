@@ -305,3 +305,29 @@ export function initMapCalculations() {
     // Initial map update
     updateMap();
 }
+// Add to your existing mapCalculations.js
+export function updateCountyColors() {
+    const counties = document.querySelectorAll('.county');
+    const currentSpecies = getCurrentSpecies();
+    
+    counties.forEach(county => {
+        const countyName = county.dataset.county;
+        const probability = calculateCountyProbability(countyName, currentSpecies);
+        const color = getProbabilityColor(probability);
+        
+        // Smooth color transition
+        county.style.transition = 'fill 0.5s ease';
+        county.setAttribute('fill', color);
+        
+        // Store probability for tooltips
+        county.dataset.probability = probability;
+    });
+}
+
+function getProbabilityColor(probability) {
+    if (probability >= 80) return '#2E7D32';      // Excellent
+    if (probability >= 60) return '#4CAF50';      // Very Good  
+    if (probability >= 40) return '#8BC34A';      // Good
+    if (probability >= 20) return '#CDDC39';      // Fair
+    return '#FF9800';                             // Poor
+}

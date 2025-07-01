@@ -1,0 +1,128 @@
+[1mdiff --git a/app.js b/app.js[m
+[1mindex 62470c9..6bd4666 100644[m
+[1m--- a/app.js[m
+[1m+++ b/app.js[m
+[36m@@ -3,6 +3,7 @@[m
+ import { initWeather } from './src/modules/weather.js';[m
+ import { initMapCalculations } from './src/modules/mapCalculations.js';[m
+ import { initInteractions } from './src/modules/interactions.js';[m
+[32m+[m[32mimport { initEnhancedMapInteractions } from './src/modules/interactions.js';[m[41m[m
+ [m
+ /**[m
+  * Application configuration[m
+[1mdiff --git a/src/modules/interactions.js b/src/modules/interactions.js[m
+[1mindex a8ff6f7..68ab491 100644[m
+[1m--- a/src/modules/interactions.js[m
+[1m+++ b/src/modules/interactions.js[m
+[36m@@ -367,4 +367,73 @@[m [mexport function initInteractions() {[m
+     console.log('UI interactions initialized');[m
+ }[m
+ // Make clear function globally available for onclick[m
+[31m-window.clearCountyInfo = clearCountyInfo;[m
+\ No newline at end of file[m
+[32m+[m[32mwindow.clearCountyInfo = clearCountyInfo;[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m// Add to your existing interactions.js module[m[41m[m
+[32m+[m[32mexport function initEnhancedMapInteractions() {[m[41m[m
+[32m+[m[32m    const counties = document.querySelectorAll('.county');[m[41m[m
+[32m+[m[41m    [m
+[32m+[m[32m    counties.forEach(county => {[m[41m[m
+[32m+[m[32m        // Enhanced hover effects[m[41m[m
+[32m+[m[32m        county.addEventListener('mouseenter', (e) => {[m[41m[m
+[32m+[m[32m            const countyName = e.target.dataset.county;[m[41m[m
+[32m+[m[32m            showCountyTooltip(e, countyName);[m[41m[m
+[32m+[m[32m        });[m[41m[m
+[32m+[m[41m        [m
+[32m+[m[32m        county.addEventListener('mouseleave', hideCountyTooltip);[m[41m[m
+[32m+[m[41m        [m
+[32m+[m[32m        // Enhanced click handling[m[41m[m
+[32m+[m[32m        county.addEventListener('click', (e) => {[m[41m[m
+[32m+[m[32m            const countyName = e.target.dataset.county;[m[41m[m
+[32m+[m[32m            selectCounty(countyName);[m[41m[m
+[32m+[m[32m            showCountyRecommendations(countyName);[m[41m[m
+[32m+[m[32m        });[m[41m[m
+[32m+[m[41m        [m
+[32m+[m[32m        // Keyboard accessibility[m[41m[m
+[32m+[m[32m        county.addEventListener('keydown', (e) => {[m[41m[m
+[32m+[m[32m            if (e.key === 'Enter' || e.key === ' ') {[m[41m[m
+[32m+[m[32m                e.preventDefault();[m[41m[m
+[32m+[m[32m                county.click();[m[41m[m
+[32m+[m[32m            }[m[41m[m
+[32m+[m[32m        });[m[41m[m
+[32m+[m[41m        [m
+[32m+[m[32m        // Make focusable for keyboard navigation[m[41m[m
+[32m+[m[32m        county.setAttribute('tabindex', '0');[m[41m[m
+[32m+[m[32m        county.setAttribute('role', 'button');[m[41m[m
+[32m+[m[32m        county.setAttribute('aria-label', `View ${countyName} county recommendations`);[m[41m[m
+[32m+[m[32m    });[m[41m[m
+[32m+[m[32m}[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mfunction showCountyTooltip(event, countyName) {[m[41m[m
+[32m+[m[32m    // Enhanced tooltip with probability info[m[41m[m
+[32m+[m[32m    const tooltip = document.createElement('div');[m[41m[m
+[32m+[m[32m    tooltip.className = 'enhanced-tooltip';[m[41m[m
+[32m+[m[32m    tooltip.innerHTML = `[m[41m[m
+[32m+[m[32m        <strong>${countyName.toUpperCase()} COUNTY</strong><br>[m[41m[m
+[32m+[m[32m        <em>Click for detailed recommendations</em>[m[41m[m
+[32m+[m[32m    `;[m[41m[m
+[32m+[m[41m    [m
+[32m+[m[32m    // Position and style tooltip[m[41m[m
+[32m+[m[32m    tooltip.style.cssText = `[m[41m[m
+[32m+[m[32m        position: absolute;[m[41m[m
+[32m+[m[32m        background: rgba(0, 0, 0, 0.9);[m[41m[m
+[32m+[m[32m        color: white;[m[41m[m
+[32m+[m[32m        padding: 10px;[m[41m[m
+[32m+[m[32m        border-radius: 8px;[m[41m[m
+[32m+[m[32m        font-size: 0.9rem;[m[41m[m
+[32m+[m[32m        pointer-events: none;[m[41m[m
+[32m+[m[32m        z-index: 1000;[m[41m[m
+[32m+[m[32m        left: ${event.pageX + 10}px;[m[41m[m
+[32m+[m[32m        top: ${event.pageY - 10}px;[m[41m[m
+[32m+[m[32m        box-shadow: 0 4px 15px rgba(0,0,0,0.3);[m[41m[m
+[32m+[m[32m    `;[m[41m[m
+[32m+[m[41m    [m
+[32m+[m[32m    document.body.appendChild(tooltip);[m[41m[m
+[32m+[m[32m}[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mfunction hideCountyTooltip() {[m[41m[m
+[32m+[m[32m    const tooltip = document.querySelector('.enhanced-tooltip');[m[41m[m
+[32m+[m[32m    if (tooltip) {[m[41m[m
+[32m+[m[32m        tooltip.remove();[m[41m[m
+[32m+[m[32m    }[m[41m[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/src/modules/mapCalculations.js b/src/modules/mapCalculations.js[m
+[1mindex 8d23eda..48821fb 100644[m
+[1m--- a/src/modules/mapCalculations.js[m
+[1m+++ b/src/modules/mapCalculations.js[m
+[36m@@ -305,3 +305,29 @@[m [mexport function initMapCalculations() {[m
+     // Initial map update[m
+     updateMap();[m
+ }[m
+[32m+[m[32m// Add to your existing mapCalculations.js[m[41m[m
+[32m+[m[32mexport function updateCountyColors() {[m[41m[m
+[32m+[m[32m    const counties = document.querySelectorAll('.county');[m[41m[m
+[32m+[m[32m    const currentSpecies = getCurrentSpecies();[m[41m[m
+[32m+[m[41m    [m
+[32m+[m[32m    counties.forEach(county => {[m[41m[m
+[32m+[m[32m        const countyName = county.dataset.county;[m[41m[m
+[32m+[m[32m        const probability = calculateCountyProbability(countyName, currentSpecies);[m[41m[m
+[32m+[m[32m        const color = getProbabilityColor(probability);[m[41m[m
+[32m+[m[41m        [m
+[32m+[m[32m        // Smooth color transition[m[41m[m
+[32m+[m[32m        county.style.transition = 'fill 0.5s ease';[m[41m[m
+[32m+[m[32m        county.setAttribute('fill', color);[m[41m[m
+[32m+[m[41m        [m
+[32m+[m[32m        // Store probability for tooltips[m[41m[m
+[32m+[m[32m        county.dataset.probability = probability;[m[41m[m
+[32m+[m[32m    });[m[41m[m
+[32m+[m[32m}[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32mfunction getProbabilityColor(probability) {[m[41m[m
+[32m+[m[32m    if (probability >= 80) return '#2E7D32';      // Excellent[m[41m[m
+[32m+[m[32m    if (probability >= 60) return '#4CAF50';      // Very Good[m[41m  [m
+[32m+[m[32m    if (probability >= 40) return '#8BC34A';      // Good[m[41m[m
+[32m+[m[32m    if (probability >= 20) return '#CDDC39';      // Fair[m[41m[m
+[32m+[m[32m    return '#FF9800';                             // Poor[m[41m[m
+[32m+[m[32m}[m
+\ No newline at end of file[m

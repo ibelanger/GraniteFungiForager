@@ -3,6 +3,7 @@
 import { initWeather } from './src/modules/weather.js';
 import { initMapCalculations } from './src/modules/mapCalculations.js';
 import { initInteractions } from './src/modules/interactions.js';
+import { initEnhancedMapInteractions } from './src/modules/interactions.js';
 
 /**
  * Application configuration
