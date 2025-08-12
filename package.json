@@ -1,7 +1,7 @@
 {
-  "name": "nh-mushroom-map",
+  "name": "granite-fungi-forager",
   "version": "3.1.0",
-  "description": "NH Tier 1 Wild Mushroom Probability Map - Interactive foraging conditions based on weather data and mycological expertise",
+  "description": "GraniteFungiForager - NH Tier 1 Wild Mushroom Probability Map with interactive foraging conditions",
   "type": "module",
   "main": "app.js",
   "scripts": {
@@ -22,10 +22,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/username/nh-mushroom-map.git"
+    "url": "git+https://github.com/ibelanger/GraniteFungiForager.git"
   },
   "bugs": {
-    "url": "https://github.com/username/nh-mushroom-map/issues"
+    "url": "https://github.com/ibelanger/GraniteFungiForager/issues"
   },
-  "homepage": "https://github.com/username/nh-mushroom-map#readme"
+  "homepage": "https://github.com/ibelanger/GraniteFungiForager#readme"
 }

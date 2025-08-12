@@ -1,9 +1,9 @@
 # 🍄 GraniteFungiForager v3.1
 
-**NH Tier 1 Wild Mushroom Probability Map** - Interactive foraging conditions based on real-time weather data and mycological expertise.
+**GraniteFungiForager** - NH Tier 1 Wild Mushroom Probability Map with interactive foraging conditions based on real-time weather data and mycological expertise.
 
 ## 🌐 **LIVE APPLICATION**
-**Try it now:** https://ibelanger.github.io/NHMushroom/
+**Try it now:** https://ibelanger.github.io/GraniteFungiForager/
 
 ## 📋 **DHHS Compliance**
 ✅ **Complete with ALL 23 official DHHS Tier 1 species** (February 2024)
@@ -54,7 +54,7 @@ python -m http.server 8000
 
 #### **Update Project Backlog:**
 ```markdown
-# NH Mushroom Map - Project Backlog & Future Development
+# GraniteFungiForager - Project Backlog & Future Development
 
 ## 📊 **Current Status (Phase 2 Complete - Modular Architecture)**
 

@@ -10,7 +10,7 @@ import { initEnhancedMapInteractions } from './src/modules/interactions.js';
  */
 const appConfig = {
     version: '3.0.0',
-    title: 'NH Tier 1 Wild Mushroom Probability Map',
+    title: 'GraniteFungiForager - NH Tier 1 Mushroom Map',
     author: 'GraniteFungiForager',
     updateInterval: 300000, // 5 minutes for auto-refresh
     debug: false
@@ -233,7 +233,7 @@ class MushroomApp {
         overlay.innerHTML = `
             <div class="loading-content">
                 <div class="loading-spinner"></div>
-                <h3>Loading NH Mushroom Map...</h3>
+                <h3>Loading GraniteFungiForager...</h3>
                 <p>Fetching weather data and initializing map</p>
             </div>
         `;
