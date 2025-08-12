@@ -105,12 +105,29 @@ export function displaySpeciesInfo(speciesKey) {
  * Display county-specific information on main page
  * @param {string} county - County name
  */
-export function displayCountyInfo(county) {
+export function displayCountyInfo(county, countyKey = null) {
     const speciesSelect = document.getElementById('species-select');
     const currentSpecies = speciesSelect?.value || 'chanterelles';
     
+    // If no countyKey provided, try to derive it from county name
+    if (!countyKey) {
+        const keyMap = {
+            'Coos County': 'coos',
+            'Grafton County': 'grafton', 
+            'Carroll County': 'carroll',
+            'Sullivan County': 'sullivan',
+            'Merrimack County': 'merrimack',
+            'Belknap County': 'belknap',
+            'Cheshire County': 'cheshire',
+            'Hillsborough County': 'hillsborough',
+            'Strafford County': 'strafford',
+            'Rockingham County': 'rockingham'
+        };
+        countyKey = keyMap[county] || county.toLowerCase();
+    }
+    
     // Get county information
-    const countyInfo = getCountyInfo(county, currentSpecies);
+    const countyInfo = getCountyInfo(countyKey, currentSpecies);
     const landData = getCountyLandData(county);
     
     // Find or create county info panel on main page
@@ -213,8 +230,8 @@ export function displayCountyInfo(county) {
     // Scroll to county info
     countyPanel.scrollIntoView({ behavior: 'smooth' });
     
-    // Update weather display for this county
-    updateWeatherDisplay(county);
+    // Update weather display for this county (use countyKey for weather data)
+    updateWeatherDisplay(countyKey);
 }
 
 /**
@@ -235,9 +252,23 @@ export function closeCountyModal() {
  * @param {Event} event - Click event
  */
 export function handleCountyClick(event) {
-    const county = event.target.getAttribute('data-county');
-    if (county) {
-        displayCountyInfo(county);
+    const countyKey = event.target.getAttribute('data-county');
+    if (countyKey) {
+        // Convert county key to display name
+        const countyDisplayNames = {
+            'coos': 'Coos County',
+            'grafton': 'Grafton County',
+            'carroll': 'Carroll County', 
+            'sullivan': 'Sullivan County',
+            'merrimack': 'Merrimack County',
+            'belknap': 'Belknap County',
+            'cheshire': 'Cheshire County',
+            'hillsborough': 'Hillsborough County',
+            'strafford': 'Strafford County',
+            'rockingham': 'Rockingham County'
+        };
+        const county = countyDisplayNames[countyKey] || countyKey;
+        displayCountyInfo(county, countyKey);
     }
 }
 /**
@@ -342,8 +373,17 @@ export function initInteractions() {
         
         // Set default selection and display
         const defaultSpecies = 'chanterelles';
-        speciesSelect.value = defaultSpecies;
-        displaySpeciesInfo(defaultSpecies);
+        if (speciesSelect.querySelector(`option[value="${defaultSpecies}"]`)) {
+            speciesSelect.value = defaultSpecies;
+            displaySpeciesInfo(defaultSpecies);
+        } else {
+            // Fallback to first option if chanterelles not found
+            const firstOption = speciesSelect.querySelector('option');
+            if (firstOption) {
+                speciesSelect.value = firstOption.value;
+                displaySpeciesInfo(firstOption.value);
+            }
+        }
         
         // Add change handler
         speciesSelect.addEventListener('change', handleSpeciesChange);
@@ -376,7 +416,20 @@ export function initEnhancedMapInteractions() {
     counties.forEach(county => {
         // Enhanced hover effects
         county.addEventListener('mouseenter', (e) => {
-            const countyName = e.target.dataset.county;
+            const countyKey = e.target.dataset.county;
+            const countyDisplayNames = {
+                'coos': 'Coos County',
+                'grafton': 'Grafton County',
+                'carroll': 'Carroll County', 
+                'sullivan': 'Sullivan County',
+                'merrimack': 'Merrimack County',
+                'belknap': 'Belknap County',
+                'cheshire': 'Cheshire County',
+                'hillsborough': 'Hillsborough County',
+                'strafford': 'Strafford County',
+                'rockingham': 'Rockingham County'
+            };
+            const countyName = countyDisplayNames[countyKey] || countyKey;
             showCountyTooltip(e, countyName);
         });
         
@@ -384,9 +437,22 @@ export function initEnhancedMapInteractions() {
         
         // Enhanced click handling
         county.addEventListener('click', (e) => {
-            const countyName = e.target.dataset.county;
-            selectCounty(countyName);
-            showCountyRecommendations(countyName);
+            const countyKey = e.target.dataset.county;
+            const countyDisplayNames = {
+                'coos': 'Coos County',
+                'grafton': 'Grafton County',
+                'carroll': 'Carroll County', 
+                'sullivan': 'Sullivan County',
+                'merrimack': 'Merrimack County',
+                'belknap': 'Belknap County',
+                'cheshire': 'Cheshire County',
+                'hillsborough': 'Hillsborough County',
+                'strafford': 'Strafford County',
+                'rockingham': 'Rockingham County'
+            };
+            const countyName = countyDisplayNames[countyKey] || countyKey;
+            // Use handleCountyClick instead of separate functions
+            displayCountyInfo(countyName, countyKey);
         });
         
         // Keyboard accessibility
@@ -400,6 +466,20 @@ export function initEnhancedMapInteractions() {
         // Make focusable for keyboard navigation
         county.setAttribute('tabindex', '0');
         county.setAttribute('role', 'button');
+        const countyKey = county.dataset.county;
+        const countyDisplayNames = {
+            'coos': 'Coos County',
+            'grafton': 'Grafton County',
+            'carroll': 'Carroll County', 
+            'sullivan': 'Sullivan County',
+            'merrimack': 'Merrimack County',
+            'belknap': 'Belknap County',
+            'cheshire': 'Cheshire County',
+            'hillsborough': 'Hillsborough County',
+            'strafford': 'Strafford County',
+            'rockingham': 'Rockingham County'
+        };
+        const countyName = countyDisplayNames[countyKey] || countyKey;
         county.setAttribute('aria-label', `View ${countyName} county recommendations`);
     });
 }
@@ -409,7 +489,7 @@ function showCountyTooltip(event, countyName) {
     const tooltip = document.createElement('div');
     tooltip.className = 'enhanced-tooltip';
     tooltip.innerHTML = `
-        <strong>${countyName.toUpperCase()} COUNTY</strong><br>
+        <strong>${countyName.toUpperCase()}</strong><br>
         <em>Click for detailed recommendations</em>
     `;
     

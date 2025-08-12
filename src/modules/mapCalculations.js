@@ -5,16 +5,16 @@ import { speciesData } from './species.js';
 
 // NH County regions for species probability calculations
 export const countyRegions = {
-    'Coos County': 'Great North Woods',
-    'Grafton County': 'White Mountains', 
-    'Carroll County': 'White Mountains',
-    'Sullivan County': 'Dartmouth-Sunapee',
-    'Merrimack County': 'Merrimack Valley',
-    'Belknap County': 'Lakes Region',
-    'Cheshire County': 'Monadnock Region',
-    'Hillsborough County': 'Merrimack Valley',
-    'Strafford County': 'Seacoast',
-    'Rockingham County': 'Seacoast'
+    'coos': 'Great North Woods',
+    'grafton': 'White Mountains', 
+    'carroll': 'White Mountains',
+    'sullivan': 'Dartmouth-Sunapee',
+    'merrimack': 'Merrimack Valley',
+    'belknap': 'Lakes Region',
+    'cheshire': 'Monadnock Region',
+    'hillsborough': 'Merrimack Valley',
+    'strafford': 'Seacoast',
+    'rockingham': 'Seacoast'
 };
 
 /**
@@ -164,7 +164,7 @@ export function updateMap(selectedSpecies = null) {
         // Calculate probability
         const probability = calculateProbability(currentSpecies, countyWeather, region);
         
-        // Get map element
+        // Get map element (county is already lowercase from countyRegions keys)
         const mapElement = document.querySelector(`[data-county="${county}"]`);
         if (mapElement) {
             const color = getProbabilityColor(probability);
@@ -238,6 +238,14 @@ function generateRecommendations(county, species, probability, weather) {
     const recommendations = [];
     const speciesInfo = speciesData[species];
     
+    // Check for data availability first
+    if (weather.error || !weather.hasData) {
+        recommendations.push('⚠️ Weather data unavailable - probability estimates may be inaccurate');
+        if (weather.error) {
+            recommendations.push(`📊 Data error: ${weather.error}`);
+        }
+    }
+    
     // Probability-based recommendations
     if (probability > 0.7) {
         recommendations.push('🍄 Excellent conditions - high success probability!');
@@ -245,6 +253,8 @@ function generateRecommendations(county, species, probability, weather) {
         recommendations.push('✅ Good conditions - worth checking preferred habitats');
     } else if (probability > 0.3) {
         recommendations.push('⚠️ Marginal conditions - focus on optimal microhabitats');
+    } else if (probability <= 0.1 && (!weather.hasData || weather.error)) {
+        recommendations.push('⚠️ Cannot assess conditions - weather data unavailable');
     } else {
         recommendations.push('❌ Poor conditions - consider waiting or trying other species');
     }
@@ -305,29 +315,6 @@ export function initMapCalculations() {
     // Initial map update
     updateMap();
 }
-// Add to your existing mapCalculations.js
-export function updateCountyColors() {
-    const counties = document.querySelectorAll('.county');
-    const currentSpecies = getCurrentSpecies();
-    
-    counties.forEach(county => {
-        const countyName = county.dataset.county;
-        const probability = calculateCountyProbability(countyName, currentSpecies);
-        const color = getProbabilityColor(probability);
-        
-        // Smooth color transition
-        county.style.transition = 'fill 0.5s ease';
-        county.setAttribute('fill', color);
-        
-        // Store probability for tooltips
-        county.dataset.probability = probability;
-    });
-}
 
-function getProbabilityColor(probability) {
-    if (probability >= 80) return '#2E7D32';      // Excellent
-    if (probability >= 60) return '#4CAF50';      // Very Good  
-    if (probability >= 40) return '#8BC34A';      // Good
-    if (probability >= 20) return '#CDDC39';      // Fair
-    return '#FF9800';                             // Poor
-}
+// updateCountyColors is not needed; updateMap already updates county colors based on probability.
+// Ensure your SVG counties have class="county" and data-county attributes.

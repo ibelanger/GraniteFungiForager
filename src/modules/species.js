@@ -16,16 +16,13 @@ export const speciesData = {
             'Color': 'Deep red to pink, beef-like appearance'
         },
         regions: {
-            'Coos County': 0.2,
-            'Grafton County': 0.3,
-            'Carroll County': 0.2,
-            'Sullivan County': 0.4,
-            'Merrimack County': 0.5,
-            'Belknap County': 0.4,
-            'Cheshire County': 0.6,
-            'Hillsborough County': 0.5,
-            'Strafford County': 0.3,
-            'Rockingham County': 0.2
+            'Great North Woods': 0.2,
+            'White Mountains': 0.25,
+            'Dartmouth-Sunapee': 0.4,
+            'Merrimack Valley': 0.5,
+            'Lakes Region': 0.4,
+            'Monadnock Region': 0.6,
+            'Seacoast': 0.25
         }
     },
     blacktrumpets: {
@@ -42,16 +39,13 @@ export const speciesData = {
             'Spore Print': 'White to pale yellow'
         },
         regions: {
-            'Coos County': 0.3,
-            'Grafton County': 0.5,
-            'Carroll County': 0.4,
-            'Sullivan County': 0.7,
-            'Merrimack County': 0.7,
-            'Belknap County': 0.6,
-            'Cheshire County': 0.8,
-            'Hillsborough County': 0.7,
-            'Strafford County': 0.5,
-            'Rockingham County': 0.3
+            'Great North Woods': 0.3,
+            'White Mountains': 0.45,
+            'Dartmouth-Sunapee': 0.7,
+            'Merrimack Valley': 0.7,
+            'Lakes Region': 0.6,
+            'Monadnock Region': 0.8,
+            'Seacoast': 0.4
         }
     },
     cauliflower: {
@@ -68,20 +62,18 @@ export const speciesData = {
             'Texture': 'Brittle, easily broken'
         },
         regions: {
-            'Coos County': 0.4,
-            'Grafton County': 0.5,
-            'Carroll County': 0.6,
-            'Sullivan County': 0.5,
-            'Merrimack County': 0.5,
-            'Belknap County': 0.6,
-            'Cheshire County': 0.5,
-            'Hillsborough County': 0.4,
-            'Strafford County': 0.3,
-            'Rockingham County': 0.2
+            'Great North Woods': 0.4,
+            'White Mountains': 0.55,
+            'Dartmouth-Sunapee': 0.5,
+            'Merrimack Valley': 0.45,
+            'Lakes Region': 0.6,
+            'Monadnock Region': 0.5,
+            'Seacoast': 0.25
         }
     },
-    goldenchanterelle: {
+    chanterelles: {
         name: 'Golden Chanterelle (Cantharellus cibarius/flavus)',
+        alias: 'goldenchanterelle',
         tempRange: [55, 75],
         moistureMin: 2.0,
         seasonMultiplier: { spring: 0.1, summer: 0.8, fall: 1.0 },
@@ -94,16 +86,13 @@ export const speciesData = {
             'Smell': 'Fruity, apricot-like aroma'
         },
         regions: {
-            'Coos County': 0.7,
-            'Grafton County': 0.8,
-            'Carroll County': 0.8,
-            'Sullivan County': 0.7,
-            'Merrimack County': 0.7,
-            'Belknap County': 0.6,
-            'Cheshire County': 0.6,
-            'Hillsborough County': 0.5,
-            'Strafford County': 0.4,
-            'Rockingham County': 0.3
+            'Great North Woods': 0.7,
+            'White Mountains': 0.8,
+            'Dartmouth-Sunapee': 0.7,
+            'Merrimack Valley': 0.7,
+            'Lakes Region': 0.6,
+            'Monadnock Region': 0.6,
+            'Seacoast': 0.35
         }
     },
     trumpetchanterelle: {
@@ -120,16 +109,13 @@ export const speciesData = {
             'Gills': 'Blunt, widely spaced ridges'
         },
         regions: {
-            'Coos County': 0.6,
-            'Grafton County': 0.7,
-            'Carroll County': 0.7,
-            'Sullivan County': 0.5,
-            'Merrimack County': 0.5,
-            'Belknap County': 0.5,
-            'Cheshire County': 0.4,
-            'Hillsborough County': 0.3,
-            'Strafford County': 0.3,
-            'Rockingham County': 0.2
+            'Great North Woods': 0.6,
+            'White Mountains': 0.7,
+            'Dartmouth-Sunapee': 0.5,
+            'Merrimack Valley': 0.4,
+            'Lakes Region': 0.5,
+            'Monadnock Region': 0.4,
+            'Seacoast': 0.25
         }
     },
     russula: {
@@ -146,16 +132,13 @@ export const speciesData = {
             'Taste': 'Mild to acrid, some edible, some toxic'
         },
         regions: {
-            'Coos County': 0.6,
-            'Grafton County': 0.7,
-            'Carroll County': 0.7,
-            'Sullivan County': 0.6,
-            'Merrimack County': 0.6,
-            'Belknap County': 0.6,
-            'Cheshire County': 0.6,
-            'Hillsborough County': 0.5,
-            'Strafford County': 0.5,
-            'Rockingham County': 0.4
+            'Great North Woods': 0.6,
+            'White Mountains': 0.7,
+            'Dartmouth-Sunapee': 0.6,
+            'Merrimack Valley': 0.55,
+            'Lakes Region': 0.6,
+            'Monadnock Region': 0.6,
+            'Seacoast': 0.45
         }
     },
     hedgehog: {
@@ -172,16 +155,13 @@ export const speciesData = {
             'Texture': 'Firm, brittle'
         },
         regions: {
-            'Coos County': 0.7,
-            'Grafton County': 0.7,
-            'Carroll County': 0.7,
-            'Sullivan County': 0.6,
-            'Merrimack County': 0.6,
-            'Belknap County': 0.6,
-            'Cheshire County': 0.6,
-            'Hillsborough County': 0.5,
-            'Strafford County': 0.5,
-            'Rockingham County': 0.4
+            'Great North Woods': 0.7,
+            'White Mountains': 0.7,
+            'Dartmouth-Sunapee': 0.6,
+            'Merrimack Valley': 0.55,
+            'Lakes Region': 0.6,
+            'Monadnock Region': 0.6,
+            'Seacoast': 0.45
         }
     },
     jellyear: {
@@ -198,16 +178,13 @@ export const speciesData = {
             'Habitat': 'On dead wood, especially elder'
         },
         regions: {
-            'Coos County': 0.3,
-            'Grafton County': 0.4,
-            'Carroll County': 0.4,
-            'Sullivan County': 0.5,
-            'Merrimack County': 0.5,
-            'Belknap County': 0.5,
-            'Cheshire County': 0.5,
-            'Hillsborough County': 0.5,
-            'Strafford County': 0.6,
-            'Rockingham County': 0.6
+            'Great North Woods': 0.3,
+            'White Mountains': 0.4,
+            'Dartmouth-Sunapee': 0.5,
+            'Merrimack Valley': 0.5,
+            'Lakes Region': 0.5,
+            'Monadnock Region': 0.5,
+            'Seacoast': 0.6
         }
     },
     kingbolete: {
@@ -224,16 +201,13 @@ export const speciesData = {
             'Stipe': 'Thick, reticulated (netted)'
         },
         regions: {
-            'Coos County': 0.7,
-            'Grafton County': 0.8,
-            'Carroll County': 0.8,
-            'Sullivan County': 0.6,
-            'Merrimack County': 0.6,
-            'Belknap County': 0.6,
-            'Cheshire County': 0.6,
-            'Hillsborough County': 0.5,
-            'Strafford County': 0.5,
-            'Rockingham County': 0.4
+            'Great North Woods': 0.7,
+            'White Mountains': 0.8,
+            'Dartmouth-Sunapee': 0.6,
+            'Merrimack Valley': 0.55,
+            'Lakes Region': 0.6,
+            'Monadnock Region': 0.6,
+            'Seacoast': 0.45
         }
     },
     hericium: {
@@ -250,16 +224,13 @@ export const speciesData = {
             'Texture': 'Soft, watery when fresh'
         },
         regions: {
-            'Coos County': 0.3,
-            'Grafton County': 0.4,
-            'Carroll County': 0.4,
-            'Sullivan County': 0.5,
-            'Merrimack County': 0.5,
-            'Belknap County': 0.5,
-            'Cheshire County': 0.5,
-            'Hillsborough County': 0.5,
-            'Strafford County': 0.5,
-            'Rockingham County': 0.5
+            'Great North Woods': 0.3,
+            'White Mountains': 0.4,
+            'Dartmouth-Sunapee': 0.5,
+            'Merrimack Valley': 0.5,
+            'Lakes Region': 0.5,
+            'Monadnock Region': 0.5,
+            'Seacoast': 0.5
         }
     },
     lobster: {
@@ -276,16 +247,13 @@ export const speciesData = {
             'Host': 'Always on Lactarius or Russula host'
         },
         regions: {
-            'Coos County': 0.3,
-            'Grafton County': 0.4,
-            'Carroll County': 0.4,
-            'Sullivan County': 0.5,
-            'Merrimack County': 0.5,
-            'Belknap County': 0.5,
-            'Cheshire County': 0.5,
-            'Hillsborough County': 0.5,
-            'Strafford County': 0.5,
-            'Rockingham County': 0.5
+            'Great North Woods': 0.3,
+            'White Mountains': 0.4,
+            'Dartmouth-Sunapee': 0.5,
+            'Merrimack Valley': 0.5,
+            'Lakes Region': 0.5,
+            'Monadnock Region': 0.5,
+            'Seacoast': 0.5
         }
     },
     maitake: {
@@ -302,16 +270,13 @@ export const speciesData = {
             'Color': 'Gray-brown to tan'
         },
         regions: {
-            'Coos County': 0.2,
-            'Grafton County': 0.3,
-            'Carroll County': 0.3,
-            'Sullivan County': 0.6,
-            'Merrimack County': 0.7,
-            'Belknap County': 0.6,
-            'Cheshire County': 0.8,
-            'Hillsborough County': 0.7,
-            'Strafford County': 0.5,
-            'Rockingham County': 0.4
+            'Great North Woods': 0.2,
+            'White Mountains': 0.3,
+            'Dartmouth-Sunapee': 0.6,
+            'Merrimack Valley': 0.6,
+            'Lakes Region': 0.6,
+            'Monadnock Region': 0.8,
+            'Seacoast': 0.45
         }
     },
     blewit: {
@@ -328,16 +293,13 @@ export const speciesData = {
             'Spore Print': 'Pale pink'
         },
         regions: {
-            'Coos County': 0.2,
-            'Grafton County': 0.3,
-            'Carroll County': 0.3,
-            'Sullivan County': 0.4,
-            'Merrimack County': 0.5,
-            'Belknap County': 0.5,
-            'Cheshire County': 0.5,
-            'Hillsborough County': 0.5,
-            'Strafford County': 0.5,
-            'Rockingham County': 0.5
+            'Great North Woods': 0.2,
+            'White Mountains': 0.3,
+            'Dartmouth-Sunapee': 0.4,
+            'Merrimack Valley': 0.5,
+            'Lakes Region': 0.5,
+            'Monadnock Region': 0.5,
+            'Seacoast': 0.5
         }
     }
 };
