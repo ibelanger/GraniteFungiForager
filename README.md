@@ -1,13 +1,24 @@
-# 🍄 GraniteFungiForager
+# 🍄 GraniteFungiForager v3.1
 
-GraniteFungiForager is a web-based tool for modern mushroom hunters—designed to help foragers explore, track, and optimize their seasonal adventures across New Hampshire and beyond.
+**NH Tier 1 Wild Mushroom Probability Map** - Interactive foraging conditions based on real-time weather data and mycological expertise.
 
-Crafted with lightweight HTML and JavaScript, this tool layers map visualizations, seasonal data, and foraging insights into a fast, approachable interface. Whether you're searching for chanterelles in the understory or mapping your favorite patches, GraniteFungiForager helps you navigate the wild with confidence.
+## 🌐 **LIVE APPLICATION**
+**Try it now:** https://ibelanger.github.io/NHMushroom/
+
+## 📋 **DHHS Compliance**
+✅ **Complete with ALL 23 official DHHS Tier 1 species** (February 2024)
+✅ **Scientifically accurate subspecies** (Boletus 7-species, Hedgehog 3-subgenera)
+✅ **Real-time weather integration** for probability calculations
+
+GraniteFungiForager is the most comprehensive tool for New Hampshire mushroom foragers, providing county-specific probability maps, detailed species identification, and public lands recommendations.
 
 🔍 **Key Features**
-- Interactive trail and habitat maps using browser-native tech
-- Foraging logbook for seasonal and personal tracking
-- Lightweight, modular structure—easy to adapt or expand
+- **Complete DHHS Tier 1 Species Database** - All 23 officially approved species
+- **Real-time Weather Integration** - Live probability calculations
+- **Interactive County Map** - Click for detailed recommendations
+- **Scientific Accuracy** - Subspecies groups and identification notes
+- **Public Lands Database** - GPS coordinates and access information
+- **Mobile Responsive** - Works on all devices
 
 🛠️ **Built using:** Vanilla HTML, CSS, JavaScript (client-side only for now)
 
