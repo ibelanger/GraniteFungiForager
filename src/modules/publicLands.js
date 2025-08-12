@@ -120,7 +120,7 @@ export const publicLandData = {
                     quality: 'high'
                 }
             ],
-            hedgehog: [
+            sweettooth: [
                 {
                     name: 'Mixed Conifer-Hardwood Zones',
                     elevationRange: [1200, 2800],
@@ -358,7 +358,7 @@ export const publicLandData = {
                     quality: 'high'
                 }
             ],
-            hedgehog: [
+            sweettooth: [
                 {
                     name: 'Mixed Conifer-Hardwood Zones',
                     elevationRange: [1200, 2800],
@@ -424,7 +424,7 @@ export const publicLandData = {
                     quality: 'medium'
                 }
             ],
-            hedgehog: [
+            sweettooth: [
                 {
                     name: 'WMNF - Mixed Conifer-Hardwood Mountain Forests',
                     gps: '44.0684,-71.2286',

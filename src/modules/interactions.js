@@ -1,6 +1,6 @@
 // interactions.js - User interface interaction handlers
 
-import { speciesData } from './species.js';
+import { speciesData, populateSpeciesDropdown } from './species.js';
 import { getCountyLandData } from './publicLands.js';
 import { getCountyInfo, updateMap } from './mapCalculations.js';
 import { updateWeatherDisplay } from './weather.js';
@@ -365,11 +365,8 @@ export function initInteractions() {
     // Setup species selection
     const speciesSelect = document.getElementById('species-select');
     if (speciesSelect) {
-        // Populate species dropdown
-        const speciesOptions = Object.entries(speciesData).map(([key, species]) => 
-            `<option value="${key}">${species.name}</option>`
-        ).join('');
-        speciesSelect.innerHTML = speciesOptions;
+        // Populate species dropdown using the proper function
+        populateSpeciesDropdown('species-select', 'chanterelles');
         
         // Set default selection and display
         const defaultSpecies = 'chanterelles';

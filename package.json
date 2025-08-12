@@ -1,0 +1,31 @@
+{
+  "name": "nh-mushroom-map",
+  "version": "3.1.0",
+  "description": "NH Tier 1 Wild Mushroom Probability Map - Interactive foraging conditions based on weather data and mycological expertise",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [
+    "mushroom",
+    "foraging", 
+    "new-hampshire",
+    "weather",
+    "mycology",
+    "dhhs",
+    "tier1"
+  ],
+  "author": "GraniteFungiForager",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/username/nh-mushroom-map.git"
+  },
+  "bugs": {
+    "url": "https://github.com/username/nh-mushroom-map/issues"
+  },
+  "homepage": "https://github.com/username/nh-mushroom-map#readme"
+}
