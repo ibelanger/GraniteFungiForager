@@ -168,7 +168,7 @@ export const speciesData = {
         }
     },
     sweettooth: {
-        name: 'Sweet Tooth (Hydnum repandum group - subgenus Hydnum)',
+        name: 'Sweet Tooth (Hydnum subgenus Hydnum - H. subolympicum group)',
         tempRange: [55, 75],
         moistureMin: 1.5,
         seasonMultiplier: { spring: 0.1, summer: 0.7, fall: 1.0 },
@@ -180,7 +180,9 @@ export const speciesData = {
             'Color': 'Light buff color, cream to pale orange',
             'Cap': 'Lacks central depression, teeth slightly decurrent',
             'Stem': 'Generally off-center, larger toward base',
-            'Species': 'H. repandum, H. subolympicum (most common in NH)'
+            'Primary_Species': 'H. subolympicum (not H. repandum - European species)',
+            'Other_Species': 'H. washingtonium, H. vagabundum',
+            'Research_Note': 'DNA studies show H. repandum does not occur in North America'
         },
         regions: {
             'Great North Woods': 0.7,
@@ -193,7 +195,7 @@ export const speciesData = {
         }
     },
     depressedhedgehog: {
-        name: 'Depressed Hedgehog (Hydnum umbilicatum group - subgenus Rufescentia)',
+        name: 'Depressed Hedgehog (Hydnum subgenus Rufescentia - 9 eastern species)',
         tempRange: [55, 75],
         moistureMin: 1.5,
         seasonMultiplier: { spring: 0.1, summer: 0.7, fall: 1.0 },
@@ -205,7 +207,9 @@ export const speciesData = {
             'Color': 'Darker, more orange color than Sweet Tooth',
             'Cap': 'Generally has dimple near center',
             'Stem': 'Often centrally attached, does not expand downward',
-            'Species': 'H. umbilicatum, H. subconnatum, H. cuspidatum'
+            'Confirmed_NH_Species': 'H. umbilicatum, H. subconnatum, H. cuspidatum',
+            'Key_Difference': 'Teeth are NOT decurrent (vs. Sweet Tooth)',
+            'Research_Note': 'H. rufescens is European - 9 species documented in eastern US'
         },
         regions: {
             'Great North Woods': 0.6,
@@ -218,7 +222,7 @@ export const speciesData = {
         }
     },
     whitehedgehog: {
-        name: 'White Hedgehog (Hydnum albidum group - subgenus Alba)',
+        name: 'White Hedgehog (Hydnum subgenus Alba - 3 eastern species)',
         tempRange: [55, 75],
         moistureMin: 1.5,
         seasonMultiplier: { spring: 0.1, summer: 0.7, fall: 1.0 },
@@ -227,10 +231,11 @@ export const speciesData = {
         soilPreference: 'rich, well-drained forest soils',
         identificationNotes: {
             'Color': 'White to pale cream - distinguishing feature',
-            'Size': 'Small to medium, generally less than 3 inches',
-            'Staining1': 'H. alboaurantiacum stains bright orange quickly',
-            'Staining2': 'H. albidum stains slowly orange',
-            'Staining3': 'H. albomagnum barely stains after an hour'
+            'Size': 'H. albidum/alboaurantiacum: <3 inches, H. albomagnum: 3-4 inches',
+            'H_alboaurantiacum': 'Stains bright orange quickly on handling',
+            'H_albidum': 'Stains slowly orange over time',
+            'H_albomagnum': 'Barely stains after an hour',
+            'Research_Source': 'Swenie RA, Baroni TJ, Matheny PB (2018) - DNA-based classification'
         },
         regions: {
             'Great North Woods': 0.5,
@@ -266,27 +271,32 @@ export const speciesData = {
         }
     },
     kingbolete: {
-        name: 'King Bolete (Boletus edulis group)',
+        name: 'King Bolete Complex (Boletus edulis group - 7 species)',
         tempRange: [55, 75],
         moistureMin: 2.0,
-        seasonMultiplier: { spring: 0.1, summer: 0.7, fall: 1.0 },
-        hostTrees: ['spruce', 'pine', 'hemlock', 'oak'],
-        microhabitat: 'mixed conifer/hardwood forests',
-        soilPreference: 'well-drained, rich',
+        seasonMultiplier: { spring: 0.2, summer: 0.8, fall: 1.0 },
+        hostTrees: ['spruce', 'pine', 'hemlock', 'norway spruce', 'oak', 'beech', 'mixed'],
+        microhabitat: 'conifer forests, mixed deciduous, oak-beech forests',
+        soilPreference: 'well-drained, rich, varied by species',
         identificationNotes: {
-            'Cap': 'Brown, sticky when wet',
-            'Pores': 'White to yellow, not gills',
-            'Stipe': 'Thick, often with reticulation (netting)',
-            'Species': 'B. edulis, B. atkinsonii, B. chippewaensis, B. nobilis, B. separans, B. subcaerulescens, B. variipes'
+            'Cap': 'Brown variations - bun brown to pale lemon yellow with rusty patches',
+            'Pores': 'White to yellow, bruising patterns vary by species',
+            'Stipe': 'Reticulation patterns key to identification',
+            'B_subcaerulescens': 'Pines/Norway spruce, white-to-brown reticulation, bluish-gray bruising',
+            'B_variipes': 'Oak-beech forests, July-Sept, grayish stem with white reticulation', 
+            'B_edulis_chippewaensis': 'Conifer forests, summer-fall, olivebrown vs yellowish spores',
+            'B_atkinsonii': 'Mixed deciduous, beech-oak, brown reticulation, cracked cap',
+            'B_separans': 'Mixed deciduous, lilac tints, fine white reticulation',
+            'B_nobilis': 'Mixed deciduous, tall stature (2-3x cap diameter), minimal reticulation'
         },
         regions: {
-            'Great North Woods': 0.7,
-            'White Mountains': 0.8,
-            'Dartmouth-Sunapee': 0.6,
-            'Merrimack Valley': 0.55,
-            'Lakes Region': 0.6,
-            'Monadnock Region': 0.6,
-            'Seacoast': 0.45
+            'Great North Woods': 0.75, // Higher conifer density favors B. subcaerulescens
+            'White Mountains': 0.85, // Excellent mixed habitat for multiple species
+            'Dartmouth-Sunapee': 0.7, // Good oak-beech for B. variipes, B. atkinsonii
+            'Merrimack Valley': 0.65, // Mixed forests, moderate elevation
+            'Lakes Region': 0.7, // Diverse habitats support multiple species
+            'Monadnock Region': 0.75, // Strong oak-beech forests for deciduous species
+            'Seacoast': 0.5 // Limited elevation and conifer habitat
         }
     },
     hericium: {
@@ -655,16 +665,10 @@ export function populateSpeciesDropdown(selectId = 'species-select', defaultSpec
     // Clear existing options
     selectElement.innerHTML = '';
     
-    // Create options from speciesData, sorted alphabetically by common name
-    const speciesOptions = Object.entries(speciesData)
-        .sort(([,a], [,b]) => {
-            // Extract common name (part before parentheses)
-            const nameA = a.name.split('(')[0].trim();
-            const nameB = b.name.split('(')[0].trim();
-            return nameA.localeCompare(nameB);
-        })
-        .map(([key, species]) => `<option value="${key}">${species.name}</option>`)
-        .join('');
+    // Create options from speciesData
+    const speciesOptions = Object.entries(speciesData).map(([key, species]) => 
+        `<option value="${key}">${species.name}</option>`
+    ).join('');
     
     selectElement.innerHTML = speciesOptions;
     
