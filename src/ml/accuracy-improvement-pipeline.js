@@ -134,7 +134,7 @@ export class AccuracyImprovementPipeline {
             'matsutake', // High elevation requirements validation
             'chanterelles', // Most popular, needs highest accuracy
             'boletusSubcaerulescens', 'boletusVariipes', 'boletusEdulis', 
-            'boletusAtkinsonii', 'boletus_separans', 'boletusNobilis', 'boletusChippewaensis', // Individual Boletus species
+            'boletusAtkinsonii', 'boletus_separans', 'boletusNobilis', 'boletusChippewaensis', // Individual Boletus species (v3.2 breakdown)
             'sweettooth' // Hedgehog subgenera differentiation
         ];
 
@@ -277,6 +277,12 @@ export class AccuracyImprovementPipeline {
                 current_confidence: '60-70%',
                 target_confidence: '85-90%',
                 method: 'transition from educated estimates to data-driven calculations'
+            },
+            v3_2_enhancements: {
+                species_coverage: '29 species including subspecies variations',
+                boletus_breakdown: '7 individual King Bolete species with distinct ecology',
+                user_experience: 'Top 5 species rankings with condition indicators',
+                data_quality: 'Enhanced tooltip system and improved user feedback collection'
             }
         };
     }

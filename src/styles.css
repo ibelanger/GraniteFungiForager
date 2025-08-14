@@ -2083,3 +2083,160 @@ input[type="checkbox"] {
     font-size: 1.1rem;
     color: var(--primary-color);
 }
+
+/* Authentication and Location Protection Styles */
+.auth-required {
+    background: linear-gradient(135deg, #ffd700, #ffed4a);
+    border: 2px solid #f1c40f;
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.auth-message {
+    text-align: center;
+    color: #2c3e50;
+}
+
+.auth-message p {
+    margin: 10px 0;
+    font-weight: 500;
+}
+
+.auth-btn {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 15px 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+}
+
+.auth-btn:hover {
+    background: linear-gradient(135deg, #219a52, #27ae60);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+}
+
+.sustainability-note {
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: var(--border-radius);
+    border-left: 4px solid #27ae60;
+}
+
+.sustainability-note p {
+    margin: 0;
+    font-style: italic;
+    color: #2c5530;
+}
+
+/* Authentication Modal Styles */
+.auth-modal .modal-content {
+    max-width: 500px;
+    width: 90%;
+}
+
+.auth-content {
+    text-align: left;
+}
+
+.auth-content .form-group {
+    margin: 20px 0;
+}
+
+.auth-content label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.auth-content input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.auth-content input[type="password"]:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+}
+
+.auth-content .form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.auth-content .submit-btn,
+.auth-content .cancel-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.auth-content .submit-btn {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+}
+
+.auth-content .submit-btn:hover {
+    background: linear-gradient(135deg, #45a049, #3d8b40);
+    transform: translateY(-1px);
+}
+
+.auth-content .cancel-btn {
+    background: #6c757d;
+    color: white;
+}
+
+.auth-content .cancel-btn:hover {
+    background: #5a6268;
+}
+
+.auth-content .error-message {
+    color: #dc3545;
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: var(--border-radius);
+    margin: 10px 0;
+    text-align: center;
+}
+
+.auth-info {
+    margin-top: 20px;
+    text-align: center;
+    color: #6c757d;
+}
+
+.success-toast {
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(300px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
