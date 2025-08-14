@@ -131,6 +131,7 @@ export function displayCountyInfo(county, countyKey = null) {
     // Get county information
     const countyInfo = getCountyInfo(countyKey, currentSpecies);
     const landData = getCountyLandData(county);
+    const topSpeciesHTML = getTopSpeciesHTML(countyKey);
     
     // Find or create county info panel on main page
     let countyPanel = document.getElementById('county-info');
@@ -173,7 +174,7 @@ export function displayCountyInfo(county, countyKey = null) {
             <div class="top-species">
                 <h4>🏆 Top 5 Most Likely Species (Current Conditions)</h4>
                 <div class="species-rankings">
-                    ${getTopSpeciesHTML(countyKey)}
+                    ${topSpeciesHTML}
                 </div>
             </div>
             
@@ -1493,13 +1494,14 @@ function hideCountyTooltip() {
  * @returns {string} HTML string for top species display
  */
 function getTopSpeciesHTML(countyKey) {
-    const topSpecies = getTopSpeciesForCounty(countyKey, 5);
-    
-    if (!topSpecies || topSpecies.length === 0) {
-        return '<p class="no-data">Unable to calculate species rankings - weather data unavailable</p>';
-    }
-    
-    return topSpecies.map((species, index) => {
+    try {
+        const topSpecies = getTopSpeciesForCounty(countyKey, 5);
+        
+        if (!topSpecies || topSpecies.length === 0) {
+            return '<p class="no-data">Unable to calculate species rankings - weather data unavailable</p>';
+        }
+        
+        return topSpecies.map((species, index) => {
         const rank = index + 1;
         const probabilityPercent = (species.probability * 100).toFixed(1);
         const rankEmoji = getRankEmoji(rank);
@@ -1538,6 +1540,11 @@ function getTopSpeciesHTML(countyKey) {
             </div>
         `;
     }).join('');
+        
+    } catch (error) {
+        console.error('Error generating top species HTML:', error);
+        return '<p class="no-data">Error calculating species rankings. Check browser console for details.</p>';
+    }
 }
 
 /**
