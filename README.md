@@ -30,7 +30,7 @@ This project is licensed under the [MIT License](./LICENSE), allowing free use a
 markdown# 🍄 GraniteFungiForager v3.0
 
 ## 🏗️ Project Structure
-GraniteFungiForager/
+NHMushroom/
 ├── index.html                 # Main application
 ├── app.js                     # Application controller
 ├── src/
@@ -40,9 +40,14 @@ GraniteFungiForager/
 │   │   ├── publicLands.js     # Location recommendations
 │   │   ├── mapCalculations.js # Probability engine
 │   │   └── interactions.js    # UI interactions
-│   └── styles.css            # Application styles
-├── assets/                   # Static assets
-└── docs/                     # Documentation
+│   ├── styles.css             # Application styles
+│   └── data/                  # Data files (if any)
+├── assets/                    # Static assets (images, etc.)
+├── docs/                      # Documentation
+├── package.json               # Project metadata (if using npm)
+├── LICENSE                    # License file
+├── README.md                  # Project readme
+└── ...                        # Other files and folders
 
 ## 🚀 Quick Start
 ```bash

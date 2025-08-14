@@ -4,6 +4,11 @@ import { initWeather } from './src/modules/weather.js';
 import { initMapCalculations } from './src/modules/mapCalculations.js';
 import { initInteractions } from './src/modules/interactions.js';
 import { initEnhancedMapInteractions } from './src/modules/interactions.js';
+import { reportsManager } from './src/modules/foragingReports.js';
+import { iNatClient, obsProcessor } from './src/modules/iNaturalistIntegration.js';
+import { speciesMapper } from './src/modules/speciesMapping.js';
+import { observationAnalyzer } from './src/modules/observationAnalysis.js';
+import { coverageAuditor } from './src/modules/speciesCoverageAudit.js';
 
 /**
  * Application configuration
