@@ -1321,11 +1321,18 @@ export function setupMapTooltips() {
             const probability = e.target.getAttribute('data-probability');
             const species = e.target.getAttribute('data-species');
             
-            tooltip.innerHTML = `
-                <strong>${countyName}</strong><br>
-                ${species}: ${probability}%<br>
-                <em>Click for details</em>
-            `;
+            if (species && probability) {
+                tooltip.innerHTML = `
+                    <strong>${countyName}</strong><br>
+                    ${species}: ${probability}%<br>
+                    <em>Click for details</em>
+                `;
+            } else {
+                tooltip.innerHTML = `
+                    <strong>${countyName.toUpperCase()}</strong><br>
+                    <em>Select a species to see probability</em>
+                `;
+            }
             tooltip.style.display = 'block';
         });
         

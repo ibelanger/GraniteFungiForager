@@ -163,7 +163,23 @@ export function getProbabilityColor(probability) {
  */
 export function updateMap(selectedSpecies = null) {
     const speciesSelect = document.getElementById('species-select');
-    const currentSpecies = selectedSpecies || speciesSelect?.value || 'chanterelles';
+    const currentSpecies = selectedSpecies || speciesSelect?.value || null;
+    
+    // If no species is selected, reset map to neutral colors and clear tooltip data
+    if (!currentSpecies) {
+        Object.keys(countyRegions).forEach(county => {
+            const mapElement = document.querySelector(`[data-county="${county}"]`);
+            if (mapElement) {
+                // Set neutral gray color when no species selected
+                mapElement.style.fill = '#f0f0f0';
+                
+                // Clear tooltip data
+                mapElement.removeAttribute('data-probability');
+                mapElement.removeAttribute('data-species');
+            }
+        });
+        return;
+    }
     
     // Get current weather conditions
     const weather = getWeatherData();
