@@ -70,29 +70,36 @@ class MushroomApp {
      * Initialize all application modules
      */
     async initModules() {
+        console.log('🔍 initModules() called');
+        
         // Initialize weather module
+        console.log('🔍 About to initialize weather module');
         await initWeather();
-        console.log('Weather module initialized');
+        console.log('🔍 Weather module initialized');
         
         // Initialize map calculations
+        console.log('🔍 About to initialize map calculations');
         initMapCalculations();
-        console.log('Map calculations initialized');
+        console.log('🔍 Map calculations initialized');
         
         // Initialize UI interactions
+        console.log('🔍 About to initialize UI interactions');
         initInteractions();
-        console.log('UI interactions initialized');
+        console.log('🔍 UI interactions initialized');
         
         // Initialize enhanced map interactions (county click handlers)
         try {
             console.log('🔍 About to call initEnhancedMapInteractions()');
             initEnhancedMapInteractions();
-            console.log('Enhanced map interactions initialized');
+            console.log('🔍 Enhanced map interactions initialized');
         } catch (error) {
             console.error('🔥 Error in initEnhancedMapInteractions():', error);
         }
         
         // Setup additional event listeners
+        console.log('🔍 About to setup global event listeners');
         this.setupGlobalEventListeners();
+        console.log('🔍 initModules() completed');
     }
     
     /**
