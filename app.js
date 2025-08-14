@@ -36,10 +36,14 @@ class MushroomApp {
      * Initialize the application
      */
     async init() {
-        if (this.initialized) return;
+        console.log('🚀 app.init() called');
+        if (this.initialized) {
+            console.log('🚀 app.init() - Already initialized, returning');
+            return;
+        }
         
         try {
-            console.log(`Initializing ${appConfig.title} v${appConfig.version}`);
+            console.log(`🚀 Initializing ${appConfig.title} v${appConfig.version}`);
             
             // Show loading state
             this.showLoading();
@@ -393,9 +397,15 @@ const app = new MushroomApp();
  * Initialize application when DOM is ready
  */
 function initializeApp() {
+    console.log('🚀 initializeApp: document.readyState =', document.readyState);
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => app.init());
+        console.log('🚀 initializeApp: Adding DOMContentLoaded listener');
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 DOMContentLoaded fired');
+            app.init();
+        });
     } else {
+        console.log('🚀 initializeApp: DOM already loaded, calling app.init() directly');
         app.init();
     }
 }
@@ -414,7 +424,9 @@ window.enableDebug = () => app.enableDebug();
 /**
  * Auto-initialize when module loads
  */
+console.log('🚀 app.js: About to call initializeApp()');
 initializeApp();
+console.log('🚀 app.js: initializeApp() called');
 
 /**
  * Handle any unhandled promise rejections
