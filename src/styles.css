@@ -2064,3 +2064,22 @@ input[type="checkbox"] {
         padding: 1px 4px;
     }
 }
+
+/* No species selected message */
+.no-species-message {
+    text-align: center;
+    padding: 30px 20px;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: var(--border-radius);
+    margin: 20px 0;
+}
+
+.no-species-message p {
+    margin: 10px 0;
+    color: var(--text-color);
+}
+
+.no-species-message p:first-child {
+    font-size: 1.1rem;
+    color: var(--primary-color);
+}

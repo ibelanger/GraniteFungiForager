@@ -798,11 +798,10 @@ export function updateSpeciesDisplay(selectedSpecies, speciesData) {
 }
 
 /**
- * Populate species dropdown with all available species
+ * Populate species dropdown with all available species (alphabetically sorted)
  * @param {string} selectId - ID of the select element
- * @param {string} defaultSpecies - Default species to select
  */
-export function populateSpeciesDropdown(selectId = 'species-select', defaultSpecies = 'chanterelles') {
+export function populateSpeciesDropdown(selectId = 'species-select') {
     const selectElement = document.getElementById(selectId);
     if (!selectElement) {
         console.warn(`Species dropdown element ${selectId} not found`);
@@ -812,25 +811,19 @@ export function populateSpeciesDropdown(selectId = 'species-select', defaultSpec
     // Clear existing options
     selectElement.innerHTML = '';
     
+    // Add default "Select one" option at the top
+    const defaultOption = '<option value="" disabled selected>-- Select a species --</option>';
+    
     // Create options from speciesData, sorted alphabetically by name
     const speciesOptions = Object.entries(speciesData)
         .sort(([, a], [, b]) => a.name.localeCompare(b.name))
         .map(([key, species]) => `<option value="${key}">${species.name}</option>`)
         .join('');
     
-    selectElement.innerHTML = speciesOptions;
+    selectElement.innerHTML = defaultOption + speciesOptions;
     
-    // Set default selection if species exists
-    if (speciesData[defaultSpecies]) {
-        selectElement.value = defaultSpecies;
-    } else {
-        // Fallback to first available species
-        const firstKey = Object.keys(speciesData)[0];
-        if (firstKey) {
-            selectElement.value = firstKey;
-            console.warn(`Default species '${defaultSpecies}' not found, using '${firstKey}'`);
-        }
-    }
+    // Leave the default "Select a species" option selected
+    // Don't auto-select any specific species
     
     console.log(`✅ Species dropdown populated with ${Object.keys(speciesData).length} species`);
 }

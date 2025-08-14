@@ -109,7 +109,28 @@ export function displaySpeciesInfo(speciesKey) {
  */
 export function displayCountyInfo(county, countyKey = null) {
     const speciesSelect = document.getElementById('species-select');
-    const currentSpecies = speciesSelect?.value || 'chanterelles';
+    const currentSpecies = speciesSelect?.value || null;
+    
+    // If no species is selected, show a message
+    if (!currentSpecies) {
+        const countyPanel = document.getElementById('county-info');
+        if (countyPanel) {
+            countyPanel.innerHTML = `
+                <div class="county-details">
+                    <div class="county-header">
+                        <h3>📍 ${county} Information</h3>
+                    </div>
+                    <div class="no-species-message">
+                        <p><strong>Please select a species first</strong></p>
+                        <p>Choose a mushroom species from the dropdown above to see detailed information and probability rankings for ${county}.</p>
+                    </div>
+                </div>
+            `;
+            countyPanel.style.display = 'block';
+            countyPanel.scrollIntoView({ behavior: 'smooth' });
+        }
+        return;
+    }
     
     // If no countyKey provided, try to derive it from county name
     if (!countyKey) {
@@ -1329,21 +1350,10 @@ export function initInteractions() {
     const speciesSelect = document.getElementById('species-select');
     if (speciesSelect) {
         // Populate species dropdown using the proper function
-        populateSpeciesDropdown('species-select', 'chanterelles');
+        populateSpeciesDropdown('species-select');
         
-        // Set default selection and display
-        const defaultSpecies = 'chanterelles';
-        if (speciesSelect.querySelector(`option[value="${defaultSpecies}"]`)) {
-            speciesSelect.value = defaultSpecies;
-            displaySpeciesInfo(defaultSpecies);
-        } else {
-            // Fallback to first option if chanterelles not found
-            const firstOption = speciesSelect.querySelector('option');
-            if (firstOption) {
-                speciesSelect.value = firstOption.value;
-                displaySpeciesInfo(firstOption.value);
-            }
-        }
+        // Don't auto-select any species - let user choose
+        // The dropdown will show "-- Select a species --" by default
         
         // Add change handler
         speciesSelect.addEventListener('change', handleSpeciesChange);
