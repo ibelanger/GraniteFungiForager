@@ -111,6 +111,23 @@ export function displayCountyInfo(county, countyKey = null) {
     const speciesSelect = document.getElementById('species-select');
     const currentSpecies = speciesSelect?.value || null;
     
+    // If no countyKey provided, try to derive it from county name
+    if (!countyKey) {
+        const keyMap = {
+            'Coos County': 'coos',
+            'Grafton County': 'grafton', 
+            'Carroll County': 'carroll',
+            'Sullivan County': 'sullivan',
+            'Merrimack County': 'merrimack',
+            'Belknap County': 'belknap',
+            'Cheshire County': 'cheshire',
+            'Hillsborough County': 'hillsborough',
+            'Strafford County': 'strafford',
+            'Rockingham County': 'rockingham'
+        };
+        countyKey = keyMap[county] || county.toLowerCase();
+    }
+    
     // If no species is selected, show a message
     if (!currentSpecies) {
         const countyPanel = document.getElementById('county-info');
@@ -130,23 +147,6 @@ export function displayCountyInfo(county, countyKey = null) {
             countyPanel.scrollIntoView({ behavior: 'smooth' });
         }
         return;
-    }
-    
-    // If no countyKey provided, try to derive it from county name
-    if (!countyKey) {
-        const keyMap = {
-            'Coos County': 'coos',
-            'Grafton County': 'grafton', 
-            'Carroll County': 'carroll',
-            'Sullivan County': 'sullivan',
-            'Merrimack County': 'merrimack',
-            'Belknap County': 'belknap',
-            'Cheshire County': 'cheshire',
-            'Hillsborough County': 'hillsborough',
-            'Strafford County': 'strafford',
-            'Rockingham County': 'rockingham'
-        };
-        countyKey = keyMap[county] || county.toLowerCase();
     }
     
     // Get county information
