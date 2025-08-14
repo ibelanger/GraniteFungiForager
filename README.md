@@ -1,33 +1,50 @@
-# 🍄 GraniteFungiForager v3.1
+# 🍄 GraniteFungiForager v3.2
 
 **GraniteFungiForager** - NH Tier 1 Wild Mushroom Probability Map with interactive foraging conditions based on real-time weather data and mycological expertise.
 
 ## 🌐 **LIVE APPLICATION**
 **Try it now:** https://ibelanger.github.io/GraniteFungiForager/
 
+## 🆕 **What's New in v3.2** (August 2024)
+
+### 🎯 Enhanced User Experience
+- **Top 5 Species Rankings** - Click any county to see the 5 most likely species with current conditions
+- **Visual Condition Indicators** - See temperature, moisture, and seasonal matches at a glance
+- **Improved Species Selection** - Alphabetical ordering with clear "Select a species" default
+- **Fixed Tooltip System** - Single, enhanced tooltips with species-specific information
+
+### 🍄 Expanded Species Database
+- **King Bolete Complex Breakdown** - 7 individual Boletus species with distinct ecological requirements
+- **29 Total Species** - Complete DHHS Tier 1 coverage plus subspecies variations
+- **Enhanced Species Cards** - Detailed identification notes and habitat preferences
+
+### 🗺️ Better Map Interaction
+- **No-Species-Selected Handling** - Clear messaging when no species is chosen
+- **Neutral Map Colors** - Visual feedback when no species is active
+- **Enhanced County Clicks** - Immediate feedback and smooth scrolling to information
+
 ## 📋 **DHHS Compliance**
-✅ **Complete with ALL 23 official DHHS Tier 1 species** (February 2024)
+✅ **Complete with ALL 29 species variants** (Updated August 2024)
 ✅ **Scientifically accurate subspecies** (Boletus 7-species, Hedgehog 3-subgenera)
 ✅ **Real-time weather integration** for probability calculations
 
 GraniteFungiForager is the most comprehensive tool for New Hampshire mushroom foragers, providing county-specific probability maps, detailed species identification, and public lands recommendations.
 
 🔍 **Key Features**
-- **Complete DHHS Tier 1 Species Database** - All 23 officially approved species
-- **Real-time Weather Integration** - Live probability calculations
-- **Interactive County Map** - Click for detailed recommendations
-- **Scientific Accuracy** - Subspecies groups and identification notes
+- **Complete DHHS Tier 1 Species Database** - 29 species including subspecies variants
+- **Real-time Weather Integration** - Live probability calculations with 5-minute auto-refresh
+- **Interactive County Map** - Click for detailed recommendations and top species rankings
+- **Scientific Accuracy** - Individual species with distinct ecological requirements
 - **Public Lands Database** - GPS coordinates and access information
-- **Mobile Responsive** - Works on all devices
+- **Mobile Responsive** - Optimized for field use on all devices
+- **Community Data** - Foraging success tracking and validation system
 
-🛠️ **Built using:** Vanilla HTML, CSS, JavaScript (client-side only for now)
+🛠️ **Built using:** Vanilla HTML, CSS, JavaScript (client-side only)
 
 📌 **License & Future Plans**  
 This project is licensed under the [MIT License](./LICENSE), allowing free use and contributions.
 
 ⚠️ **Heads up:** Future versions of this project may include premium features or datasets offered under a separate commercial license. Community contributions and feedback are encouraged!
-
-markdown# 🍄 GraniteFungiForager v3.0
 
 ## 🏗️ Project Structure
 NHMushroom/

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**GraniteFungiForager v3.1** is a client-side web application that provides interactive probability maps for foraging New Hampshire's official DHHS Tier 1 wild mushroom species. The application combines real-time weather data with mycological expertise to calculate county-specific foraging probabilities.
+**GraniteFungiForager v3.2** is a client-side web application that provides interactive probability maps for foraging New Hampshire's official DHHS Tier 1 wild mushroom species. The application combines real-time weather data with mycological expertise to calculate county-specific foraging probabilities.
 
 **Live Application:** https://ibelanger.github.io/GraniteFungiForager/
 
@@ -44,7 +44,7 @@ The application uses **modular ES6 JavaScript** with a clean separation of conce
    - Auto-refresh system (5-minute intervals)
 
 2. **`species.js`** - Species database and identification
-   - Complete DHHS Tier 1 species data (23 official species)
+   - Complete DHHS Tier 1 species data (29 species including subspecies variations)
    - Specialized support for Boletus 7-species group and Hedgehog 3-subgenera
    - Temperature ranges, moisture requirements, seasonal multipliers
    - Host tree associations and microhabitat preferences
