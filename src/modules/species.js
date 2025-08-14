@@ -812,10 +812,11 @@ export function populateSpeciesDropdown(selectId = 'species-select', defaultSpec
     // Clear existing options
     selectElement.innerHTML = '';
     
-    // Create options from speciesData
-    const speciesOptions = Object.entries(speciesData).map(([key, species]) => 
-        `<option value="${key}">${species.name}</option>`
-    ).join('');
+    // Create options from speciesData, sorted alphabetically by name
+    const speciesOptions = Object.entries(speciesData)
+        .sort(([, a], [, b]) => a.name.localeCompare(b.name))
+        .map(([key, species]) => `<option value="${key}">${species.name}</option>`)
+        .join('');
     
     selectElement.innerHTML = speciesOptions;
     
