@@ -109,7 +109,7 @@ export function displaySpeciesInfo(speciesKey) {
  */
 export function displayCountyInfo(county, countyKey = null) {
     const speciesSelect = document.getElementById('species-select');
-    const currentSpecies = speciesSelect?.value || null;
+    const currentSpecies = (speciesSelect?.value && speciesSelect.value !== '') ? speciesSelect.value : null;
     
     // If no countyKey provided, try to derive it from county name
     if (!countyKey) {
@@ -127,32 +127,6 @@ export function displayCountyInfo(county, countyKey = null) {
         };
         countyKey = keyMap[county] || county.toLowerCase();
     }
-    
-    // If no species is selected, show a message
-    if (!currentSpecies) {
-        const countyPanel = document.getElementById('county-info');
-        if (countyPanel) {
-            countyPanel.innerHTML = `
-                <div class="county-details">
-                    <div class="county-header">
-                        <h3>📍 ${county} Information</h3>
-                    </div>
-                    <div class="no-species-message">
-                        <p><strong>Please select a species first</strong></p>
-                        <p>Choose a mushroom species from the dropdown above to see detailed information and probability rankings for ${county}.</p>
-                    </div>
-                </div>
-            `;
-            countyPanel.style.display = 'block';
-            countyPanel.scrollIntoView({ behavior: 'smooth' });
-        }
-        return;
-    }
-    
-    // Get county information
-    const countyInfo = getCountyInfo(countyKey, currentSpecies);
-    const landData = getCountyLandData(county);
-    const topSpeciesHTML = getTopSpeciesHTML(countyKey);
     
     // Find or create county info panel on main page
     let countyPanel = document.getElementById('county-info');
@@ -174,6 +148,29 @@ export function displayCountyInfo(county, countyKey = null) {
             }
         }
     }
+    
+    // If no species is selected, show a message
+    if (!currentSpecies) {
+        countyPanel.innerHTML = `
+            <div class="county-details">
+                <div class="county-header">
+                    <h3>📍 ${county} Information</h3>
+                </div>
+                <div class="no-species-message">
+                    <p><strong>Please select a species first</strong></p>
+                    <p>Choose a mushroom species from the dropdown above to see detailed information and probability rankings for ${county}.</p>
+                </div>
+            </div>
+        `;
+        countyPanel.style.display = 'block';
+        countyPanel.scrollIntoView({ behavior: 'smooth' });
+        return;
+    }
+    
+    // Get county information
+    const countyInfo = getCountyInfo(countyKey, currentSpecies);
+    const landData = getCountyLandData(county);
+    const topSpeciesHTML = getTopSpeciesHTML(countyKey);
     
     // Update county panel content
     const countyHTML = `
@@ -1370,7 +1367,7 @@ export function initInteractions() {
     setupManualControls();
     
     // Setup map interactions
-    setupMapTooltips();
+    // setupMapTooltips(); // Removed - using enhanced tooltips only
     
     // Setup update button
     const updateButton = document.getElementById('update-map');
@@ -1472,13 +1469,36 @@ export function initEnhancedMapInteractions() {
 }
 
 function showCountyTooltip(event, countyName) {
+    const speciesSelect = document.getElementById('species-select');
+    const currentSpecies = (speciesSelect?.value && speciesSelect.value !== '') ? speciesSelect.value : null;
+    
     // Enhanced tooltip with probability info
     const tooltip = document.createElement('div');
     tooltip.className = 'enhanced-tooltip';
-    tooltip.innerHTML = `
-        <strong>${countyName.toUpperCase()}</strong><br>
-        <em>Click for detailed recommendations</em>
-    `;
+    
+    if (currentSpecies) {
+        // Get species data from the map element if available
+        const probability = event.target.getAttribute('data-probability');
+        const species = event.target.getAttribute('data-species');
+        
+        if (probability && species) {
+            tooltip.innerHTML = `
+                <strong>${countyName.toUpperCase()}</strong><br>
+                ${species}: ${probability}%<br>
+                <em>Click for detailed recommendations</em>
+            `;
+        } else {
+            tooltip.innerHTML = `
+                <strong>${countyName.toUpperCase()}</strong><br>
+                <em>Click for detailed recommendations</em>
+            `;
+        }
+    } else {
+        tooltip.innerHTML = `
+            <strong>${countyName.toUpperCase()}</strong><br>
+            <em>Select a species to see probability</em>
+        `;
+    }
     
     // Position and style tooltip
     tooltip.style.cssText = `

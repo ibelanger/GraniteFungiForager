@@ -163,7 +163,7 @@ export function getProbabilityColor(probability) {
  */
 export function updateMap(selectedSpecies = null) {
     const speciesSelect = document.getElementById('species-select');
-    const currentSpecies = selectedSpecies || speciesSelect?.value || null;
+    const currentSpecies = selectedSpecies || ((speciesSelect?.value && speciesSelect.value !== '') ? speciesSelect.value : null);
     
     // If no species is selected, reset map to neutral colors and clear tooltip data
     if (!currentSpecies) {
