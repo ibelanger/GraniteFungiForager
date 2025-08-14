@@ -113,56 +113,10 @@ python -m http.server 8000
 - **Configurable passwords** - Easy to change in `src/modules/authentication.js`
 - **Session management** - Automatic cleanup and expiration handling
 
-#### **Update Project Backlog:**
-```markdown
-# GraniteFungiForager - Project Backlog & Future Development
+## 🚀 **Development & Contributing**
 
-## 📊 **Current Status (Phase 2 Complete - Modular Architecture)**
+**Want to contribute?** Check out our [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
-### ✅ **NEW: Completed Modularization:**
-- **Complete Modular Architecture** - Separated concerns into focused modules
-- **Dynamic Species Information Display** - CRITICAL ISSUE RESOLVED ✅
-- **Enhanced Weather Integration** - Auto-refresh and county-specific data
-- **Interactive UI System** - Real-time updates and accessibility
-- **Comprehensive Public Lands Database** - All NH counties covered
-- **Professional Code Organization** - Maintainable and testable structure
+**See our roadmap:** [ACCURACY_IMPROVEMENT_PLAN.md](./ACCURACY_IMPROVEMENT_PLAN.md) shows completed features and future development.
 
-### ⚡ **Enhanced Working Features:**
-- **Modular ES6 JavaScript** - Clean import/export structure
-- **Real-time Species Cards** - Dynamic identification information
-- **County-Specific Recommendations** - Click any county for details
-- **Advanced Probability Engine** - Multi-factor calculations
-- **Mobile-Optimized Interface** - Responsive design for field use
-- **Accessibility Features** - ARIA labels, keyboard navigation
-- **Auto-refresh System** - Background weather updates
-- **Error Handling** - Graceful degradation and user feedback
-
-# 🍄 GraniteFungiForager v3.1 - Enhanced Interactive Map
-
-## 🎯 Major Improvements
-
-### 🗺️ New Grid-Based County Layout
-- **Eliminated overlapping counties** - Clean rectangular grid replaces complex polygons
-- **4-row geographic layout** - Maintains NH geography: Coos → Grafton/Belknap/Carroll → Sullivan/Merrimack/Strafford → Cheshire/Hillsborough/Rockingham
-- **Crystal clear boundaries** - No more confusion about which county you're selecting
-
-### 🎨 Professional Visual Design
-- **Enhanced typography** - Larger, bolder county labels with improved readability
-- **Smooth animations** - Professional hover effects with color changes and scaling
-- **Thematic styling** - Green forestry color scheme throughout interface
-- **Modern aesthetics** - Gradient backgrounds, drop shadows, and rounded corners
-
-### 📱 Improved User Experience
-- **Better mobile support** - Rectangular shapes work perfectly on touch devices
-- **Enhanced accessibility** - Keyboard navigation and improved contrast
-- **Geographic context** - Icons showing mountains, lakes, forests, and coastline
-- **Intuitive interactions** - Clear visual feedback for all user actions
-
-## 🔧 Technical Enhancements
-- Maintained all existing modular architecture
-- Preserved weather API integration and species calculations
-- Enhanced CSS with modern styling techniques
-- Improved click handling and event management
-
-## 🚀 Migration from V7/V8
-This release addresses the map visualization regression noted in previous builds while maintaining all the functional improvements from the modular architecture.
+**Technical Documentation:** [CLAUDE.md](./CLAUDE.md) contains detailed architecture and development guidance.

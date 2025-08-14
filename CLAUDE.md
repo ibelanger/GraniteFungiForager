@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**GraniteFungiForager v3.2** is a client-side web application that provides interactive probability maps for foraging New Hampshire's official DHHS Tier 1 wild mushroom species. The application combines real-time weather data with mycological expertise to calculate county-specific foraging probabilities.
+**GraniteFungiForager v3.2.1** is a client-side web application that provides interactive probability maps for foraging New Hampshire's official DHHS Tier 1 wild mushroom species. The application combines real-time weather data with mycological expertise to calculate county-specific foraging probabilities, with conservation-focused authentication protecting sensitive location data.
 
 **Live Application:** https://ibelanger.github.io/GraniteFungiForager/
 
@@ -60,8 +60,15 @@ The application uses **modular ES6 JavaScript** with a clean separation of conce
    - Modal system for county details with accessibility features
 
 5. **`publicLands.js`** - Location recommendations
-   - GPS coordinates for public foraging locations
+   - GPS coordinates for public foraging locations (authentication protected)
    - Access information and permit requirements
+   - Integration with authentication system for conservation
+
+6. **`authentication.js`** - Location data protection
+   - Password-based authentication for sensitive GPS coordinates
+   - 24-hour session management with localStorage
+   - Conservation-focused access control system
+   - Modal interface for seamless user experience
 
 ### Data Flow
 1. **Weather Module** fetches real-time data and updates global state
@@ -73,18 +80,23 @@ The application uses **modular ES6 JavaScript** with a clean separation of conce
 - **Interactive SVG County Map:** Clean grid layout (4 rows × 3 columns) representing NH counties
 - **Real-time Weather Integration:** County-specific weather data with auto-refresh
 - **Species Information Cards:** Dynamic display with identification notes and foraging tips
+- **Authentication System:** Password protection for sensitive GPS coordinates and trail data
+- **Community Data Collection:** User success tracking, iNaturalist integration, analytics dashboard
+- **Conservation Focus:** Protects sensitive locations while maintaining educational access
 - **Accessibility:** ARIA labels, keyboard navigation, modal system
 - **Mobile Responsive:** Touch-friendly interface for field use
 - **Offline Capability:** Service worker registration (HTTPS only)
 
 ## Machine Learning Pipeline
 
-The `src/ml/accuracy-improvement-pipeline.js` contains a framework for improving prediction accuracy from 60-70% to 85-90% through:
-- User success tracking and validation
-- iNaturalist API integration for observation data
-- Expert validation systems
-- Academic research integration
-- Species-specific analyzers for complex groups (Boletus, Hedgehog, etc.)
+The `src/ml/accuracy-improvement-pipeline.js` contains a **completed framework** for improving prediction accuracy from 60-70% to 85-90% through:
+- ✅ User success tracking and validation (`foragingReports.js` - **IMPLEMENTED**)
+- ✅ iNaturalist API integration for observation data (`iNaturalistIntegration.js` - **IMPLEMENTED**)  
+- ⏳ Expert validation systems (framework exists, partnerships needed)
+- ⏳ Academic research integration (ongoing literature review)
+- ✅ Species-specific analyzers for complex groups (Boletus, Hedgehog, etc. - **IMPLEMENTED**)
+
+**Current Status:** All technical infrastructure is complete and deployed. The system is ready for data collection and model training once sufficient user reports are gathered.
 
 ## Important Technical Notes
 
@@ -105,11 +117,20 @@ The `src/ml/accuracy-improvement-pipeline.js` contains a framework for improving
 - Color-coded probability visualization with smooth transitions
 - Icons show geographic features (mountains 🏔️, lakes 🌊, forests 🌲, coast 🌊)
 
+### Authentication System
+- Uses simple password-based authentication (`granite2024`, `forager123`)
+- Client-side only implementation suitable for conservation purposes (not high-security)
+- 24-hour session persistence using localStorage with automatic cleanup
+- Event-driven UI updates (`authStateChanged` custom events)
+- Protected data: GPS coordinates, trail names, parking locations, contact information
+- Public data: Climate information, soil types, elevation ranges, seasonal timing
+
 ### Performance Considerations
 - Auto-refresh pauses when tab is not visible
 - Weather data cached to prevent excessive API calls
 - Modal system with proper cleanup and event management
 - Responsive design optimized for mobile field use
+- Authentication state managed efficiently with minimal storage footprint
 
 ## Safety and Compliance
 
