@@ -239,6 +239,61 @@ export function getCountyInfo(county, species) {
 }
 
 /**
+ * Get top N most likely species for a county based on current conditions
+ * @param {string} county - County name
+ * @param {number} topCount - Number of top species to return (default 5)
+ * @returns {Array} Array of species objects sorted by probability
+ */
+export function getTopSpeciesForCounty(county, topCount = 5) {
+    const region = countyRegions[county];
+    const weather = getWeatherData(county);
+    
+    if (!region || !weather) {
+        return [];
+    }
+    
+    // Calculate probabilities for all species
+    const speciesRankings = [];
+    
+    for (const [speciesKey, speciesInfo] of Object.entries(speciesData)) {
+        const probability = calculateProbability(speciesKey, weather, region);
+        
+        speciesRankings.push({
+            key: speciesKey,
+            name: speciesInfo.name,
+            probability: probability,
+            color: getProbabilityColor(probability),
+            tempRange: speciesInfo.tempRange,
+            moistureMin: speciesInfo.moistureMin,
+            seasonMultiplier: speciesInfo.seasonMultiplier,
+            hostTrees: speciesInfo.hostTrees || [],
+            microhabitat: speciesInfo.microhabitat || '',
+            // Add current conditions context
+            currentTemp: weather.temperature,
+            currentMoisture: weather.rainfall,
+            currentSeason: getCurrentSeason()
+        });
+    }
+    
+    // Sort by probability (highest first) and return top N
+    return speciesRankings
+        .sort((a, b) => b.probability - a.probability)
+        .slice(0, topCount);
+}
+
+/**
+ * Get current season based on date
+ * @returns {string} Current season
+ */
+function getCurrentSeason() {
+    const month = new Date().getMonth() + 1; // 1-12
+    if (month >= 3 && month <= 5) return 'spring';
+    if (month >= 6 && month <= 8) return 'summer';
+    if (month >= 9 && month <= 11) return 'fall';
+    return 'winter';
+}
+
+/**
  * Generate specific recommendations for county/species combination
  * @param {string} county - County name
  * @param {string} species - Species key

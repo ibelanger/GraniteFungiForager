@@ -2,7 +2,7 @@
 
 import { speciesData, populateSpeciesDropdown } from './species.js';
 import { getCountyLandData } from './publicLands.js';
-import { getCountyInfo, updateMap } from './mapCalculations.js';
+import { getCountyInfo, updateMap, getTopSpeciesForCounty } from './mapCalculations.js';
 import { updateWeatherDisplay } from './weather.js';
 import { reportsManager } from './foragingReports.js';
 import { observationAnalyzer } from './observationAnalysis.js';
@@ -168,6 +168,13 @@ export function displayCountyInfo(county, countyKey = null) {
             
             <div class="probability-display" style="background-color: ${countyInfo.color};">
                 <h4>${countyInfo.species} Probability: ${(countyInfo.probability * 100).toFixed(1)}%</h4>
+            </div>
+            
+            <div class="top-species">
+                <h4>🏆 Top 5 Most Likely Species (Current Conditions)</h4>
+                <div class="species-rankings">
+                    ${getTopSpeciesHTML(countyKey)}
+                </div>
             </div>
             
             <div class="current-conditions">
@@ -1479,3 +1486,78 @@ function hideCountyTooltip() {
         tooltip.remove();
     }
 }
+
+/**
+ * Generate HTML for top species rankings
+ * @param {string} countyKey - County key for calculations
+ * @returns {string} HTML string for top species display
+ */
+function getTopSpeciesHTML(countyKey) {
+    const topSpecies = getTopSpeciesForCounty(countyKey, 5);
+    
+    if (!topSpecies || topSpecies.length === 0) {
+        return '<p class="no-data">Unable to calculate species rankings - weather data unavailable</p>';
+    }
+    
+    return topSpecies.map((species, index) => {
+        const rank = index + 1;
+        const probabilityPercent = (species.probability * 100).toFixed(1);
+        const rankEmoji = getRankEmoji(rank);
+        
+        // Create condition indicators
+        const tempMatch = species.currentTemp >= species.tempRange[0] && species.currentTemp <= species.tempRange[1];
+        const moistureMatch = species.currentMoisture >= species.moistureMin;
+        const seasonMultiplier = species.seasonMultiplier[species.currentSeason] || 0;
+        
+        return `
+            <div class="species-rank-item" onclick="selectSpeciesFromRanking('${species.key}')" 
+                 style="border-left: 4px solid ${species.color}; cursor: pointer;">
+                <div class="rank-header">
+                    <span class="rank-number">${rankEmoji} #${rank}</span>
+                    <span class="probability-badge" style="background-color: ${species.color};">
+                        ${probabilityPercent}%
+                    </span>
+                </div>
+                <div class="species-name">${species.name}</div>
+                <div class="species-details">
+                    <div class="condition-indicators">
+                        <span class="indicator ${tempMatch ? 'good' : 'poor'}" title="Temperature match">
+                            🌡️ ${tempMatch ? '✅' : '❌'} Temp
+                        </span>
+                        <span class="indicator ${moistureMatch ? 'good' : 'poor'}" title="Moisture requirement">
+                            💧 ${moistureMatch ? '✅' : '❌'} Moisture  
+                        </span>
+                        <span class="indicator ${seasonMultiplier > 0.5 ? 'good' : seasonMultiplier > 0.2 ? 'fair' : 'poor'}" title="Seasonal timing">
+                            📅 ${seasonMultiplier > 0.5 ? '✅' : seasonMultiplier > 0.2 ? '⚠️' : '❌'} Season
+                        </span>
+                    </div>
+                    <div class="habitat-hint">
+                        ${species.hostTrees.slice(0, 2).join(', ')} ${species.hostTrees.length > 2 ? '...' : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+/**
+ * Get emoji for ranking position
+ * @param {number} rank - Ranking position (1-5)
+ * @returns {string} Appropriate emoji
+ */
+function getRankEmoji(rank) {
+    const emojis = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
+    return emojis[rank - 1] || '🔢';
+}
+
+/**
+ * Handle species selection from ranking
+ * @param {string} speciesKey - Species key to select
+ */
+window.selectSpeciesFromRanking = function(speciesKey) {
+    const speciesSelect = document.getElementById('species-select');
+    if (speciesSelect) {
+        speciesSelect.value = speciesKey;
+        speciesSelect.dispatchEvent(new Event('change'));
+    }
+};

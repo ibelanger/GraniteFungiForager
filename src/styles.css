@@ -1924,3 +1924,143 @@ input[type="checkbox"] {
         align-items: flex-start;
     }
 }
+
+/* Top Species Rankings Styles */
+.top-species {
+    margin: 15px 0;
+    padding: 15px;
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.top-species h4 {
+    margin: 0 0 15px 0;
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.species-rankings {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.species-rank-item {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    padding: 12px;
+    border-left: 4px solid var(--accent-color);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.species-rank-item:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: translateX(4px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.rank-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.rank-number {
+    font-weight: bold;
+    color: var(--primary-color);
+    font-size: 0.9rem;
+}
+
+.probability-badge {
+    background: var(--accent-color);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.species-name {
+    font-weight: bold;
+    color: var(--text-color);
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.species-details {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.condition-indicators {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.indicator {
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.indicator.good {
+    background: rgba(50, 205, 50, 0.2);
+    color: #228B22;
+}
+
+.indicator.fair {
+    background: rgba(255, 215, 0, 0.3);
+    color: #B8860B;
+}
+
+.indicator.poor {
+    background: rgba(255, 68, 68, 0.2);
+    color: #DC143C;
+}
+
+.habitat-hint {
+    font-size: 0.8rem;
+    color: var(--secondary-color);
+    font-style: italic;
+}
+
+.no-data {
+    text-align: center;
+    color: var(--secondary-color);
+    font-style: italic;
+    padding: 20px;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Mobile responsive adjustments for rankings */
+@media (max-width: 768px) {
+    .species-rank-item {
+        padding: 10px;
+    }
+    
+    .rank-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    
+    .condition-indicators {
+        gap: 4px;
+    }
+    
+    .indicator {
+        font-size: 0.7rem;
+        padding: 1px 4px;
+    }
+}
