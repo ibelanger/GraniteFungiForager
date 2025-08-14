@@ -1,7 +1,7 @@
 // interactions.js - User interface interaction handlers
 
 import { speciesData, populateSpeciesDropdown } from './species.js';
-import { getCountyLandData } from './publicLands.js';
+import { getCountyLandData, requestLocationAccess } from './publicLands.js';
 import { getCountyInfo, updateMap, getTopSpeciesForCounty } from './mapCalculations.js';
 import { updateWeatherDisplay } from './weather.js';
 import { reportsManager } from './foragingReports.js';
@@ -233,7 +233,7 @@ export function displayCountyInfo(county, countyKey = null) {
             </div>
             ` : ''}
             
-            ${landData && landData.landsBySpecies ? `
+            ${landData && landData.landsBySpecies && !landData.authRequired ? `
             <div class="locations-info">
                 <h4>📍 Specific Locations by Species</h4>
                 <div class="locations-grid">
@@ -251,6 +251,22 @@ export function displayCountyInfo(county, countyKey = null) {
                             `).join('')}
                         </div>
                     `).join('')}
+                </div>
+            </div>
+            ` : ''}
+            
+            ${landData && landData.authRequired ? `
+            <div class="locations-info auth-required">
+                <h4>🔒 Detailed Location Information</h4>
+                <div class="auth-message">
+                    <p><strong>Location data protected</strong></p>
+                    <p>${landData.message}</p>
+                    <button class="auth-btn" onclick="requestLocationAccess()">
+                        🔑 Access Location Data
+                    </button>
+                    <div class="sustainability-note">
+                        <p><small>🌱 <strong>Sustainability:</strong> Specific GPS coordinates and trail access information are protected to prevent over-harvesting and preserve these locations for future generations.</small></p>
+                    </div>
                 </div>
             </div>
             ` : ''}
@@ -1377,6 +1393,7 @@ export function initInteractions() {
     
     // Make functions globally available for onclick handlers
     window.closeCountyModal = closeCountyModal;
+    window.displayCountyInfo = displayCountyInfo;
     window.openForagingReport = openForagingReport;
     window.closeForagingReport = closeForagingReport;
     window.showForagingStats = showForagingStats;
@@ -1387,6 +1404,7 @@ export function initInteractions() {
     window.downloadCSV = downloadCSV;
     window.validateWithiNaturalist = validateWithiNaturalist;
     window.closeValidationResults = closeValidationResults;
+    window.requestLocationAccess = requestLocationAccess;
     
     console.log('UI interactions initialized');
 }
@@ -1605,3 +1623,51 @@ window.selectSpeciesFromRanking = function(speciesKey) {
         speciesSelect.dispatchEvent(new Event('change'));
     }
 };
+
+/**
+ * Listen for authentication state changes to refresh county displays
+ */
+document.addEventListener('authStateChanged', function(e) {
+    // Check both county-info panel (main page) and county-modal (modal view)
+    const countyPanel = document.getElementById('county-info');
+    const countyModal = document.getElementById('county-modal');
+    
+    let targetElement = null;
+    let isModal = false;
+    
+    // Check if county info panel is visible
+    if (countyPanel && countyPanel.style.display !== 'none') {
+        targetElement = countyPanel;
+        isModal = false;
+    } 
+    // Check if county modal is visible
+    else if (countyModal && countyModal.style.display !== 'none') {
+        targetElement = countyModal.querySelector('#county-modal-content');
+        isModal = true;
+    }
+    
+    if (targetElement) {
+        // Extract county name from the displayed content
+        const countyTitle = targetElement.querySelector('h3');
+        
+        if (countyTitle) {
+            const countyText = countyTitle.textContent;
+            const currentSpecies = document.getElementById('species-select')?.value;
+            
+            // Re-show the county information with updated authentication status
+            const match = countyText.match(/📍 (.+?) Information|Information for (.+)/);
+            
+            if (match && currentSpecies) {
+                const countyDisplayName = match[1] || match[2];
+                
+                if (isModal) {
+                    // For modal, we need to trigger the modal display logic
+                    window.displayCountyInfo(countyDisplayName, null);
+                } else {
+                    // For main page panel, just refresh
+                    window.displayCountyInfo(countyDisplayName, null);
+                }
+            }
+        }
+    }
+});

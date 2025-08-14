@@ -1,4 +1,7 @@
 // publicLand.js - Public land data and recommendations
+// v3.2.1: Location data now protected behind authentication
+
+import { auth } from './authentication.js';
 
 // Enhanced Public Land Data - Species-Specific Locations
 export const publicLandData = {
@@ -874,14 +877,7 @@ export function updateRecommendations(county, speciesKey, publicLandData) {
     recDiv.innerHTML = html;
 }
 
-/**
- * Get public land recommendations for a specific county
- * @param {string} county - County name
- * @returns {Object} County-specific land data  
- */
-export function getCountyLandData(county) {
-    return publicLandData[county] || null;
-}
+// getCountyLandData function moved to end of file with authentication
 
 /**
  * Helper function to get land data for both old 'kingbolete' key and new individual Boletus species
@@ -907,4 +903,38 @@ export function getSpeciesLandData(landsBySpecies, speciesKey) {
     
     // For all other species, return data directly
     return landsBySpecies[speciesKey] || [];
+}
+
+/**
+ * Get county land data with authentication check for sensitive location information
+ * @param {string} countyName - Name of the county
+ * @returns {Object} County data with location info conditionally included
+ */
+export function getCountyLandData(countyName) {
+    const countyData = publicLandData[countyName];
+    if (!countyData) return null;
+    
+    // Always return general information (habitat, climate, etc.)
+    const result = {
+        general: countyData.general
+    };
+    
+    // Only include specific location data if authenticated
+    if (auth.hasLocationAccess()) {
+        result.landsBySpecies = countyData.landsBySpecies;
+    } else {
+        // Return limited information for unauthenticated users
+        result.landsBySpecies = null;
+        result.authRequired = true;
+        result.message = "Detailed location information requires authentication to prevent over-harvesting.";
+    }
+    
+    return result;
+}
+
+/**
+ * Show authentication modal for location access
+ */
+export function requestLocationAccess() {
+    return auth.showLoginModal();
 }
