@@ -83,8 +83,13 @@ class MushroomApp {
         console.log('UI interactions initialized');
         
         // Initialize enhanced map interactions (county click handlers)
-        initEnhancedMapInteractions();
-        console.log('Enhanced map interactions initialized');
+        try {
+            console.log('🔍 About to call initEnhancedMapInteractions()');
+            initEnhancedMapInteractions();
+            console.log('Enhanced map interactions initialized');
+        } catch (error) {
+            console.error('🔥 Error in initEnhancedMapInteractions():', error);
+        }
         
         // Setup additional event listeners
         this.setupGlobalEventListeners();

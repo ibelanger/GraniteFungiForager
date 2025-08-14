@@ -1385,9 +1385,12 @@ window.clearCountyInfo = clearCountyInfo;
 
 // Add to your existing interactions.js module
 export function initEnhancedMapInteractions() {
+    console.log('🔍 initEnhancedMapInteractions called');
     const counties = document.querySelectorAll('.county');
+    console.log('🔍 Found', counties.length, 'counties');
     
     counties.forEach(county => {
+        console.log('🔍 Setting up handlers for county:', county.dataset.county);
         // Enhanced hover effects
         county.addEventListener('mouseenter', (e) => {
             const countyKey = e.target.dataset.county;
