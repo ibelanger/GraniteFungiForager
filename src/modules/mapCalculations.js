@@ -100,9 +100,21 @@ function applySpeciesAdjustments(speciesKey, baseProbability, weather, season) {
             }
             break;
             
-        case 'kingbolete':
-            // King boletes prefer cooler, moist conditions
+        case 'boletusSubcaerulescens':
+        case 'boletusEdulis': 
+        case 'boletusChippewaensis':
+            // Conifer boletes prefer cooler, moist conditions
             if (weather.soilTemp < 70 && weather.rainfall > 2.0) {
+                adjustedProbability *= 1.3;
+            }
+            break;
+            
+        case 'boletusVariipes':
+        case 'boletusAtkinsonii':
+        case 'boletus_separans':
+        case 'boletusNobilis':
+            // Deciduous boletes prefer slightly warmer, moist conditions
+            if (weather.soilTemp >= 60 && weather.soilTemp < 75 && weather.rainfall > 1.8) {
                 adjustedProbability *= 1.25;
             }
             break;

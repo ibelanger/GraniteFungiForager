@@ -270,33 +270,180 @@ export const speciesData = {
             'Seacoast': 0.6
         }
     },
-    kingbolete: {
-        name: 'King Bolete Complex (Boletus edulis group - 7 species)',
+    // King Bolete Complex - Split into Individual Species
+    boletusSubcaerulescens: {
+        name: 'Pine King Bolete (Boletus subcaerulescens)',
+        tempRange: [50, 70],
+        moistureMin: 2.0,
+        seasonMultiplier: { spring: 0.1, summer: 0.8, fall: 1.0 },
+        hostTrees: ['pine', 'norway spruce', 'spruce'],
+        microhabitat: 'conifer forests, especially pine and Norway spruce plantations',
+        soilPreference: 'acidic, well-drained conifer soils',
+        identificationNotes: {
+            'Cap': 'Bun brown to reddish-brown, smooth to slightly velvety',
+            'Pores': 'White when young, becoming yellowish, bruising blue-gray',
+            'Stipe': 'White-to-brown reticulation, distinctive bluish-gray bruising',
+            'Habitat': 'Specifically with pines and Norway spruce',
+            'Bruising': 'Notable bluish-gray color when cut or bruised'
+        },
+        regions: {
+            'Great North Woods': 0.9,  // Excellent conifer habitat
+            'White Mountains': 0.8,   // Good mixed conifer forests
+            'Dartmouth-Sunapee': 0.6, // Some conifer stands
+            'Merrimack Valley': 0.5,  // Limited conifer habitat
+            'Lakes Region': 0.7,      // Good conifer areas
+            'Monadnock Region': 0.6,  // Some conifer stands
+            'Seacoast': 0.4          // Limited conifer habitat
+        }
+    },
+    boletusVariipes: {
+        name: 'Two-colored King Bolete (Boletus variipes)',
+        tempRange: [60, 75],
+        moistureMin: 2.0,
+        seasonMultiplier: { spring: 0.1, summer: 1.0, fall: 0.8 },
+        hostTrees: ['oak', 'beech', 'mixed hardwood'],
+        microhabitat: 'oak-beech forests, mature hardwood stands',
+        soilPreference: 'rich, well-drained hardwood forest soils',
+        identificationNotes: {
+            'Cap': 'Pale lemon yellow with rusty patches, distinctive two-toned appearance',
+            'Pores': 'White to pale yellow, slowly bruising blue',
+            'Stipe': 'Grayish stem with white reticulation',
+            'Season': 'Peak July through September',
+            'Habitat': 'Specifically oak-beech forests'
+        },
+        regions: {
+            'Great North Woods': 0.5,
+            'White Mountains': 0.7,
+            'Dartmouth-Sunapee': 0.8,  // Good oak-beech habitat
+            'Merrimack Valley': 0.7,
+            'Lakes Region': 0.6,
+            'Monadnock Region': 0.9,   // Excellent oak-beech forests
+            'Seacoast': 0.6
+        }
+    },
+    boletusEdulis: {
+        name: 'King Bolete (Boletus edulis var. chippewaensis)',
         tempRange: [55, 75],
         moistureMin: 2.0,
         seasonMultiplier: { spring: 0.2, summer: 0.8, fall: 1.0 },
-        hostTrees: ['spruce', 'pine', 'hemlock', 'norway spruce', 'oak', 'beech', 'mixed'],
-        microhabitat: 'conifer forests, mixed deciduous, oak-beech forests',
-        soilPreference: 'well-drained, rich, varied by species',
+        hostTrees: ['spruce', 'fir', 'hemlock', 'conifer'],
+        microhabitat: 'mature conifer forests, especially spruce-fir',
+        soilPreference: 'acidic, rich conifer forest soils',
         identificationNotes: {
-            'Cap': 'Brown variations - bun brown to pale lemon yellow with rusty patches',
-            'Pores': 'White to yellow, bruising patterns vary by species',
-            'Stipe': 'Reticulation patterns key to identification',
-            'B_subcaerulescens': 'Pines/Norway spruce, white-to-brown reticulation, bluish-gray bruising',
-            'B_variipes': 'Oak-beech forests, July-Sept, grayish stem with white reticulation', 
-            'B_edulis_chippewaensis': 'Conifer forests, summer-fall, olivebrown vs yellowish spores',
-            'B_atkinsonii': 'Mixed deciduous, beech-oak, brown reticulation, cracked cap',
-            'B_separans': 'Mixed deciduous, lilac tints, fine white reticulation',
-            'B_nobilis': 'Mixed deciduous, tall stature (2-3x cap diameter), minimal reticulation'
+            'Cap': 'Brown to reddish-brown, classic king bolete appearance',
+            'Pores': 'White when young, becoming yellow-green with age',
+            'Stipe': 'White reticulation on brown background',
+            'Spores': 'Olive-brown (vs yellowish in European B. edulis)',
+            'Season': 'Summer through fall in conifer forests'
         },
         regions: {
-            'Great North Woods': 0.75, // Higher conifer density favors B. subcaerulescens
-            'White Mountains': 0.85, // Excellent mixed habitat for multiple species
-            'Dartmouth-Sunapee': 0.7, // Good oak-beech for B. variipes, B. atkinsonii
-            'Merrimack Valley': 0.65, // Mixed forests, moderate elevation
-            'Lakes Region': 0.7, // Diverse habitats support multiple species
-            'Monadnock Region': 0.75, // Strong oak-beech forests for deciduous species
-            'Seacoast': 0.5 // Limited elevation and conifer habitat
+            'Great North Woods': 0.9,
+            'White Mountains': 0.9,
+            'Dartmouth-Sunapee': 0.6,
+            'Merrimack Valley': 0.5,
+            'Lakes Region': 0.7,
+            'Monadnock Region': 0.6,
+            'Seacoast': 0.3
+        }
+    },
+    boletusAtkinsonii: {
+        name: 'Atkinson\'s King Bolete (Boletus atkinsonii)',
+        tempRange: [55, 75],
+        moistureMin: 1.8,
+        seasonMultiplier: { spring: 0.2, summer: 0.8, fall: 1.0 },
+        hostTrees: ['beech', 'oak', 'mixed deciduous'],
+        microhabitat: 'mixed deciduous forests, especially beech-oak associations',
+        soilPreference: 'rich, well-drained deciduous forest soils',
+        identificationNotes: {
+            'Cap': 'Brown with tendency to crack, areolate surface',
+            'Pores': 'White to yellow, bruising blue',
+            'Stipe': 'Brown reticulation, often extensive',
+            'Surface': 'Cap frequently shows cracking pattern',
+            'Habitat': 'Mixed deciduous, particularly beech-oak'
+        },
+        regions: {
+            'Great North Woods': 0.6,
+            'White Mountains': 0.7,
+            'Dartmouth-Sunapee': 0.8,
+            'Merrimack Valley': 0.7,
+            'Lakes Region': 0.6,
+            'Monadnock Region': 0.8,
+            'Seacoast': 0.5
+        }
+    },
+    boletus_separans: {
+        name: 'Lilac-tinted King Bolete (Boletus separans)',
+        tempRange: [55, 75],
+        moistureMin: 1.8,
+        seasonMultiplier: { spring: 0.2, summer: 0.7, fall: 1.0 },
+        hostTrees: ['mixed deciduous', 'oak', 'hickory'],
+        microhabitat: 'mixed deciduous forests, oak-hickory associations',
+        soilPreference: 'rich, slightly acidic deciduous forest soils',
+        identificationNotes: {
+            'Cap': 'Brown with subtle lilac or purplish tints',
+            'Pores': 'White to pale yellow',
+            'Stipe': 'Fine white reticulation, often delicate pattern',
+            'Color': 'Distinctive lilac tints distinguish from other species',
+            'Reticulation': 'Very fine, lace-like white pattern on stem'
+        },
+        regions: {
+            'Great North Woods': 0.4,
+            'White Mountains': 0.6,
+            'Dartmouth-Sunapee': 0.7,
+            'Merrimack Valley': 0.6,
+            'Lakes Region': 0.5,
+            'Monadnock Region': 0.7,
+            'Seacoast': 0.4
+        }
+    },
+    boletusNobilis: {
+        name: 'Noble King Bolete (Boletus nobilis)',
+        tempRange: [55, 75],
+        moistureMin: 2.0,
+        seasonMultiplier: { spring: 0.2, summer: 0.7, fall: 1.0 },
+        hostTrees: ['mixed deciduous', 'beech', 'maple'],
+        microhabitat: 'mixed deciduous forests, rich woodland soils',
+        soilPreference: 'very rich, deep deciduous forest soils',
+        identificationNotes: {
+            'Stature': 'Very tall - stem often 2-3 times cap diameter',
+            'Cap': 'Brown, typically smaller relative to tall stem',
+            'Pores': 'White to pale yellow',
+            'Stipe': 'Minimal reticulation, very tall and stately',
+            'Proportions': 'Distinctive tall, elegant stature'
+        },
+        regions: {
+            'Great North Woods': 0.5,
+            'White Mountains': 0.6,
+            'Dartmouth-Sunapee': 0.7,
+            'Merrimack Valley': 0.6,
+            'Lakes Region': 0.5,
+            'Monadnock Region': 0.7,
+            'Seacoast': 0.4
+        }
+    },
+    boletusChippewaensis: {
+        name: 'Chippewa King Bolete (Boletus chippewaensis)',
+        tempRange: [50, 70],
+        moistureMin: 2.2,
+        seasonMultiplier: { spring: 0.1, summer: 0.9, fall: 1.0 },
+        hostTrees: ['hemlock', 'pine', 'mixed conifer'],
+        microhabitat: 'hemlock-dominated forests, cool conifer stands',
+        soilPreference: 'moist, acidic, rich conifer soils',
+        identificationNotes: {
+            'Habitat': 'Strongly associated with hemlock forests',
+            'Cap': 'Dark brown to reddish-brown',
+            'Pores': 'White when very young, quickly becoming yellow',
+            'Stipe': 'Brown reticulation on pale background',
+            'Moisture': 'Prefers more moist conditions than other boletes'
+        },
+        regions: {
+            'Great North Woods': 0.8,
+            'White Mountains': 0.9,  // Excellent hemlock habitat
+            'Dartmouth-Sunapee': 0.6,
+            'Merrimack Valley': 0.4,
+            'Lakes Region': 0.6,
+            'Monadnock Region': 0.5,
+            'Seacoast': 0.3
         }
     },
     hericium: {

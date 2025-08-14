@@ -133,7 +133,8 @@ export class AccuracyImprovementPipeline {
             'morels', // Spring timing highly location-dependent
             'matsutake', // High elevation requirements validation
             'chanterelles', // Most popular, needs highest accuracy
-            'kingbolete', // Complex 7-species group refinement
+            'boletusSubcaerulescens', 'boletusVariipes', 'boletusEdulis', 
+            'boletusAtkinsonii', 'boletus_separans', 'boletusNobilis', 'boletusChippewaensis', // Individual Boletus species
             'sweettooth' // Hedgehog subgenera differentiation
         ];
 

@@ -846,7 +846,7 @@ export function updateRecommendations(county, speciesKey, publicLandData) {
         recDiv.innerHTML = 'Select a county and species to see specific public land recommendations...';
         return;
     }
-    const lands = publicLandData[county].landsBySpecies[speciesKey];
+    const lands = getSpeciesLandData(publicLandData[county].landsBySpecies, speciesKey);
     if (!lands || lands.length === 0) {
         recDiv.innerHTML = 'No public land recommendations available for this species in this county.';
         return;
@@ -881,4 +881,30 @@ export function updateRecommendations(county, speciesKey, publicLandData) {
  */
 export function getCountyLandData(county) {
     return publicLandData[county] || null;
+}
+
+/**
+ * Helper function to get land data for both old 'kingbolete' key and new individual Boletus species
+ * @param {Object} landsBySpecies - The landsBySpecies object from county data
+ * @param {string} speciesKey - The species key to look up
+ * @returns {Array} Array of locations for the species
+ */
+export function getSpeciesLandData(landsBySpecies, speciesKey) {
+    // If it's one of the new individual Boletus species, return kingbolete data
+    const boletusSpecies = [
+        'boletusSubcaerulescens',
+        'boletusVariipes', 
+        'boletusEdulis',
+        'boletusAtkinsonii',
+        'boletus_separans',
+        'boletusNobilis',
+        'boletusChippewaensis'
+    ];
+    
+    if (boletusSpecies.includes(speciesKey)) {
+        return landsBySpecies['kingbolete'] || [];
+    }
+    
+    // For all other species, return data directly
+    return landsBySpecies[speciesKey] || [];
 }

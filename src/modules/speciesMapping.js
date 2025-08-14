@@ -223,34 +223,99 @@ export const iNatSpeciesMapping = {
         ]
     },
 
-    // King Bolete Complex (7 species)
-    kingbolete: {
+    // King Bolete Species - Broken out individually
+    boletusSubcaerulescens: {
         scientificNames: [
-            'Boletus edulis',           // Traditional King Bolete
-            'Boletus subcaerulescens',  // Pine/Norway spruce species  
-            'Boletus variipes',         // Oak-beech forests species
-            'Boletus chippewaensis',    // Conifer forests species
-            'Boletus atkinsonii',       // Mixed deciduous species
-            'Boletus separans',         // Mixed deciduous, lilac tints
-            'Boletus nobilis'           // Mixed deciduous, tall species
+            'Boletus subcaerulescens'
+        ],
+        commonNames: [
+            'Pine King Bolete',
+            'Almost Bluing King Bolete'
+        ],
+        iNatTaxonIds: [
+            194181   // B. subcaerulescens (123 observations)
+        ]
+    },
+
+    boletusVariipes: {
+        scientificNames: [
+            'Boletus variipes'
+        ],
+        commonNames: [
+            'Two-colored King Bolete',
+            'Variable-footed King Bolete'
+        ],
+        iNatTaxonIds: [
+            194218   // B. variipes (1,195 observations)
+        ]
+    },
+
+    boletusEdulis: {
+        scientificNames: [
+            'Boletus edulis',
+            'Boletus edulis var. chippewaensis'
         ],
         commonNames: [
             'King Bolete',
-            'Porcini', 
+            'Porcini',
             'Penny Bun',
-            'Almost Bluing King Bolete',
-            'Chippewa Bolete',
-            'Lilac Bolete',
-            'Noble Bolete'
+            'Chippewa King Bolete'
         ],
         iNatTaxonIds: [
             48701,   // Boletus edulis (26,352 observations)
-            194181,  // B. subcaerulescens (123 observations)
-            194218,  // B. variipes (1,195 observations)
-            543052,  // B. chippewaensis (943 observations)
-            350203,  // B. atkinsonii (78 observations)
-            350217,  // B. separans (1,546 observations)
+            543052   // B. chippewaensis (943 observations)
+        ]
+    },
+
+    boletusAtkinsonii: {
+        scientificNames: [
+            'Boletus atkinsonii'
+        ],
+        commonNames: [
+            'Atkinson\'s King Bolete',
+            'Cracked King Bolete'
+        ],
+        iNatTaxonIds: [
+            350203   // B. atkinsonii (78 observations)
+        ]
+    },
+
+    boletus_separans: {
+        scientificNames: [
+            'Boletus separans'
+        ],
+        commonNames: [
+            'Lilac-tinted King Bolete',
+            'Lilac Bolete'
+        ],
+        iNatTaxonIds: [
+            350217   // B. separans (1,546 observations)
+        ]
+    },
+
+    boletusNobilis: {
+        scientificNames: [
+            'Boletus nobilis'
+        ],
+        commonNames: [
+            'Noble King Bolete',
+            'Tall King Bolete'
+        ],
+        iNatTaxonIds: [
             500013   // B. nobilis (187 observations)
+        ]
+    },
+
+    boletusChippewaensis: {
+        scientificNames: [
+            'Boletus chippewaensis'
+        ],
+        commonNames: [
+            'Chippewa King Bolete',
+            'Hemlock King Bolete'
+        ],
+        iNatTaxonIds: [
+            543052   // B. chippewaensis (943 observations)
         ]
     },
 
