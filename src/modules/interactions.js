@@ -108,7 +108,6 @@ export function displaySpeciesInfo(speciesKey) {
  * @param {string} county - County name
  */
 export function displayCountyInfo(county, countyKey = null) {
-    console.log('🔍 displayCountyInfo called with:', county, countyKey);
     const speciesSelect = document.getElementById('species-select');
     const currentSpecies = speciesSelect?.value || 'chanterelles';
     
@@ -130,12 +129,9 @@ export function displayCountyInfo(county, countyKey = null) {
     }
     
     // Get county information
-    console.log('🔍 Getting info for countyKey:', countyKey, 'species:', currentSpecies);
     const countyInfo = getCountyInfo(countyKey, currentSpecies);
     const landData = getCountyLandData(county);
-    console.log('🔍 Generating top species HTML...');
     const topSpeciesHTML = getTopSpeciesHTML(countyKey);
-    console.log('🔍 Top species HTML generated:', topSpeciesHTML.length, 'characters');
     
     // Find or create county info panel on main page
     let countyPanel = document.getElementById('county-info');
@@ -1385,12 +1381,9 @@ window.clearCountyInfo = clearCountyInfo;
 
 // Add to your existing interactions.js module
 export function initEnhancedMapInteractions() {
-    console.log('🔍 initEnhancedMapInteractions called');
     const counties = document.querySelectorAll('.county');
-    console.log('🔍 Found', counties.length, 'counties');
     
     counties.forEach(county => {
-        console.log('🔍 Setting up handlers for county:', county.dataset.county);
         // Enhanced hover effects
         county.addEventListener('mouseenter', (e) => {
             const countyKey = e.target.dataset.county;

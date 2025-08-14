@@ -36,14 +36,10 @@ class MushroomApp {
      * Initialize the application
      */
     async init() {
-        console.log('🚀 app.init() called');
-        if (this.initialized) {
-            console.log('🚀 app.init() - Already initialized, returning');
-            return;
-        }
+        if (this.initialized) return;
         
         try {
-            console.log(`🚀 Initializing ${appConfig.title} v${appConfig.version}`);
+            console.log(`Initializing ${appConfig.title} v${appConfig.version}`);
             
             // Show loading state
             this.showLoading();
@@ -70,36 +66,24 @@ class MushroomApp {
      * Initialize all application modules
      */
     async initModules() {
-        console.log('🔍 initModules() called');
-        
         // Initialize weather module
-        console.log('🔍 About to initialize weather module');
         await initWeather();
-        console.log('🔍 Weather module initialized');
+        console.log('Weather module initialized');
         
         // Initialize map calculations
-        console.log('🔍 About to initialize map calculations');
         initMapCalculations();
-        console.log('🔍 Map calculations initialized');
+        console.log('Map calculations initialized');
         
         // Initialize UI interactions
-        console.log('🔍 About to initialize UI interactions');
         initInteractions();
-        console.log('🔍 UI interactions initialized');
+        console.log('UI interactions initialized');
         
         // Initialize enhanced map interactions (county click handlers)
-        try {
-            console.log('🔍 About to call initEnhancedMapInteractions()');
-            initEnhancedMapInteractions();
-            console.log('🔍 Enhanced map interactions initialized');
-        } catch (error) {
-            console.error('🔥 Error in initEnhancedMapInteractions():', error);
-        }
+        initEnhancedMapInteractions();
+        console.log('Enhanced map interactions initialized');
         
         // Setup additional event listeners
-        console.log('🔍 About to setup global event listeners');
         this.setupGlobalEventListeners();
-        console.log('🔍 initModules() completed');
     }
     
     /**
@@ -409,15 +393,9 @@ const app = new MushroomApp();
  * Initialize application when DOM is ready
  */
 function initializeApp() {
-    console.log('🚀 initializeApp: document.readyState =', document.readyState);
     if (document.readyState === 'loading') {
-        console.log('🚀 initializeApp: Adding DOMContentLoaded listener');
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('🚀 DOMContentLoaded fired');
-            app.init();
-        });
+        document.addEventListener('DOMContentLoaded', () => app.init());
     } else {
-        console.log('🚀 initializeApp: DOM already loaded, calling app.init() directly');
         app.init();
     }
 }
@@ -436,9 +414,7 @@ window.enableDebug = () => app.enableDebug();
 /**
  * Auto-initialize when module loads
  */
-console.log('🚀 app.js: About to call initializeApp()');
 initializeApp();
-console.log('🚀 app.js: initializeApp() called');
 
 /**
  * Handle any unhandled promise rejections
