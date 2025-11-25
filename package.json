@@ -7,11 +7,14 @@
   "scripts": {
     "start": "python -m http.server 8000",
     "dev": "python -m http.server 8000",
-    "test": "echo \"No tests specified\" && exit 0"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage"
   },
   "keywords": [
     "mushroom",
-    "foraging", 
+    "foraging",
     "new-hampshire",
     "weather",
     "mycology",
@@ -27,5 +30,11 @@
   "bugs": {
     "url": "https://github.com/ibelanger/GraniteFungiForager/issues"
   },
-  "homepage": "https://github.com/ibelanger/GraniteFungiForager#readme"
+  "homepage": "https://github.com/ibelanger/GraniteFungiForager#readme",
+  "devDependencies": {
+    "@vitest/ui": "^4.0.14",
+    "c8": "^10.1.3",
+    "jsdom": "^27.2.0",
+    "vitest": "^4.0.14"
+  }
 }
