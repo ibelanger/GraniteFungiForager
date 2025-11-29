@@ -191,11 +191,9 @@ describe('Map Calculations Module', () => {
         const fallProb = calculateProbability('morels', { ...baseWeather, season: 'fall' }, 'White Mountains');
 
         // Morel seasonMultiplier: spring=1.0, summer=0.1, fall=0.0
-        // Note: Due to || 0.5 fallback in code, fall (0.0) defaults to 0.5
         expect(springProb).toBeGreaterThan(summerProb);
-        expect(springProb).toBeGreaterThan(fallProb); // Spring should still be best
-        expect(summerProb).toBeGreaterThan(0); // Summer has 0.1 multiplier
-        expect(fallProb).toBeGreaterThan(0); // Fall gets default 0.5 due to 0.0 || 0.5 (JavaScript falsy)
+        expect(summerProb).toBeGreaterThan(fallProb);
+        expect(fallProb).toBe(0); // Fall should be exactly 0 (fixed: was incorrectly 0.5 due to || operator)
       });
 
       test('should favor chanterelles in summer', () => {
@@ -230,8 +228,8 @@ describe('Map Calculations Module', () => {
         // Spring should be significantly better (even accounting for seasonal multiplier and bonus)
         expect(idealSpring).toBeGreaterThan(0);
         expect(idealSpring).toBeGreaterThan(fallNoBonus);
-        // Fall has 0.0 in data but defaults to 0.5 due to || 0.5 in code
-        expect(fallNoBonus).toBeGreaterThan(0);
+        // Fall has 0.0 seasonal multiplier, so should be exactly 0
+        expect(fallNoBonus).toBe(0);
       });
 
       test('should apply chanterelle moisture bonus', () => {
