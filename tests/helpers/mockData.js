@@ -92,38 +92,105 @@ export const mockOpenMeteoResponse = {
 
 /**
  * Mock species data for testing probability calculations
+ * Simplified versions of actual speciesData from species.js
  */
 export const mockSpeciesData = {
   morels: {
     name: 'Morels (4 varieties)',
     tempRange: [50, 70],
     moistureMin: 1.0,
-    seasonMultiplier: { spring: 1.0, summer: 0.1, fall: 0.0 },
+    seasonMultiplier: { spring: 1.0, summer: 0.1, fall: 0.0, winter: 0.0 },
+    hostTrees: ['ash', 'elm', 'apple'],
     regions: {
       'Great North Woods': 0.6,
-      'White Mountains': 0.8,
+      'White Mountains': 0.7,
+      'Dartmouth-Sunapee': 0.8,
+      'Merrimack Valley': 0.9,
       'Lakes Region': 0.7,
-      'Seacoast': 0.4,
-      'Merrimack Valley': 0.6,
-      'Monadnock Region': 0.7,
-      'Connecticut Valley': 0.7
+      'Monadnock Region': 0.8,
+      'Seacoast': 0.6
     }
   },
   chanterelles: {
-    name: 'Chanterelles (3 varieties)',
+    name: 'Chanterelles (4 varieties)',
     tempRange: [60, 75],
     moistureMin: 1.5,
-    seasonMultiplier: { spring: 0.3, summer: 1.0, fall: 0.8 },
+    seasonMultiplier: { spring: 0.3, summer: 1.0, fall: 0.8, winter: 0.0 },
+    hostTrees: ['oak', 'beech'],
     regions: {
       'Great North Woods': 0.8,
       'White Mountains': 0.9,
-      'Lakes Region': 0.7,
-      'Seacoast': 0.5,
+      'Dartmouth-Sunapee': 0.8,
       'Merrimack Valley': 0.6,
+      'Lakes Region': 0.7,
       'Monadnock Region': 0.7,
-      'Connecticut Valley': 0.7
+      'Seacoast': 0.5
+    }
+  },
+  blacktrumpets: {
+    name: 'Black Trumpet',
+    tempRange: [55, 75],
+    moistureMin: 2.0,
+    seasonMultiplier: { spring: 0.1, summer: 0.7, fall: 1.0, winter: 0.0 },
+    hostTrees: ['oak', 'beech', 'maple'],
+    regions: {
+      'Great North Woods': 0.3,
+      'White Mountains': 0.45,
+      'Dartmouth-Sunapee': 0.7,
+      'Merrimack Valley': 0.7,
+      'Lakes Region': 0.6,
+      'Monadnock Region': 0.8,
+      'Seacoast': 0.4
+    }
+  },
+  boletusEdulis: {
+    name: 'King Bolete (Boletus edulis)',
+    tempRange: [55, 70],
+    moistureMin: 1.8,
+    seasonMultiplier: { spring: 0.2, summer: 0.8, fall: 1.0, winter: 0.0 },
+    hostTrees: ['spruce', 'pine', 'hemlock'],
+    regions: {
+      'Great North Woods': 0.9,
+      'White Mountains': 0.95,
+      'Dartmouth-Sunapee': 0.7,
+      'Merrimack Valley': 0.5,
+      'Lakes Region': 0.7,
+      'Monadnock Region': 0.6,
+      'Seacoast': 0.3
+    }
+  },
+  maitake: {
+    name: 'Maitake (Grifola frondosa)',
+    tempRange: [60, 75],
+    moistureMin: 1.5,
+    seasonMultiplier: { spring: 0.1, summer: 0.6, fall: 1.0, winter: 0.0 },
+    hostTrees: ['oak'],
+    regions: {
+      'Great North Woods': 0.3,
+      'White Mountains': 0.4,
+      'Dartmouth-Sunapee': 0.6,
+      'Merrimack Valley': 0.7,
+      'Lakes Region': 0.5,
+      'Monadnock Region': 0.7,
+      'Seacoast': 0.4
     }
   }
+};
+
+/**
+ * Mock NH county-to-region mapping
+ */
+export const mockCountyRegions = {
+  'coos': 'Great North Woods',
+  'grafton': 'White Mountains',
+  'carroll': 'White Mountains',
+  'sullivan': 'Dartmouth-Sunapee',
+  'merrimack': 'Merrimack Valley',
+  'belknap': 'Lakes Region',
+  'cheshire': 'Monadnock Region',
+  'hillsborough': 'Merrimack Valley',
+  'strafford': 'Seacoast',
+  'rockingham': 'Seacoast'
 };
 
 /**
