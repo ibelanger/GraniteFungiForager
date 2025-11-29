@@ -218,19 +218,57 @@ test('should check season', () => {
 
 ## Continuous Integration
 
-To run tests in CI/CD pipelines:
+**GitHub Actions CI/CD is configured and running!** ✅
 
-```yaml
-# Example GitHub Actions workflow
-- name: Run tests
-  run: npm test
+The project uses GitHub Actions to automatically run tests on every push and pull request.
 
-- name: Generate coverage
-  run: npm run test:coverage
+### Current Setup
 
-- name: Upload coverage
-  uses: codecov/codecov-action@v3
+**Workflow:** `.github/workflows/test.yml`
+
+**Runs on:**
+- Push to `main`, `develop`, or `claude/**` branches
+- Pull requests to `main` or `develop`
+
+**Test Matrix:**
+- Node.js 18.x, 20.x, 22.x
+- Ubuntu latest
+
+**Jobs:**
+1. **Test** - Runs test suite on all Node versions
+2. **Lint Check** - Validates code structure and package.json
+3. **Security Audit** - Checks for vulnerabilities in dependencies
+4. **Test Summary** - Aggregates results and reports status
+
+**Artifacts:**
+- Coverage reports saved for 30 days
+- Download from Actions → Workflow run → Artifacts
+
+### Status Badge
+
+Check current test status: [![Tests](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml/badge.svg)](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml)
+
+### For Contributors
+
+**Before submitting a PR:**
+```bash
+# Run tests locally
+npm test
+
+# Generate coverage report
+npm run test:coverage
+
+# Watch mode for development
+npm run test:watch
 ```
+
+**CI will automatically:**
+- Run all 26 tests
+- Generate coverage reports
+- Check for security vulnerabilities
+- Report status on your PR
+
+See `.github/CICD.md` for detailed CI/CD documentation.
 
 ## Resources
 
