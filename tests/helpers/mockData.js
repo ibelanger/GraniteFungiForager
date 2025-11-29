@@ -221,6 +221,84 @@ export function createMockLocalStorage() {
 }
 
 /**
+ * Mock foraging report data for testing
+ */
+export const mockForagingReports = {
+  successfulMorels: {
+    county: 'grafton',
+    species: 'morels',
+    predicted_probability: 0.75,
+    actual_success: true,
+    quantity_found: 'moderate',
+    confidence_level: 'high',
+    weather_conditions: {
+      rainfall_7day: 1.5,
+      soil_temp: 58,
+      air_temp: 65,
+      humidity: 70,
+      season: 'spring'
+    },
+    location_details: {
+      elevation: 1200,
+      habitat: 'mixed hardwoods',
+      gps_coords: [44.0, -71.5],
+      access_notes: 'Public trail access'
+    },
+    user_notes: 'Found near dead elm trees',
+    photo_uploaded: true,
+    verified_by_expert: false
+  },
+  unsuccessfulChanterelles: {
+    county: 'merrimack',
+    species: 'chanterelles',
+    predicted_probability: 0.45,
+    actual_success: false,
+    quantity_found: 'none',
+    confidence_level: 'medium',
+    weather_conditions: {
+      rainfall_7day: 0.5,
+      soil_temp: 62,
+      air_temp: 72,
+      humidity: 50,
+      season: 'summer'
+    },
+    location_details: {
+      elevation: 800,
+      habitat: 'oak forest',
+      gps_coords: null,
+      access_notes: ''
+    },
+    user_notes: 'Too dry this week',
+    photo_uploaded: false,
+    verified_by_expert: false
+  },
+  successfulBlackTrumpets: {
+    county: 'cheshire',
+    species: 'blacktrumpets',
+    predicted_probability: 0.82,
+    actual_success: true,
+    quantity_found: 'heavy',
+    confidence_level: 'high',
+    weather_conditions: {
+      rainfall_7day: 2.5,
+      soil_temp: 65,
+      air_temp: 68,
+      humidity: 85,
+      season: 'fall'
+    },
+    location_details: {
+      elevation: 1000,
+      habitat: 'beech-maple forest',
+      gps_coords: [42.9, -72.1],
+      access_notes: 'Conservation land'
+    },
+    user_notes: 'Excellent fruiting year',
+    photo_uploaded: true,
+    verified_by_expert: true
+  }
+};
+
+/**
  * Helper function to mock fetch responses
  */
 export function createMockFetch(responseData, options = {}) {
