@@ -351,10 +351,15 @@ export function openForagingReport(countyKey, species, probability) {
     // Pre-fill form data
     const form = modal.querySelector('#foraging-report-form');
     if (form) {
-        form.county.value = countyKey;
-        form.species.value = species;
-        form.predicted_probability.value = probability.toFixed(3);
-        form.date.value = new Date().toISOString().split('T')[0];
+        const countyField = form.querySelector('[name="county"]');
+        const speciesField = form.querySelector('[name="species"]');
+        const probField = form.querySelector('[name="predicted_probability"]');
+        const dateField = form.querySelector('[name="date"]');
+
+        if (countyField) countyField.value = countyKey;
+        if (speciesField) speciesField.value = species;
+        if (probField) probField.value = probability.toFixed(3);
+        if (dateField) dateField.value = new Date().toISOString().split('T')[0];
     }
     
     // Show modal
@@ -526,12 +531,13 @@ function setupForagingReportHandlers(modal) {
     // Show/hide quantity field based on success
     successRadios.forEach(radio => {
         radio.addEventListener('change', (e) => {
+            const quantityField = form.querySelector('[name="quantity_found"]');
             if (e.target.value === 'true') {
                 successDetails.style.display = 'block';
-                form.quantity_found.value = 'light'; // Default to light
+                if (quantityField) quantityField.value = 'light'; // Default to light
             } else {
                 successDetails.style.display = 'none';
-                form.quantity_found.value = 'none';
+                if (quantityField) quantityField.value = 'none';
             }
         });
     });
