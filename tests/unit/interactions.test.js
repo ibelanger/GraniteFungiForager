@@ -29,11 +29,15 @@ vi.mock('../../src/modules/species.js', () => ({
             name: 'Morels (Morchella americana)',
             tempRange: [50, 70],
             moistureMin: 1.0,
-            seasonMultiplier: { spring: 1.0, summer: 0.1, fall: 0.0 },
+            seasonMultiplier: { spring: 1.0, summer: 0.1, fall: 0.0, winter: 0.0 },
             hostTrees: ['ash', 'elm', 'apple'],
             microhabitat: 'old orchards',
             soilPreference: 'rich, well-drained',
-            identificationNotes: { cap: 'honeycomb appearance' },
+            identificationNotes: {
+                cap: 'honeycomb appearance',
+                stem: 'hollow',
+                color: 'yellow-brown to gray-brown'
+            },
             regions: {
                 'Great North Woods': 0.6,
                 'White Mountains': 0.7,
@@ -48,9 +52,15 @@ vi.mock('../../src/modules/species.js', () => ({
             name: 'Chanterelles (Cantharellus cibarius)',
             tempRange: [60, 75],
             moistureMin: 1.5,
-            seasonMultiplier: { spring: 0.3, summer: 1.0, fall: 0.8 },
+            seasonMultiplier: { spring: 0.3, summer: 1.0, fall: 0.8, winter: 0.0 },
             hostTrees: ['oak', 'beech', 'hemlock'],
-            identificationNotes: { gills: 'false gills' },
+            microhabitat: 'mossy forest floors',
+            soilPreference: 'well-drained acidic soils',
+            identificationNotes: {
+                gills: 'false gills',
+                color: 'golden yellow',
+                smell: 'fruity apricot-like'
+            },
             regions: {
                 'Great North Woods': 0.7,
                 'White Mountains': 0.8,
@@ -180,6 +190,27 @@ vi.mock('../../src/modules/observationAnalysis.js', () => ({
 }));
 
 describe('Interactions Module', () => {
+    // Helper function to create a properly configured species select
+    const createSpeciesSelect = (selectedValue = 'morels') => {
+        const select = document.createElement('select');
+        select.id = 'species-select';
+
+        // Add options
+        const morelsOption = document.createElement('option');
+        morelsOption.value = 'morels';
+        morelsOption.textContent = 'Morels';
+        select.appendChild(morelsOption);
+
+        const chanterellesOption = document.createElement('option');
+        chanterellesOption.value = 'chanterelles';
+        chanterellesOption.textContent = 'Chanterelles';
+        select.appendChild(chanterellesOption);
+
+        // Set selected value
+        select.value = selectedValue;
+        return select;
+    };
+
     beforeEach(() => {
         document.body.innerHTML = '';
         vi.clearAllMocks();
@@ -198,7 +229,7 @@ describe('Interactions Module', () => {
 
             expect(infoPanel.innerHTML).toContain('Morels');
             expect(infoPanel.innerHTML).toContain('50°F - 70°F');
-            expect(infoPanel.innerHTML).toContain('1.0" rainfall');
+            expect(infoPanel.innerHTML).toContain('1.0" rainfall (past 7-10 days)');
             expect(infoPanel.style.display).toBe('block');
         });
 
@@ -265,9 +296,7 @@ describe('Interactions Module', () => {
 
     describe('displayCountyInfo', () => {
         test('should display county information panel', () => {
-            const speciesSelect = document.createElement('select');
-            speciesSelect.id = 'species-select';
-            speciesSelect.value = 'morels';
+            const speciesSelect = createSpeciesSelect('morels');
             document.body.appendChild(speciesSelect);
 
             const speciesInfo = document.createElement('div');
@@ -299,9 +328,7 @@ describe('Interactions Module', () => {
         });
 
         test('should display probability', () => {
-            const speciesSelect = document.createElement('select');
-            speciesSelect.id = 'species-select';
-            speciesSelect.value = 'morels';
+            const speciesSelect = createSpeciesSelect('morels');
             document.body.appendChild(speciesSelect);
 
             const speciesInfo = document.createElement('div');
@@ -315,9 +342,7 @@ describe('Interactions Module', () => {
         });
 
         test('should display current conditions', () => {
-            const speciesSelect = document.createElement('select');
-            speciesSelect.id = 'species-select';
-            speciesSelect.value = 'morels';
+            const speciesSelect = createSpeciesSelect('morels');
             document.body.appendChild(speciesSelect);
 
             const speciesInfo = document.createElement('div');
@@ -333,9 +358,7 @@ describe('Interactions Module', () => {
         });
 
         test('should display recommendations', () => {
-            const speciesSelect = document.createElement('select');
-            speciesSelect.id = 'species-select';
-            speciesSelect.value = 'morels';
+            const speciesSelect = createSpeciesSelect('morels');
             document.body.appendChild(speciesSelect);
 
             const speciesInfo = document.createElement('div');
@@ -350,9 +373,7 @@ describe('Interactions Module', () => {
         });
 
         test('should display top species rankings', () => {
-            const speciesSelect = document.createElement('select');
-            speciesSelect.id = 'species-select';
-            speciesSelect.value = 'morels';
+            const speciesSelect = createSpeciesSelect('morels');
             document.body.appendChild(speciesSelect);
 
             const speciesInfo = document.createElement('div');
@@ -368,9 +389,7 @@ describe('Interactions Module', () => {
         });
 
         test('should display general land information', () => {
-            const speciesSelect = document.createElement('select');
-            speciesSelect.id = 'species-select';
-            speciesSelect.value = 'morels';
+            const speciesSelect = createSpeciesSelect('morels');
             document.body.appendChild(speciesSelect);
 
             const speciesInfo = document.createElement('div');
@@ -385,9 +404,7 @@ describe('Interactions Module', () => {
         });
 
         test('should include report foraging results button', () => {
-            const speciesSelect = document.createElement('select');
-            speciesSelect.id = 'species-select';
-            speciesSelect.value = 'morels';
+            const speciesSelect = createSpeciesSelect('morels');
             document.body.appendChild(speciesSelect);
 
             const speciesInfo = document.createElement('div');
@@ -402,9 +419,7 @@ describe('Interactions Module', () => {
         });
 
         test('should include data analytics buttons', () => {
-            const speciesSelect = document.createElement('select');
-            speciesSelect.id = 'species-select';
-            speciesSelect.value = 'morels';
+            const speciesSelect = createSpeciesSelect('morels');
             document.body.appendChild(speciesSelect);
 
             const speciesInfo = document.createElement('div');
