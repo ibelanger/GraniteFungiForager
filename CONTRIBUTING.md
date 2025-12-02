@@ -119,11 +119,21 @@ We welcome ideas for improvements!
 - **Mobile-first** - Ensure responsive design for field use
 
 #### **Testing Requirements**
+
+**Automated Testing (Required for PRs):**
+- **Run test suite** - `npm test` must pass before submitting PR
+- **Coverage check** - `npm run test:coverage` to verify test coverage
+- **Watch mode** - `npm run test:watch` for development
+- **CI/CD** - GitHub Actions automatically runs tests on all PRs
+
+**Manual Testing (Recommended):**
 - **Cross-browser testing** - Chrome, Firefox, Safari, Edge
 - **Mobile testing** - iOS Safari, Chrome Android
 - **Authentication testing** - Verify login/logout flows work correctly
 - **API error handling** - Test with network failures and timeouts
 - **Accessibility testing** - Screen readers and keyboard navigation
+
+See `tests/README.md` for detailed testing documentation and examples.
 
 ### 4. **Documentation Improvements**
 Documentation is always appreciated!

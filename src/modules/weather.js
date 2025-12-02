@@ -32,7 +32,7 @@ export const countyTowns = {
  * @param {number} precipitation - Recent precipitation
  * @returns {number} Estimated soil temperature in Fahrenheit
  */
-function calculateSoilTemp(airTemp, humidity = 70, precipitation = 0) {
+export function calculateSoilTemp(airTemp, humidity = 70, precipitation = 0) {
     // Soil temperature estimation based on air temp with moisture adjustments
     let soilTemp = airTemp - 8; // Base soil temp offset
     
@@ -55,7 +55,7 @@ function calculateSoilTemp(airTemp, humidity = 70, precipitation = 0) {
  * Determine season based on current month
  * @returns {string} Current season
  */
-function getCurrentSeason() {
+export function getCurrentSeason() {
     const month = new Date().getMonth() + 1;
     if (month >= 4 && month <= 5) return 'spring';
     else if (month >= 6 && month <= 8) return 'summer';

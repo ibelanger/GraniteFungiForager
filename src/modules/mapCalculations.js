@@ -61,7 +61,8 @@ export function calculateProbability(speciesKey, weather, region) {
     }
     
     // Seasonal factor
-    const seasonalMultiplier = species.seasonMultiplier[season] || 0.5;
+    // Use nullish coalescing (??) to preserve 0.0 values (0.0 || 0.5 would incorrectly use 0.5)
+    const seasonalMultiplier = species.seasonMultiplier[season] ?? 0.5;
     
     // Combine all factors
     probability = probability * finalTempFactor * moistureFactor * seasonalMultiplier;
