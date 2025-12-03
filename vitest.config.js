@@ -13,7 +13,7 @@ export default defineConfig({
 
     // Coverage configuration
     coverage: {
-      provider: 'c8',
+      provider: 'v8', // Built-in V8 coverage (Vitest 4.x)
       reporter: ['text', 'html', 'lcov', 'json'],
       exclude: [
         'node_modules/',
