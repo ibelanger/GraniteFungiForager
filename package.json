@@ -32,6 +32,7 @@
   },
   "homepage": "https://github.com/ibelanger/GraniteFungiForager#readme",
   "devDependencies": {
+    "@vitest/coverage-v8": "^4.0.15",
     "@vitest/ui": "^4.0.14",
     "c8": "^10.1.3",
     "jsdom": "^27.2.0",
