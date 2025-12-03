@@ -180,24 +180,116 @@ npm run test:coverage   # Generate coverage reports
 #### GitHub Actions Workflows
 
 **Test Workflow** (`.github/workflows/test.yml`):
-- Runs on: push to main/develop/claude/** branches, PRs to main/develop
-- Matrix testing: Node 18.x, 20.x, 22.x
-- Jobs:
-  - **test**: Runs full test suite on all Node versions
-  - **lint-check**: Validates package.json structure
-  - **dependency-audit**: Security audit with npm audit
-  - **test-summary**: Aggregates results and validates all checks passed
-- Artifacts: Coverage reports uploaded for 30-day retention
+
+The test workflow ensures code quality through automated testing on every push and pull request.
+
+**Triggers:**
+- Push to `main`, `develop`, or `claude/**` branches
+- Pull requests to `main` or `develop` branches
+
+**Jobs:**
+
+1. **test** - Matrix testing across Node.js versions
+   - **Strategy:** Tests on Node 18.x, 20.x, and 22.x
+   - **Steps:**
+     - Checkout code
+     - Setup Node.js with npm caching
+     - Install dependencies (`npm ci`)
+     - Run test suite (`npm test`)
+     - Generate coverage report (Node 20.x only)
+     - Upload coverage artifacts (30-day retention)
+   - **Test Results:** 470 tests (468 passing, 2 skipped)
+   - **Duration:** ~5 seconds
+
+2. **lint-check** - Code quality validation
+   - Validates package.json structure
+   - Future: ESLint integration (commented out, ready to enable)
+   - Future: Prettier formatting checks
+
+3. **dependency-audit** - Security scanning
+   - Runs `npm audit` at moderate+ severity level
+   - Checks for outdated dependencies (informational)
+   - Continues on error to avoid blocking on non-critical issues
+
+4. **test-summary** - Results aggregation
+   - Depends on: test, lint-check, dependency-audit
+   - Reports pass/fail status for each job
+   - Fails pipeline if critical tests fail
+   - Blocks merge if required checks don't pass
+
+**Coverage Reports:**
+- Generated on Node.js 20.x only
+- Formats: text, HTML, LCOV, JSON
+- Access: Download from Actions → Workflow run → Artifacts
+- Retention: 30 days
 
 **Deploy Workflow** (`.github/workflows/deploy.yml`):
-- Automated GitHub Pages deployment on push to main
-- Zero-downtime deployment with Jekyll disabled (.nojekyll)
+- **Trigger:** Push to `main` branch
+- **Target:** GitHub Pages (https://ibelanger.github.io/GraniteFungiForager/)
+- **Process:**
+  - Checkout code
+  - Deploy to gh-pages branch
+  - Jekyll disabled (.nojekyll file)
+- **Result:** Zero-downtime automated deployment
+
+#### Status Badges
+
+The README displays live build status:
+```markdown
+[![Tests](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml/badge.svg)]
+```
+
+**Badge States:**
+- 🟢 Passing - All tests passed
+- 🔴 Failing - One or more tests failed
+- 🟡 In Progress - Tests currently running
+
+#### Local Testing Before Push
+
+**Run tests locally to catch issues early:**
+```bash
+# Run all tests
+npm test                  # 470 tests in ~5 seconds
+
+# Watch mode (re-run on changes)
+npm run test:watch
+
+# Interactive UI
+npm run test:ui
+
+# Coverage report
+npm run test:coverage
+```
+
+#### Pull Request Requirements
+
+For a PR to be merged:
+1. ✅ All 470 tests must pass
+2. ✅ Lint checks must pass
+3. ✅ No critical security vulnerabilities
+4. ✅ Code review approval
+5. 📊 Coverage should not decrease (recommended)
+
+#### Troubleshooting CI Failures
+
+**Test failures in CI but pass locally:**
+- Check Node version matches CI (18.x, 20.x, or 22.x)
+- Clear and reinstall: `rm -rf node_modules && npm ci`
+- Check for environment-specific code (timezones, file paths)
+- Review detailed logs in GitHub Actions
+
+**Common Issues:**
+- Date/time tests may fail due to timezone differences
+- File path separators differ on Windows vs Linux
+- Node version differences in async behavior
 
 #### Development Best Practices
 - All tests must pass before merging
 - Coverage reports generated on Node 20.x
 - Security audits run automatically on every push
 - Multi-version Node.js compatibility ensured
+- Workflow uses npm caching for faster builds (30-60s speedup)
+- Matrix strategy with `fail-fast: false` continues testing all versions
 
 ## Machine Learning Pipeline
 
@@ -332,13 +424,18 @@ GraniteFungiForager/
 │   ├── helpers/                  # Mock data
 │   ├── setup.js                  # Test configuration
 │   └── README.md                 # Test documentation
-└── docs/                         # Documentation
-    ├── CLAUDE.md                 # This file
-    ├── README.md                 # User documentation
-    ├── CHANGELOG.md              # Version history
-    ├── CONTRIBUTING.md           # Contribution guidelines
-    ├── RELEASE_NOTES_v3.3.0.md  # Latest release notes
-    └── ACCURACY_IMPROVEMENT_PLAN.md  # ML roadmap
+├── docs/
+│   ├── design-system/
+│   │   └── GraniteFungiForager_UI_Design_System_v2_MASTER.md
+│   └── archive/                  # Archived historical documents
+│       └── Project_Roadmap_UI_Planning_ARCHIVED.md
+├── CLAUDE.md                     # This file (Development guidance)
+├── README.md                     # User documentation
+├── CHANGELOG.md                  # Version history
+├── CONTRIBUTING.md               # Contribution guidelines
+├── ACCURACY_IMPROVEMENT_PLAN.md  # ML roadmap
+├── CODE_OF_CONDUCT.md            # Community guidelines
+└── LICENSE                       # MIT License
 ```
 
 ## Safety and Compliance

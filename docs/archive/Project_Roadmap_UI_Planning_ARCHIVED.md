@@ -1,5 +1,22 @@
+# 📦 ARCHIVED DOCUMENT - UI Planning & Development Roadmap
+
+**⚠️ ARCHIVE NOTICE**
+
+**Status:** Historical reference only
+**Archived:** December 3, 2025
+**Reason:** UI modernization and v3.3.0 testing phase complete
+
+This document represents the UI planning and feature development roadmap from the v3.3.0 UI modernization phase. It has been archived because:
+- UI modernization objectives have been achieved
+- v3.3.0 focus shifted from UI to testing/quality assurance
+- Current development priorities are outlined in ACCURACY_IMPROVEMENT_PLAN.md
+
+**For Current Roadmap:** See `ACCURACY_IMPROVEMENT_PLAN.md` (v4.0+ ML/Data Collection focus)
+
+---
+
 # 🍄 NH Mushroom Map - Project Backlog & Development Roadmap
-**Updated for Version 3.3.0**
+**Updated for Version 3.3.0 - UI Modernization Phase**
 
 ---
 
