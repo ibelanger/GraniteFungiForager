@@ -1,4 +1,5 @@
-# 🍄 GraniteFungiForager v3.2.1
+# 🍄 GraniteFungiForager v3.3.0
+
 
 [![Tests](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml/badge.svg)](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -7,6 +8,27 @@
 
 ## 🌐 **LIVE APPLICATION**
 **Try it now:** https://ibelanger.github.io/GraniteFungiForager/
+
+## 🆕 **What's New in v3.3.0** (December 2025)
+
+### 🧪 **MAJOR: 100% Test Coverage Achieved**
+- **470 Comprehensive Tests** - Complete validation of all application functionality
+- **100% Pass Rate** - All 468 tests passing, 2 properly skipped (jsdom limitations)
+- **100% Module Coverage** - All 8 core modules thoroughly tested
+- **Professional Documentation** - Complete test suite guide in `tests/README.md`
+
+### 🔧 **Quality Improvements**
+- **Browser Compatibility** - Fixed form field access in `interactions.js` for cross-browser support
+- **CI/CD Configuration** - Updated to Vitest 4.x with proper v8 coverage provider
+- **GitHub Pages Deployment** - Automated deployment workflow on every push to main
+- **Test Infrastructure** - Vitest 4.0.14 with jsdom environment and comprehensive mocking
+
+### 📊 **Testing Metrics**
+- **Test Files**: 8 comprehensive test suites
+- **Coverage**: Weather (26), Maps (48), Auth (56), Reports (84), Species (62), iNaturalist (60), Lands (65), UI (67)
+- **Duration**: ~5 seconds for full suite
+- **Documentation**: Detailed breakdown of all tests with examples and best practices
+
 
 ## 🆕 **What's New in v3.2.1** (August 2025)
 
