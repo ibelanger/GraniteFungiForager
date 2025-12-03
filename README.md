@@ -117,11 +117,14 @@ GraniteFungiForager/
 │   ├── helpers/                  # Mock data and utilities
 │   ├── setup.js                  # Test configuration
 │   └── README.md                 # Test documentation
+├── docs/
+│   ├── design-system/            # UI design system documentation
+│   └── archive/                  # Archived historical documents
 ├── CLAUDE.md                     # Development guidance
 ├── CHANGELOG.md                  # Version history
 ├── CONTRIBUTING.md               # Contribution guidelines
-├── RELEASE_NOTES_v3.3.0.md      # Latest release notes
 ├── ACCURACY_IMPROVEMENT_PLAN.md  # ML roadmap
+├── CODE_OF_CONDUCT.md            # Community guidelines
 └── LICENSE                       # MIT License
 ```
 
