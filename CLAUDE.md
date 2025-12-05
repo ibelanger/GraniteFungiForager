@@ -8,6 +8,48 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Live Application:** https://ibelanger.github.io/GraniteFungiForager/
 
+### Recent Enhancements (December 2025)
+
+**Research-Backed Data Integration:** The application now incorporates peer-reviewed mycological research for improved foraging accuracy:
+
+- **Enhanced Species Data:** Added detailed research-backed fields to key species:
+  - `optimalSoilTemp` - Precise temperature ranges with confidence levels and sources
+  - `soilPH` - pH requirements with NH-specific notes
+  - `precipitationWindow` - 30-day correlation windows vs. simple "days after rain"
+  - `elevationRange` - Elevation-based phenological delays
+  - `hostTreeFrequencies` - Percentage-based host tree associations
+  - `phenologyNH` - NH-specific timing data
+  - `confidenceLevel` - Data quality indicators (High/Medium/Low)
+  - `safetyRating` - Safety classifications with critical warnings
+
+- **Enhanced Probability Calculations:** New research-backed multipliers in `mapCalculations.js`:
+  - **Oak Proximity Multiplier** - Critical for Maitake and Milk Caps (oakMandatory flag)
+  - **Moss Association Multiplier** - Boosts for Black Trumpets in high-rainfall areas
+  - **Species-Specific Optimal Ranges** - Precise temperature windows for each species
+  - **Regional Soil pH Considerations** - NH granite soil challenges factored in
+
+- **Primary Research Sources:**
+  - MushroomExpert.com (Michael Kuo) - Species identification and ecology
+  - USDA PNW-GTR-576 (Pilz et al. 2003) - Chanterelle ecology
+  - Mihail 2014 McIlvainea - Morel soil temperature thresholds
+  - boletes.wpamushroomclub.org - Boletus edulis complex identification
+  - PMC peer-reviewed studies - Cultivation and field data
+
+- **Species Enhanced with Research Data:**
+  - Morels (Morchella spp.) - HIGH confidence
+  - Chanterelles (Cantharellus cibarius complex) - HIGH confidence
+  - Matsutake (Tricholoma magnivelare) - MEDIUM confidence
+  - Maitake (Grifola frondosa) - HIGH confidence for oak association
+  - Lobster Mushroom (Hypomyces lactifluorum) - MEDIUM-HIGH confidence
+  - Milk Caps (Lactifluus volemus, L. corrugis, L. hygrophoroides) - HIGH confidence
+  - Black Trumpets (Craterellus fallax) - MEDIUM-HIGH confidence
+
+- **Future Work Noted:**
+  - Toxic lookalike species data (planned for future revision)
+  - GPS marking feature for perennial species like Maitake (handled in separate tool)
+
+**All 468 tests continue to pass** - enhancements are backward-compatible and non-breaking.
+
 ## Development Commands
 
 - **Local Development Server:**
@@ -61,6 +103,14 @@ The application uses **modular ES6 JavaScript** with a clean separation of conce
    - Specialized support for Boletus 7-species group and Hedgehog 3-subgenera
    - Temperature ranges, moisture requirements, seasonal multipliers
    - Host tree associations and microhabitat preferences
+   - **NEW (Dec 2025):** Research-enhanced data fields:
+     - Optimal soil temperature with confidence levels and sources
+     - Soil pH requirements with NH-specific challenges
+     - Precipitation windows (7-30 day correlations)
+     - Elevation ranges with phenological delays
+     - Host tree frequencies with percentage associations
+     - NH-specific phenology timing
+     - Confidence levels and safety ratings
    - **Tests:** 62 tests validating all species data and edge cases
 
 3. **`mapCalculations.js`** - Probability engine

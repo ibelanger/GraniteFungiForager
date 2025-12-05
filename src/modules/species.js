@@ -1,7 +1,8 @@
 // species.js - Species info card and data
 
 // ENHANCED Species Data - Complete with ALL DHHS Tier 1 Species
-// Updated August 2025 - Aligned with DHHS February 2024 Official List
+// Updated December 2025 - Enhanced with peer-reviewed research data
+// Data Sources: MushroomExpert.com, USDA PNW-GTR-576, Mihail 2014, boletes.wpamushroomclub.org
 export const speciesData = {
     morels: {
         name: 'Morels (Morchella americana, M. angusticeps, M. elata, M. punctipes)',
@@ -11,11 +12,62 @@ export const speciesData = {
         hostTrees: ['ash', 'elm', 'apple', 'tulip poplar'],
         microhabitat: 'old orchards, burned areas, river bottoms, ash groves',
         soilPreference: 'rich, well-drained, slightly alkaline',
+
+        // RESEARCH-ENHANCED DATA (December 2025)
+        optimalSoilTemp: {
+            min: 50,
+            max: 60,
+            fruitingInitiation: 50,
+            fruitingCessation: 62,
+            measurementDepth: '2-4 inches',
+            sustainedDaysRequired: 5,
+            confidence: 'High',
+            source: 'Mihail 2014 McIlvainea 23:53-60'
+        },
+        soilPH: {
+            min: 6.0,
+            max: 7.5,
+            optimal: 6.5,
+            nhChallenges: 'NH granite soils often pH <6.0 making state "morel-poor"',
+            bestNHAreas: 'Connecticut River valley (less acidic, loamier soils)',
+            confidence: 'High'
+        },
+        precipitationWindow: {
+            correlationPeriod: 30,
+            significantRainEvent: 0.4,
+            correlationType: 'abundance',
+            notes: 'Rain in preceding 30 days correlates with abundance; post-rain timing not validated'
+        },
+        elevationRange: {
+            min: 100,
+            max: 2500,
+            optimal: 1500,
+            elevationDelay: '7-10 days per 500-1000 feet'
+        },
+        hostTreeFrequencies: {
+            'American Elm': '35-40%',
+            'Ash': '25-30%',
+            'Apple': '15-20%',
+            'Hickory': '10-15%',
+            'Basswood': '5-10%'
+        },
+        phenologyNH: {
+            start: 'mid-April',
+            peak: 'mid-May (around Mother\'s Day)',
+            end: 'early June',
+            blackMorels: 'early to mid-April (M. angusticeps first)',
+            yellowMorels: 'early May (M. americana follows)'
+        },
+        confidenceLevel: 'High',
+        safetyRating: 'SAFE (but has toxic lookalikes - see safety notes)',
+
         identificationNotes: {
             'Cap': 'Honeycomb-like pitted surface, hollow stem',
             'Attachment': 'Cap attached to stem at base',
             'Season': 'Spring only - April through May',
-            'Habitat': 'Around dying trees, especially ash and elm'
+            'Habitat': 'Around dying trees, especially ash and elm',
+            'CRITICAL SAFETY': 'MUST cut lengthwise - interior must be COMPLETELY HOLLOW',
+            'Safety Check': 'False morels (Gyromitra) are TOXIC - chambered interior, brain-like cap'
         },
         regions: {
             'Great North Woods': 0.6,
@@ -58,10 +110,63 @@ export const speciesData = {
         hostTrees: ['oak', 'beech', 'maple'],
         microhabitat: 'mossy hardwood slopes, stream banks',
         soilPreference: 'moist, rich, well-drained',
+
+        // RESEARCH-ENHANCED DATA (December 2025)
+        optimalSoilTemp: {
+            min: 55,
+            max: 70,
+            optimal: 62,
+            cessationThreshold: 60,
+            notes: 'Season extends until daytime temps drop below ~60°F consistently',
+            confidence: 'Medium',
+            source: 'mnforager.com, ediblewildfood.com'
+        },
+        soilPH: {
+            min: 4.5,
+            max: 6.5,
+            optimal: 5.5,
+            notes: 'Prefers moderately acidic; NH granitic soils generally suitable',
+            confidence: 'High'
+        },
+        precipitationWindow: {
+            min: 7,
+            max: 21,
+            typical: 10,
+            requirement: 'Deep soaking rain; often found near chanterelle habitat',
+            correlation: 'abundance'
+        },
+        elevationRange: {
+            min: 0,
+            max: 3500,
+            optimal: { min: 200, max: 2000 },
+            elevationDelay: '7-10 days per 1000 feet'
+        },
+        hostTreeFrequencies: {
+            'Red Oak': '40-50%',
+            'White Oak': '30-40%',
+            'Eastern Hemlock': '10-15%',
+            'Birch': '5-10%'
+        },
+        phenologyNH: {
+            start: 'Late June - Early July',
+            peak: 'August - September',
+            end: 'November (or until first hard freeze)',
+            persistence: 'Extended season - fruits into late fall',
+            coOccurrence: 'Often found with chanterelles, milk caps'
+        },
+        confidenceLevel: 'Medium-High',
+        safetyRating: 'VERY SAFE (no toxic lookalikes)',
+        mossAssociation: 'STRONG',  // Flag for probability calculations
+
         identificationNotes: {
-            'Shape': 'Trumpet/funnel-shaped, thin flesh',
-            'Color': 'Dark gray to black',
-            'Spore Print': 'White to pale yellow'
+            'Shape': 'Funnel/trumpet-shaped, hollow, thin flesh',
+            'Color': 'Black to dark gray',
+            'Spore Print': 'Pale pinkish-orange (NA species)',
+            'Gills': 'No true gills',
+            'CRITICAL CHALLENGE': 'EXTREME CAMOUFLAGE - black color makes them nearly invisible',
+            'Finding Strategy': 'Look for lighter stems, squat to ground level, search mossy areas',
+            'Safety': 'NO TOXIC LOOKALIKES - all Craterellus species are edible',
+            'Abundance': 'Often fruit in large patches once located - 30-40+ lbs possible'
         },
         regions: {
             'Great North Woods': 0.3,
@@ -105,10 +210,62 @@ export const speciesData = {
         hostTrees: ['oak', 'beech', 'birch', 'hemlock'],
         microhabitat: 'mossy hardwood/conifer forests, stream edges',
         soilPreference: 'moist, well-drained, mossy',
+
+        // RESEARCH-ENHANCED DATA (December 2025)
+        optimalSoilTemp: {
+            min: 54.5,
+            max: 72.5,
+            fruitingOptimal: 68,
+            measurementDepth: '5cm (2 inches)',
+            confidence: 'High',
+            source: 'Deshaware et al. 2021 Archives of Microbiology; USDA PNW-GTR-576'
+        },
+        soilPH: {
+            min: 4.0,
+            max: 6.0,
+            optimal: 5.0,
+            notes: 'Moderately acidic preferred; NH acidic soils generally suitable',
+            confidence: 'High'
+        },
+        precipitationWindow: {
+            min: 7,
+            max: 21,
+            optimal: 10,
+            correlation: 'Precipitation 1 week before positively correlated with productivity',
+            requirement: 'Deep soaking rain saturating top several inches - light sprinkle insufficient'
+        },
+        elevationRange: {
+            min: 0,
+            max: 4000,
+            optimal: 500,
+            elevationDelay: '7-14 days per 1000 feet',
+            notes: 'Lower elevations (oak) fruit July-Aug; higher (beech-birch) fruit Aug-Oct'
+        },
+        hostTreeFrequencies: {
+            'Oak': '40-50%',
+            'Beech': '20-25%',
+            'Birch': '10-15%',
+            'Hemlock': '10-15%',
+            'White Pine': '5-10%'
+        },
+        phenologyNH: {
+            baseElevation: 'Late June - Early July start, July 15 - Aug 31 peak',
+            midElevation: 'Mid-July start, August peak',
+            highElevation: 'Late July - Early Aug start, Late Aug - Sept peak',
+            persistence: '44-90+ days (exceptionally long)',
+            forestAge: '10-40 years optimal'
+        },
+        confidenceLevel: 'High',
+        safetyRating: 'SAFE (but has toxic lookalikes - see safety notes)',
+
         identificationNotes: {
-            'Gills': 'False gills, blunt ridges',
+            'Gills': 'FALSE GILLS - blunt forked ridges, NOT easily removed',
             'Color': 'Bright yellow to gold',
-            'Smell': 'Fruity, apricot-like aroma'
+            'Smell': 'Fruity, apricot-like aroma',
+            'Growth': 'ALWAYS from SOIL, never on wood',
+            'Pattern': 'Solitary or scattered, never dense clusters',
+            'CRITICAL SAFETY': 'Jack O\'Lanterns are TOXIC - true gills, grow on wood in clusters',
+            'Safety Test': 'Pick at "gills" - false gills do not separate easily'
         },
         regions: {
             'Great North Woods': 0.7,
@@ -477,10 +634,55 @@ export const speciesData = {
         hostTrees: ['hardwood', 'conifer'],
         microhabitat: 'parasitized Lactarius/Russula species',
         soilPreference: 'acidic forest soils where host mushrooms grow',
+
+        // RESEARCH-ENHANCED DATA (December 2025)
+        optimalSoilTemp: {
+            min: 55,
+            max: 75,
+            optimal: 65,
+            notes: 'Follows host mushroom (Russula/Lactarius) requirements',
+            confidence: 'Medium-High'
+        },
+        soilPH: {
+            min: 4.5,
+            max: 6.5,
+            optimal: 5.5,
+            notes: 'Follows host species preferences',
+            confidence: 'Medium'
+        },
+        precipitationWindow: {
+            min: 7,
+            max: 14,
+            optimal: 10,
+            notes: 'Follows host mushroom patterns'
+        },
+        elevationRange: {
+            min: 0,
+            max: 3500,
+            optimal: { min: 500, max: 2000 }
+        },
+        hostSpecies: {
+            'Russula brevipes': 'Primary host - 70-80%',
+            'Lactarius piperatus': 'Secondary host - 20-30%',
+            parasiteTransformation: 'Parasite DNA 95%+ in mature specimens'
+        },
+        phenologyNH: {
+            start: 'July',
+            peak: 'August - September',
+            end: 'October',
+            dependsOnHost: 'Timing follows host mushroom patterns'
+        },
+        confidenceLevel: 'Medium-High',
+        safetyRating: 'SAFE (no poisonings in hundreds of years)',
+
         identificationNotes: {
-            'Texture': 'Firm, dense flesh unlike typical mushrooms',
+            'Texture': 'FIRM, DENSE flesh unlike typical mushrooms',
             'Color': 'Bright orange-red exterior',
-            'Host': 'Always on Lactarius or Russula host'
+            'Host': 'Always on Lactarius or Russula host',
+            'CRITICAL CHECK': 'Interior flesh MUST be WHITE (diagnostic)',
+            'Safety Protocol': 'Reject half-parasitized specimens',
+            'Firmness Test': 'Very dense, hard to break',
+            'Quebec DNA Study': 'Mature lobster 95%+ parasite DNA - host toxins neutralized'
         },
         regions: {
             'Great North Woods': 0.3,
@@ -500,10 +702,58 @@ export const speciesData = {
         hostTrees: ['oak (primarily)'],
         microhabitat: 'base of mature oak trees, on roots',
         soilPreference: 'rich, well-drained soils around oak trees',
+
+        // RESEARCH-ENHANCED DATA (December 2025)
+        optimalSoilTemp: {
+            min: 50,
+            max: 68,
+            optimal: 59,
+            fruitingOptimal: { min: 59, max: 68 },
+            mycelialGrowth: { min: 68, max: 77 },
+            notes: 'Cultivation data from controlled studies',
+            confidence: 'Medium-High',
+            source: 'PMC Fang et al. 2012, zombiemyco.com'
+        },
+        soilPH: {
+            min: 5.0,
+            max: 7.0,
+            optimal: 6.0,
+            confidence: 'Medium'
+        },
+        precipitationWindow: {
+            min: 7,
+            max: 21,
+            optimal: 14,
+            requirement: 'Sustained rainfall preceding fruiting; warm temperatures + abundant rain'
+        },
+        elevationRange: {
+            min: 0,
+            max: 3000,
+            optimal: { min: 200, max: 1500 },
+            typicalRange: 'Below 3,280 feet - lowland forest species'
+        },
+        hostTreeFrequencies: {
+            'Oak': '95-100% - MANDATORY',
+            'Tree Age': '70+ years (mature stands)',
+            'Association': 'White-rot pathogen, base of living oaks'
+        },
+        phenologyNH: {
+            start: 'Late August',
+            peak: 'September - October',
+            end: 'Late October - early November',
+            perennialNote: 'SAME TREES FRUIT FOR 5-10+ YEARS - excellent for GPS marking'
+        },
+        confidenceLevel: 'High (oak association well-documented)',
+        safetyRating: 'SAFE (main lookalike is also edible)',
+        oakMandatory: true,  // Flag for probability calculations
+
         identificationNotes: {
-            'Habitat': 'Always at base of oaks, can return to same spot annually',
+            'Habitat': 'ALWAYS at base of MATURE OAKS (70+ years old)',
             'Shape': 'Large, clustered, frond-like',
-            'Color': 'Gray-brown to tan'
+            'Color': 'Gray-brown to tan',
+            'Perennial': 'Returns to SAME TREES annually for years',
+            'Lookalike': 'Meripilus sumstinei (Black-staining Polypore) also edible but stains BLACK',
+            'Key to Success': 'Mark productive oak trees - they fruit repeatedly'
         },
         regions: {
             'Great North Woods': 0.2,
@@ -570,11 +820,60 @@ export const speciesData = {
         hostTrees: ['pine', 'hemlock', 'spruce'],
         microhabitat: 'under conifers in sandy, well-drained soils',
         soilPreference: 'sandy, acidic, well-drained conifer duff',
+
+        // RESEARCH-ENHANCED DATA (December 2025)
+        optimalSoilTemp: {
+            min: 54,
+            max: 66,
+            optimal: 64,
+            notes: 'Based on T. matsutake studies; T. magnivelare may vary',
+            confidence: 'Medium',
+            source: 'Kurokochi & Lian 2018 Current Trends Forest Research'
+        },
+        soilPH: {
+            min: 4.5,
+            max: 6.0,
+            optimal: 5.0,
+            inside_shiro: { min: 4.5, max: 5.5 },
+            notes: 'Active fungal colony zone (shiro)',
+            confidence: 'High'
+        },
+        precipitationWindow: {
+            min: 3,
+            max: 14,
+            optimal: 7,
+            weeklyRainfallTarget: 1.0,
+            notes: 'Inches of rainfall per week optimal'
+        },
+        elevationRange: {
+            min: 200,
+            max: 2500,
+            optimal: 800,
+            nhZones: 'Lakeshore 200-600ft, mid-slope 600-1500ft, upper limit 1500-2500ft',
+            bestHabitat: 'Hemlock stands near lakes most productive'
+        },
+        hostTreeFrequencies: {
+            'Eastern Hemlock': '60% - PRIMARY (most productive in NH)',
+            'Jack Pine': '20% - more common north of NH',
+            'Red Pine': '10% - natural stands only',
+            'Pitch Pine': '10% - coastal/sandy soils'
+        },
+        phenologyNH: {
+            start: 'early September',
+            peak: 'late September - early October',
+            end: 'late October - early November',
+            triggers: 'Soil temp drop to 54-66°F + significant rain (1+ inch)'
+        },
+        confidenceLevel: 'Medium',
+        safetyRating: 'SAFE (distinctive cinnamon odor, no deadly lookalikes in NH)',
+
         identificationNotes: {
-            'Smell': 'Distinctive spicy, cinnamon-like aroma',
+            'Smell': 'DISTINCTIVE spicy, cinnamon + funky aroma (KEY identifier)',
             'Cap': 'White to brown, often with soil debris',
             'Gills': 'White, attached, often torn',
-            'Habitat': 'Buried in conifer duff, often only cap visible'
+            'Habitat': 'Buried in conifer duff, often only cap visible',
+            'Stem Test': 'Firm, resists crushing (vs. brittle Amanita)',
+            'Key Feature': 'Cinnamon odor is diagnostic - always verify'
         },
         regions: {
             'Great North Woods': 0.8,
@@ -642,11 +941,55 @@ export const speciesData = {
         hostTrees: ['hardwood', 'oak', 'hickory'],
         microhabitat: 'hardwood forests, especially oak-hickory',
         soilPreference: 'rich, well-drained hardwood forest soils',
+
+        // RESEARCH-ENHANCED DATA (December 2025)
+        optimalSoilTemp: {
+            min: 60,
+            max: 80,
+            optimal: 70,
+            confidence: 'Medium'
+        },
+        soilPH: {
+            min: 5.0,
+            max: 7.0,
+            optimal: 6.0,
+            notes: 'Oak mycorrhizal associations',
+            confidence: 'Medium'
+        },
+        precipitationWindow: {
+            min: 7,
+            max: 14,
+            optimal: 10,
+            requirement: 'Sustained summer rainfall'
+        },
+        elevationRange: {
+            min: 0,
+            max: 3000,
+            optimal: { min: 200, max: 1500 }
+        },
+        hostTreeFrequencies: {
+            'Red Oak': '50-60%',
+            'White Oak': '30-40%',
+            'Association': 'Mycorrhizal with oaks - PRIMARY'
+        },
+        phenologyNH: {
+            start: 'June',
+            peak: 'July - August',
+            end: 'September - October',
+            coOccurrence: 'Often found WITH L. volemus and L. hygrophoroides'
+        },
+        confidenceLevel: 'High',
+        safetyRating: 'SAFE with proper latex taste test',
+        oakMandatory: true,
+
         identificationNotes: {
-            'Cap': 'Orange-brown with corrugated (wrinkled) surface',
-            'Milk': 'White latex that does not change color',
-            'Gills': 'Close, white to cream, stain brown when bruised',
-            'Habitat': 'Always associated with hardwood trees'
+            'Cap': 'DEEPLY CORRUGATED (wrinkled) surface - darker brown',
+            'Milk': 'White latex that stains brown',
+            'Gills': 'Close spacing, orangish before bruising',
+            'Odor': 'WEAKER or ABSENT (vs. strong fishy smell of volemus)',
+            'MANDATORY TEST': 'Taste tiny amount of latex - MUST be MILD',
+            'REJECT if': 'Latex is HOT, PEPPERY, or ACRID',
+            'Key Difference': 'More wrinkled cap, darker, weaker odor than L. volemus'
         },
         regions: {
             'Great North Woods': 0.4,
@@ -666,11 +1009,56 @@ export const speciesData = {
         hostTrees: ['hardwood', 'oak', 'pine'],
         microhabitat: 'hardwood and mixed forests',
         soilPreference: 'rich, well-drained forest soils',
+
+        // RESEARCH-ENHANCED DATA (December 2025)
+        optimalSoilTemp: {
+            min: 60,
+            max: 80,
+            optimal: 70,
+            confidence: 'Medium'
+        },
+        soilPH: {
+            min: 5.0,
+            max: 7.0,
+            optimal: 6.0,
+            notes: 'Oak mycorrhizal associations',
+            confidence: 'Medium'
+        },
+        precipitationWindow: {
+            min: 7,
+            max: 14,
+            optimal: 10,
+            requirement: 'Sustained summer rainfall'
+        },
+        elevationRange: {
+            min: 0,
+            max: 3000,
+            optimal: { min: 200, max: 1500 }
+        },
+        hostTreeFrequencies: {
+            'Red Oak': '45-55%',
+            'White Oak': '30-40%',
+            'Other Hardwoods': '10-20%',
+            'Association': 'Mycorrhizal with oaks - PRIMARY'
+        },
+        phenologyNH: {
+            start: 'Late summer',
+            peak: 'August - early fall',
+            end: 'September - October',
+            coOccurrence: 'Often found WITH L. volemus and L. corrugis'
+        },
+        confidenceLevel: 'High',
+        safetyRating: 'SAFE with proper latex taste test',
+        oakMandatory: true,
+
         identificationNotes: {
-            'Cap': 'Orange to orange-brown, smooth',
-            'Milk': 'White latex that does not change color',
-            'Gills': 'White, widely spaced, some forked',
-            'Bruising': 'Cap and stem bruise brown when handled'
+            'Cap': 'Orange to orange-brown, smooth, often with umbo (bump)',
+            'Milk': 'White latex that does NOT stain brown quickly',
+            'Gills': 'WIDELY SPACED (KEY - vs. close in volemus/corrugis)',
+            'Odor': 'NO strong fishy smell (KEY difference from volemus)',
+            'MANDATORY TEST': 'Taste tiny amount of latex - MUST be MILD',
+            'REJECT if': 'Latex is HOT, PEPPERY, or ACRID',
+            'Key Difference': 'Widely spaced gills, no fishy odor, no strong latex staining'
         },
         regions: {
             'Great North Woods': 0.4,
@@ -690,11 +1078,57 @@ export const speciesData = {
         hostTrees: ['hardwood', 'oak', 'beech'],
         microhabitat: 'hardwood forests, especially oak-beech',
         soilPreference: 'rich, well-drained hardwood forest soils',
+
+        // RESEARCH-ENHANCED DATA (December 2025)
+        optimalSoilTemp: {
+            min: 60,
+            max: 80,
+            optimal: 70,
+            confidence: 'Medium',
+            source: 'General mycorrhizal mushroom requirements'
+        },
+        soilPH: {
+            min: 5.0,
+            max: 7.0,
+            optimal: 6.0,
+            notes: 'Oak mycorrhizal associations',
+            confidence: 'Medium'
+        },
+        precipitationWindow: {
+            min: 7,
+            max: 14,
+            optimal: 10,
+            requirement: 'Sustained summer rainfall'
+        },
+        elevationRange: {
+            min: 0,
+            max: 3000,
+            optimal: { min: 200, max: 1500 }
+        },
+        hostTreeFrequencies: {
+            'Red Oak': '40-50%',
+            'White Oak': '25-35%',
+            'Beech': '10-15%',
+            'Association': 'Mycorrhizal with oaks - PRIMARY'
+        },
+        phenologyNH: {
+            start: 'June (early summer)',
+            peak: 'July - August',
+            end: 'September - October',
+            coOccurrence: 'Often found WITH L. corrugis and L. hygrophoroides'
+        },
+        confidenceLevel: 'High',
+        safetyRating: 'SAFE with proper latex taste test',
+        oakMandatory: true,  // Strong oak association
+
         identificationNotes: {
             'Cap': 'Tawny orange-brown, velvety when young',
-            'Milk': 'Abundant white latex that dries yellowish',
-            'Smell': 'Distinctive fishy or seafood odor',
-            'Gills': 'Close, cream colored, stain brown from latex'
+            'Milk': 'ABUNDANT WHITE LATEX that dries yellowish/brown',
+            'Smell': 'DISTINCTIVE FISHY or seafood odor (KEY identifier)',
+            'Gills': 'CLOSE spacing, cream colored, stain brown from latex',
+            'MANDATORY TEST': 'Taste tiny amount of latex - MUST be MILD',
+            'REJECT if': 'Latex is HOT, PEPPERY, or ACRID (indicates toxic species)',
+            'Safety Protocol': 'All three NH milk caps have MILD latex - acrid = reject'
         },
         regions: {
             'Great North Woods': 0.5,

@@ -76,6 +76,7 @@ export function calculateProbability(speciesKey, weather, region) {
 
 /**
  * Apply species-specific adjustments to probability
+ * ENHANCED December 2025: Research-backed multipliers for improved accuracy
  * @param {string} speciesKey - Species identifier
  * @param {number} baseProbability - Base calculated probability
  * @param {Object} weather - Weather conditions
@@ -84,32 +85,71 @@ export function calculateProbability(speciesKey, weather, region) {
  */
 function applySpeciesAdjustments(speciesKey, baseProbability, weather, season) {
     let adjustedProbability = baseProbability;
-    
+    const species = speciesData[speciesKey];
+
+    if (!species) return adjustedProbability;
+
+    // RESEARCH ENHANCEMENT: Oak-dependent species multiplier
+    // Maitake and Milk Caps REQUIRE oak presence (research-backed)
+    if (species.oakMandatory) {
+        // Apply oak proximity multiplier based on county (oak-rich regions)
+        const oakRichRegions = ['Merrimack Valley', 'Monadnock Region', 'Dartmouth-Sunapee'];
+        const currentRegion = countyRegions[weather.county] || '';
+
+        if (oakRichRegions.includes(currentRegion)) {
+            adjustedProbability *= 1.2;  // Oak-dominant areas boost
+        } else {
+            adjustedProbability *= 0.8;  // Lower probability in conifer-dominant areas
+        }
+    }
+
+    // RESEARCH ENHANCEMENT: Moss association multiplier
+    // Black trumpets and trumpet chanterelles benefit from mossy habitats
+    if (species.mossAssociation === 'STRONG') {
+        // Moss more prevalent in:
+        // - Areas with higher precipitation
+        // - North-facing slopes (represented by cooler temps)
+        // - Higher elevations
+        if (weather.rainfall > 2.0) {
+            adjustedProbability *= 1.3;  // Moss-friendly conditions
+        }
+    }
+
     // Species-specific logic
     switch (speciesKey) {
         case 'morels':
-            // Morels need specific spring conditions
-            if (season === 'spring' && weather.soilTemp >= 55 && weather.soilTemp <= 70) {
-                adjustedProbability *= 1.3;
+            // ENHANCED: Research-backed soil temp requirements (50-60°F optimal)
+            if (season === 'spring' && weather.soilTemp >= 50 && weather.soilTemp <= 60) {
+                adjustedProbability *= 1.4;  // Increased from 1.3 - optimal range
+            } else if (season === 'spring' && weather.soilTemp >= 55 && weather.soilTemp <= 70) {
+                adjustedProbability *= 1.2;  // Still good, wider range
             }
+            // NH soil pH challenge (typically <6.0, morels prefer 6.0-7.5)
+            // Connecticut River Valley has better soil
+            const nhSoilPenalty = 0.9;  // Slight penalty for acidic NH soils
+            adjustedProbability *= nhSoilPenalty;
             break;
-            
+
         case 'chanterelles':
-            // Chanterelles love consistent moisture
-            if (weather.rainfall > 1.5 && weather.rainfall < 4.0) {
-                adjustedProbability *= 1.2;
+            // ENHANCED: Deep soaking rain requirement (research-backed)
+            // Optimal soil temp 54.5-72.5°F
+            if (weather.rainfall > 2.0 && weather.rainfall < 4.0 &&
+                weather.soilTemp >= 54.5 && weather.soilTemp <= 72.5) {
+                adjustedProbability *= 1.3;  // Optimal conditions
+            } else if (weather.rainfall > 1.5 && weather.rainfall < 4.0) {
+                adjustedProbability *= 1.1;  // Good conditions
             }
             break;
-            
+
         case 'boletusSubcaerulescens':
-        case 'boletusEdulis': 
+        case 'boletusEdulis':
         case 'boletusChippewaensis':
             // Conifer boletes prefer cooler, moist conditions
             if (weather.soilTemp < 70 && weather.rainfall > 2.0) {
                 adjustedProbability *= 1.3;
             }
             break;
-            
+
         case 'boletusVariipes':
         case 'boletusAtkinsonii':
         case 'boletus_separans':
@@ -119,29 +159,60 @@ function applySpeciesAdjustments(speciesKey, baseProbability, weather, season) {
                 adjustedProbability *= 1.25;
             }
             break;
-            
+
         case 'blacktrumpets':
-            // Black trumpets love fall moisture
-            if (season === 'fall' && weather.rainfall > 2.5) {
-                adjustedProbability *= 1.4;
+            // ENHANCED: Research shows extended fall season, moss association
+            // Optimal soil temp 55-70°F
+            if (season === 'fall' && weather.rainfall > 2.5 &&
+                weather.soilTemp >= 55 && weather.soilTemp <= 70) {
+                adjustedProbability *= 1.5;  // Increased - optimal conditions
+            } else if (season === 'fall' && weather.rainfall > 2.0) {
+                adjustedProbability *= 1.3;  // Good fall conditions
             }
             break;
-            
+
         case 'maitake':
-            // Maitake peaks in fall around oaks
-            if (season === 'fall') {
-                adjustedProbability *= 1.3;
+            // ENHANCED: Research shows 59-68°F optimal for fruiting
+            // Fall season is critical
+            if (season === 'fall' && weather.soilTemp >= 59 && weather.soilTemp <= 68) {
+                adjustedProbability *= 1.5;  // Increased - optimal temp range
+            } else if (season === 'fall') {
+                adjustedProbability *= 1.2;  // Fall season still good
             }
             break;
-            
+
         case 'matsutake':
-            // Matsutake prefers drier conditions after rain
-            if (weather.rainfall > 1.0 && weather.rainfall < 2.5) {
-                adjustedProbability *= 1.2;
+            // ENHANCED: Research shows 54-66°F optimal soil temp
+            // Hemlock association critical
+            if (season === 'fall' && weather.rainfall > 1.0 && weather.rainfall < 2.5 &&
+                weather.soilTemp >= 54 && weather.soilTemp <= 66) {
+                adjustedProbability *= 1.4;  // Optimal conditions
+            } else if (weather.rainfall > 1.0 && weather.rainfall < 2.5) {
+                adjustedProbability *= 1.1;  // Good rainfall conditions
+            }
+            break;
+
+        case 'tawnymilky':
+        case 'corrugatedmilky':
+        case 'orangemilky':
+            // ENHANCED: All three milk caps - oak association critical
+            // Summer heat lovers (60-80°F optimal)
+            if (season === 'summer' && weather.soilTemp >= 60 && weather.soilTemp <= 80) {
+                adjustedProbability *= 1.3;  // Optimal summer conditions
+            }
+            // Oak-rich regions already boosted above via oakMandatory flag
+            break;
+
+        case 'lobster':
+            // ENHANCED: Follows host mushroom patterns (Russula/Lactarius)
+            // Summer-fall fruiting
+            if ((season === 'summer' || season === 'fall') &&
+                weather.soilTemp >= 55 && weather.soilTemp <= 75) {
+                adjustedProbability *= 1.2;  // Optimal host conditions
             }
             break;
     }
-    
+
     return adjustedProbability;
 }
 
