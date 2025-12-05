@@ -1,13 +1,39 @@
-# 🍄 GraniteFungiForager v3.3.0
+# 🍄 GraniteFungiForager v3.4.0
 
 
 [![Tests](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml/badge.svg)](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**GraniteFungiForager** - NH Tier 1 Wild Mushroom Probability Map with interactive foraging conditions based on real-time weather data and mycological expertise.
+**GraniteFungiForager** - NH Tier 1 Wild Mushroom Probability Map with interactive foraging conditions based on real-time weather data, peer-reviewed research, and mycological expertise.
 
 ## 🌐 **LIVE APPLICATION**
 **Try it now:** https://ibelanger.github.io/GraniteFungiForager/
+
+## 🆕 **What's New in v3.4.0** (December 2025)
+
+### 🔬 **MAJOR: Research-Backed Species Data Integration**
+- **Peer-Reviewed Research** - 7 key species enhanced with data from MushroomExpert.com, USDA studies, and peer-reviewed publications
+- **13 New Data Fields** - Optimal soil temperatures, pH requirements, precipitation windows, elevation ranges, host tree frequencies
+- **Confidence Levels** - All enhanced data includes confidence ratings (High/Medium/Low) and source citations
+- **Enhanced Safety Protocols** - Critical identification checks for morels, chanterelles, milk caps, and lobster mushrooms
+
+### 🍄 **Enhanced Species with Scientific Data**
+- **Morels** (HIGH): 50-60°F optimal, pH 6.0-7.5, hollow interior check (Mihail 2014)
+- **Chanterelles** (HIGH): 54.5-72.5°F optimal, 7-21 day rain window, false gills diagnostic (USDA PNW-GTR-576)
+- **Matsutake** (MEDIUM): 54-66°F optimal, hemlock 60% primary host (Kurokochi & Lian 2018)
+- **Maitake** (HIGH): 59-68°F fruiting, oak 95-100% mandatory, perennial (5-10+ years)
+- **Lobster Mushroom** (MEDIUM-HIGH): Host-dependent, white interior check, 95%+ parasite DNA
+- **Milk Caps** (HIGH): Oak mandatory, latex taste test protocol, 3 species with co-occurrence patterns
+- **Black Trumpets** (MEDIUM-HIGH): 55-70°F optimal, moss association, 30-40+ lb patch potential
+
+### 🎯 **Smarter Probability Calculations**
+- **Oak Proximity Multiplier** - 1.2x boost in oak-rich counties for oak-dependent species
+- **Moss Association Multiplier** - 1.3x boost for Black Trumpets in high-rainfall areas
+- **Species-Specific Optima** - Enhanced multipliers using peer-reviewed temperature ranges
+- **NH Soil Challenges** - 0.9x penalty for morels in acidic granite soils
+
+### 📚 **Research Sources**
+All enhancements backed by peer-reviewed sources including USDA studies, McIlvainea journal, PMC research, and expert mycological resources.
 
 ## 🆕 **What's New in v3.3.0** (December 2025)
 
