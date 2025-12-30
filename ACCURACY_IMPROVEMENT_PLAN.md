@@ -2,21 +2,33 @@
 ## GraniteFungiForager Data Validation & Refinement Strategy
 
 ### **📊 Current Status Assessment (December 2025)**
-- **Confidence Level**: 70-75% (baseline enhanced with peer-reviewed research - UP from 60-70%)
+- **Confidence Level**: 72-77% (baseline enhanced with peer-reviewed research - UP from 60-70%)
 - **Target Goal**: 85-90% (empirically validated through real data)
 - **Method**: Research-backed data + community reports + scientific observations
 - **Infrastructure Status**: ✅ **COMPLETE** - All major systems implemented
-- **Research Integration Status**: ✅ **PHASE 1 COMPLETE** - 7 species enhanced with peer-reviewed data
+- **Research Integration Status**: ✅ **PHASE 2 COMPLETE** - 17 of 29 species enhanced (59% complete)
 
-### **🎉 NEW: Research Integration Milestone Achieved (v3.4.0 - December 2025)**
+### **🎉 LATEST: v3.5.0 - King Boletes & Hedgehogs Enhancement (December 30, 2025)**
 
-**✅ Completed: Peer-Reviewed Research Integration (Phase 3.4)**
-- **7 Key Species Enhanced** with research-backed data fields
-- **13 New Data Fields** added to species objects
-- **Confidence Level Tracking** for all enhanced data
-- **7+ Research Sources** cited with specific studies
+**✅ Completed: 10 Additional Species Enhanced**
+- **King Bolete Complex (7 species)** - All B. edulis group species with habitat-specific data
+- **Hedgehog Subgenera (3 species)** - All Hydnum groups with DNA taxonomy and user field observations
+- **Total Enhanced**: 17 of 29 species (59% complete, up from 24%)
+- **New Research Sources**: 6+ additional peer-reviewed sources integrated
 
-**Enhanced Species with Peer-Reviewed Data:**
+**v3.5.0 Enhanced Species:**
+8. **Boletus edulis** (Type species, HIGH) - Norway Spruce 50%, conifer specialist
+9. **Boletus subcaerulescens** (MEDIUM-HIGH) - Spruce 70%, pine specialist
+10. **Boletus variipes** (MEDIUM-HIGH) - Oak 60%, summer fruiting
+11. **Boletus atkinsonii** (MEDIUM) - Oak 40%, June-Sept fruiting
+12. **Boletus separans** (MEDIUM-HIGH) - Red Oak 60%, extended season
+13. **Boletus nobilis** (MEDIUM) - Oak-Beech 90%, high elevation
+14. **Boletus chippewaensis** (MEDIUM-HIGH) - Hemlock 70% specialist
+15. **Sweet Tooth** (HIGH) - Merrimack County user-verified, Beech 35-40%
+16. **Depressed Hedgehog** (MEDIUM-HIGH) - 9 eastern species, small size diagnostic
+17. **White Hedgehog** (MEDIUM-HIGH) - DNA-based ID, staining tests critical
+
+**v3.4.0 Enhanced Species (Original 7):**
 1. **Morels** (HIGH confidence) - Mihail 2014 soil temperature thresholds (50-60°F optimal)
 2. **Chanterelles** (HIGH confidence) - USDA PNW-GTR-576 ecology data (54.5-72.5°F optimal)
 3. **Matsutake** (MEDIUM confidence) - Kurokochi & Lian 2018 temperature data (54-66°F optimal)
@@ -31,11 +43,13 @@
 - ✅ Species-specific temperature optima (peer-reviewed ranges)
 - ✅ NH soil pH challenges modeled (morels 0.9x penalty in acidic soils)
 - ✅ Elevation-based phenological delays (7-14 days per 1000 feet)
+- ✅ User field observation integration (Merrimack County late summer Hydnum data)
 
 **Estimated Accuracy Improvement:**
 - **Previous Baseline**: 60-70% (expert estimates only)
-- **Current With Research**: 70-75% (research-backed for 7 species, ~25% of database)
-- **Remaining Gap to Goal**: 10-15% (achievable through user data + remaining species enhancements)
+- **v3.4.0 (7 species)**: 70-75% (research-backed for 24% of database)
+- **v3.5.0 (17 species)**: 72-77% (research-backed for 59% of database)
+- **Remaining Gap to Goal**: 8-13% (achievable through remaining 12 species + user data)
 
 ---
 
@@ -165,8 +179,8 @@ const foragingLog = {
 - **User Reports**: 0/500+ foraging attempts logged (📊 System ready, awaiting users)
 - **iNaturalist Integration**: 0/1000+ NH observations analyzed (🔬 API ready, awaiting activation)
 - **Expert Validation**: 0/100% of species reviewed by mycologists (⏳ Outreach needed)
-- **Academic Sources**: 22/50+ research papers integrated (📚 ✅ **7 NEW** from v3.4.0 research enhancement)
-- **Peer-Reviewed Data Integration**: ✅ **7/29 species** enhanced with research-backed data fields (24% complete)
+- **Academic Sources**: 28/50+ research papers integrated (📚 ✅ **13 NEW** from v3.4.0 + v3.5.0)
+- **Peer-Reviewed Data Integration**: ✅ **17/29 species** enhanced with research-backed data fields (59% complete)
 
 ---
 
