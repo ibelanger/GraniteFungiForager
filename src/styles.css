@@ -565,12 +565,17 @@ input[type="checkbox"]:focus {
 .county-label {
     font-size: 13px;
     font-weight: 700;
-    fill: var(--forest-dark);
+    fill: var(--mycelium-white);
     text-anchor: middle;
     pointer-events: none;
-    text-shadow: 1px 1px 3px rgba(253, 250, 245, 0.9);
+    /* SVG text-shadow doesn't work, use filter instead */
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.7));
     font-family: 'Crimson Pro', serif;
     letter-spacing: 0.05em;
+    /* Add stroke for maximum readability on any background */
+    paint-order: stroke fill;
+    stroke: rgba(26, 47, 26, 0.5);
+    stroke-width: 0.5px;
 }
 
 /* Geographic Icons */
@@ -731,6 +736,143 @@ input[type="checkbox"]:focus {
 .close-btn:hover {
     background: rgba(255, 255, 255, 0.15);
     transform: rotate(90deg);
+}
+
+/* ==================== COUNTY MODAL CONTENT ==================== */
+.modal-body {
+    padding: var(--space-lg) var(--space-xl);
+}
+
+.probability-display {
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-md);
+    border: 2px solid rgba(45, 80, 22, 0.1);
+    position: relative;
+}
+
+.probability-display h4 {
+    margin: 0;
+    font-size: 1.25rem;
+    /* Force white text for accessibility on dark/brown backgrounds */
+    color: var(--mycelium-white) !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    font-weight: 700;
+}
+
+.top-species {
+    margin-bottom: var(--space-md);
+}
+
+.top-species h4 {
+    color: var(--forest-medium);
+    margin-bottom: var(--space-sm);
+    font-size: 1.1rem;
+}
+
+.species-rankings {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.current-conditions,
+.recommendations,
+.general-info {
+    margin-bottom: var(--space-md);
+}
+
+.current-conditions h4,
+.recommendations h4,
+.general-info h4 {
+    color: var(--forest-medium);
+    margin-bottom: var(--space-sm);
+    font-size: 1.1rem;
+}
+
+.conditions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-sm);
+}
+
+.condition-item {
+    background: var(--mushroom-cream);
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(45, 80, 22, 0.1);
+}
+
+.condition-label {
+    font-weight: 600;
+    color: var(--forest-medium);
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.condition-value {
+    color: var(--forest-dark);
+    font-size: 1.1rem;
+}
+
+.recommendations ul,
+.general-info ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.recommendations li,
+.general-info li {
+    padding: var(--space-xs) 0;
+    padding-left: var(--space-md);
+    position: relative;
+}
+
+.recommendations li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--chanterelle-gold);
+    font-weight: bold;
+}
+
+.county-actions {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.report-success-btn,
+.clear-btn {
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.report-success-btn {
+    background: var(--forest-medium);
+    color: var(--mycelium-white);
+    flex: 1;
+}
+
+.report-success-btn:hover {
+    background: var(--forest-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.clear-btn {
+    background: var(--oyster-grey);
+    color: var(--forest-dark);
+}
+
+.clear-btn:hover {
+    background: var(--black-trumpet);
+    color: var(--mycelium-white);
+    transform: translateY(-2px);
 }
 
 /* ==================== TOAST NOTIFICATIONS ==================== */
