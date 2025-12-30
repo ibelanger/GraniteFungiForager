@@ -766,7 +766,7 @@ export const speciesData = {
         }
     },
     boletusEdulis: {
-        name: 'King Bolete (Boletus edulis var. chippewaensis)',
+        name: 'King Bolete (Boletus edulis)',
         tempRange: [55, 75],
         moistureMin: 2.0,
         seasonMultiplier: { spring: 0.2, summer: 0.8, fall: 1.0 },
@@ -782,7 +782,7 @@ export const speciesData = {
             cessationThreshold: 70,
             measurementDepth: '0-8 inches',
             confidence: 'High',
-            source: 'Multiple cultivation studies on B. edulis - most researched species',
+            source: 'Multiple cultivation studies on B. edulis complex - most researched',
             notes: '3 days in sunny weather, 4-5 days in cloudy weather after rain'
         },
         soilPH: {
@@ -825,14 +825,16 @@ export const speciesData = {
             triggers: 'Autumn rains + temperature drop'
         },
         confidenceLevel: 'High (most researched Boletus species)',
-        safetyRating: 'EXCELLENT - Premium edible (porcini)',
+        safetyRating: 'EXCELLENT - Premium edible (porcini/cep)',
+        taxonomicNote: 'Type species of the genus. North American populations may represent distinct species (see B. chippewaensis). Maintained as B. edulis for consistency with field guides.',
 
         identificationNotes: {
             'Cap': 'Brown to reddish-brown, classic king bolete appearance',
             'Pores': 'White when young, becoming yellow-green with age',
             'Stipe': 'White reticulation on brown background',
-            'Spores': 'Olive-brown (vs yellowish in European B. edulis)',
+            'Spores': 'Olive-brown spore print',
             'Season': 'Summer through fall in conifer forests',
+            'Taxonomy': 'B. edulis sensu lato - may include B. chippewaensis and related NA species',
             'TOXIC LOOKALIKE': 'Boletus huronensis - slow blue staining, yellow flesh, yellowish stem with red traces',
             'Secondary Lookalike': 'Tylopilus felleus (bitter bolete) - dark reticulation on light stem (opposite), pinkish pores',
             'Key Safety': 'White net-like reticulation on upper stem, NO blue staining, white flesh'
