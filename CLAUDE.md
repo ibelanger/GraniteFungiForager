@@ -564,6 +564,23 @@ The application includes comprehensive safety warnings and follows responsible f
 
 ## Quick Reference for AI Assistants
 
+### AI Model Selection Preferences
+
+**Planning Mode:**
+- **Model:** Claude Opus 4.5 (opus)
+- **Extended Thinking:** ENABLED
+- Use Opus with extended thinking when entering plan mode for complex architectural decisions and implementation planning
+- The deeper reasoning helps explore edge cases and consider multiple approaches before execution
+
+**Execution Mode (Default):**
+- **Model:** Claude Sonnet 4.5 (sonnet)
+- Use Sonnet for all other tasks: coding, testing, documentation updates, bug fixes
+- Sonnet provides excellent performance with lower latency for direct implementation
+
+**When to use Haiku:**
+- Simple, repetitive tasks (e.g., updating version numbers across files)
+- Quick file reads or searches where no complex reasoning is needed
+
 ### When Adding Features
 1. Always run tests first: `npm test`
 2. Create test file before implementing feature
