@@ -1124,3 +1124,254 @@ input[type="checkbox"]:focus {
 .mt-sm { margin-top: var(--space-sm); }
 .mt-md { margin-top: var(--space-md); }
 .mt-lg { margin-top: var(--space-lg); }
+
+/* ============================================================================
+   Compact Species Card Layout with Sticky Positioning
+   ============================================================================ */
+
+/* Sticky positioning for species info panel */
+#species-info {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--mycelium-white);
+    box-shadow: var(--shadow-lg);
+    margin-bottom: var(--space-md);
+}
+
+.species-card {
+    padding: var(--space-sm);
+}
+
+/* Header with collapse button side-by-side */
+.species-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-sm);
+}
+
+.species-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+/* Collapse button - now in header row */
+.species-collapse-btn {
+    background: var(--chanterelle-gold);
+    color: var(--forest-dark);
+    border: none;
+    padding: 0.3rem 0.6rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.75rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s ease;
+}
+
+.species-collapse-btn:hover {
+    background: var(--cap-orange);
+}
+
+.species-collapse-btn:focus {
+    outline: 2px solid var(--forest-dark);
+    outline-offset: 2px;
+}
+
+/* 2-column info grid for temp + moisture */
+.info-grid-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-xs);
+}
+
+.info-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--space-xs);
+    background: var(--mushroom-cream);
+    border-radius: var(--radius-sm);
+    text-align: center;
+}
+
+.chip-icon {
+    font-size: 1rem;
+    margin-bottom: 0.125rem;
+}
+
+.chip-label {
+    font-size: 0.65rem;
+    color: var(--forest-medium);
+    font-weight: 500;
+}
+
+.chip-value {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--forest-dark);
+}
+
+/* Host trees as inline tags */
+.host-trees-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    align-items: center;
+    margin-bottom: var(--space-xs);
+    font-size: 0.8rem;
+}
+
+.row-label {
+    font-weight: 600;
+    color: var(--forest-medium);
+    margin-right: 0.25rem;
+}
+
+.tree-tag {
+    background: var(--forest-light);
+    color: var(--forest-dark);
+    padding: 0.1rem 0.4rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.7rem;
+}
+
+/* Season badges - inline row */
+.season-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-bottom: var(--space-xs);
+}
+
+.season-badge {
+    padding: 0.1rem 0.4rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.65rem;
+    font-weight: 600;
+}
+
+.season-badge.peak {
+    background: #4ade80;
+    color: #166534;
+}
+
+.season-badge.low {
+    background: #fde047;
+    color: #854d0e;
+}
+
+.season-badge.none {
+    background: #e5e7eb;
+    color: #6b7280;
+}
+
+/* Collapsible advanced section using <details> */
+.species-advanced {
+    margin-bottom: var(--space-xs);
+    border: 1px dashed var(--forest-light);
+    border-radius: var(--radius-sm);
+}
+
+.show-more-btn {
+    display: block;
+    width: 100%;
+    font-size: 0.8rem;
+    color: var(--forest-medium);
+    cursor: pointer;
+    padding: var(--space-xs);
+    list-style: none;
+}
+
+.show-more-btn:hover {
+    color: var(--chanterelle-gold);
+    background: var(--mushroom-cream);
+}
+
+.show-more-btn::-webkit-details-marker {
+    display: none;
+}
+
+.advanced-content {
+    padding: var(--space-xs);
+    background: var(--mushroom-cream);
+    font-size: 0.8rem;
+}
+
+.advanced-section {
+    margin-bottom: var(--space-xs);
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--forest-light);
+}
+
+.advanced-section:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.detail-item {
+    margin-left: var(--space-xs);
+    color: var(--forest-dark);
+}
+
+.detail-item em {
+    color: var(--forest-medium);
+    font-style: normal;
+    font-weight: 500;
+}
+
+/* Reference links compact */
+.reference-row {
+    display: flex;
+    gap: var(--space-sm);
+    font-size: 0.75rem;
+    padding-top: var(--space-xs);
+    border-top: 1px solid var(--forest-light);
+}
+
+.reference-row a {
+    color: var(--forest-medium);
+    text-decoration: none;
+}
+
+.reference-row a:hover {
+    color: var(--chanterelle-gold);
+}
+
+/* Compact mode (collapsed state) - shows only header */
+#species-info.compact .species-primary-info,
+#species-info.compact .species-advanced,
+#species-info.compact .reference-row {
+    display: none;
+}
+
+#species-info.compact .species-card {
+    padding: var(--space-xs);
+}
+
+#species-info.compact .species-header {
+    margin-bottom: 0;
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+    .species-card {
+        padding: var(--space-xs);
+    }
+
+    .species-header h3 {
+        font-size: 1rem;
+    }
+
+    .chip-value {
+        font-size: 0.85rem;
+    }
+
+    .tree-tag,
+    .season-badge {
+        font-size: 0.6rem;
+    }
+}

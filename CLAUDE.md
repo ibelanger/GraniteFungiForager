@@ -20,6 +20,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **All 468 tests passing** - accessibility enhancements are fully compatible with existing functionality.
 
+**Compact Species Card with Smart Collapse (Post v3.5.0):** Major UX improvement for mobile foraging experience:
+
+- **2-Column Compact Layout:** Species info card redesigned from ~680px to ~300px height
+  - Temperature and moisture displayed in side-by-side "chips"
+  - Host trees shown as inline tags instead of paragraphs
+  - Seasonal timing as color-coded badges (green=peak, yellow=low, gray=none)
+  - Advanced details (elevation, ID notes, habitat) in collapsible `<details>` section
+- **Auto-Collapse on Mobile:** When clicking a county on viewport height < 768px:
+  - Species card automatically collapses to ~60px header-only view
+  - Both species name AND county probability visible simultaneously
+  - No more forced scrolling that hides valuable species ID information
+- **Sticky Positioning:** Species card stays at top while scrolling on all devices
+- **WCAG AAA Compliant:** No automatic motion, keyboard accessible collapse button
+- **Files Modified:**
+  - `src/modules/interactions.js` - Compact HTML structure, auto-collapse logic
+  - `src/styles.css` - 250 lines of compact layout CSS
+
 **Research-Backed Data Integration:** The application now incorporates peer-reviewed mycological research for improved foraging accuracy:
 
 - **Enhanced Species Data:** Added detailed research-backed fields to key species:

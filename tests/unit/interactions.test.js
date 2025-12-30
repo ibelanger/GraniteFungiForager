@@ -229,10 +229,11 @@ describe('Interactions Module', () => {
             displaySpeciesInfo('morels');
 
             expect(infoPanel.innerHTML).toContain('Morels');
-            expect(infoPanel.innerHTML).toContain('50°F - 70°F');
-            // Check for components separately (1.0 becomes "1" in HTML output)
+            // Compact layout shows "50-70°F" format in chip-value
+            expect(infoPanel.innerHTML).toContain('50-70°F');
+            // Check for moisture min (1.0 becomes "1" in chip)
             expect(infoPanel.innerHTML).toMatch(/1(\.0)?"/); // matches both "1" and "1.0"
-            expect(infoPanel.innerHTML).toContain('rainfall');
+            expect(infoPanel.innerHTML).toContain('Min Rain');
             expect(infoPanel.style.display).toBe('block');
         });
 
@@ -257,8 +258,10 @@ describe('Interactions Module', () => {
 
             displaySpeciesInfo('morels');
 
-            expect(infoPanel.innerHTML).toContain('🌡️ Growing Conditions');
-            expect(infoPanel.innerHTML).toContain('Temperature Range');
+            // Compact layout uses info-chip for temperature
+            expect(infoPanel.innerHTML).toContain('🌡️');
+            expect(infoPanel.innerHTML).toContain('Soil Temp');
+            expect(infoPanel.innerHTML).toContain('50-70°F'); // morels: [50, 70]
         });
 
         test('should display host trees', () => {
@@ -268,10 +271,12 @@ describe('Interactions Module', () => {
 
             displaySpeciesInfo('morels');
 
-            // Check for components separately to handle encoding/formatting variations
-            expect(infoPanel.innerHTML).toContain('Habitat');
-            expect(infoPanel.innerHTML).toContain('Host Trees');
-            expect(infoPanel.innerHTML).toContain('ash, elm, apple');
+            // Compact layout uses tree-tag badges for host trees
+            expect(infoPanel.innerHTML).toContain('🌳');
+            expect(infoPanel.innerHTML).toContain('tree-tag');
+            expect(infoPanel.innerHTML).toContain('ash');
+            expect(infoPanel.innerHTML).toContain('elm');
+            expect(infoPanel.innerHTML).toContain('apple');
         });
 
         test('should display seasonal multipliers', () => {
@@ -281,7 +286,8 @@ describe('Interactions Module', () => {
 
             displaySpeciesInfo('morels');
 
-            expect(infoPanel.innerHTML).toContain('📅 Seasonal Timing');
+            // Compact layout uses season-badge for seasons
+            expect(infoPanel.innerHTML).toContain('season-badge');
             expect(infoPanel.innerHTML).toContain('Spring');
             expect(infoPanel.innerHTML).toContain('100%'); // spring: 1.0
         });
@@ -293,7 +299,8 @@ describe('Interactions Module', () => {
 
             displaySpeciesInfo('morels');
 
-            expect(infoPanel.innerHTML).toContain('🔍 Identification Notes');
+            // Compact layout puts ID notes in collapsible details section
+            expect(infoPanel.innerHTML).toContain('🔍 ID Notes');
             expect(infoPanel.innerHTML).toContain('cap');
             expect(infoPanel.innerHTML).toContain('honeycomb appearance');
         });

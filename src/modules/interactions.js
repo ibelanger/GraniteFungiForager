@@ -8,97 +8,150 @@ import { reportsManager } from './foragingReports.js';
 import { observationAnalyzer } from './observationAnalysis.js';
 
 /**
- * Display detailed species information
+ * Display detailed species information in compact 2-column layout
  * @param {string} speciesKey - Species identifier
  */
 export function displaySpeciesInfo(speciesKey) {
     const species = speciesData[speciesKey];
     if (!species) return;
-    
+
     const infoPanel = document.getElementById('species-info');
     if (!infoPanel) return;
-    
-    // Create species information HTML
+
+    // Helper to get season badge class
+    const getSeasonClass = (mult) => {
+        if (mult >= 0.7) return 'peak';
+        if (mult >= 0.3) return 'low';
+        return 'none';
+    };
+
+    // Build host trees tags
+    const hostTreesHTML = species.hostTrees ?
+        `<div class="host-trees-row">
+            <span class="row-label">🌳</span>
+            ${species.hostTrees.map(tree => `<span class="tree-tag">${tree}</span>`).join('')}
+        </div>` : '';
+
+    // Build season badges
+    const seasonBadgesHTML = species.seasonMultiplier ?
+        `<div class="season-row">
+            ${Object.entries(species.seasonMultiplier).map(([season, mult]) =>
+                `<span class="season-badge ${getSeasonClass(mult)}">${season.charAt(0).toUpperCase() + season.slice(1)} ${(mult * 100).toFixed(0)}%</span>`
+            ).join('')}
+        </div>` : '';
+
+    // Build advanced details (hidden by default)
+    let advancedContent = '';
+
+    if (species.elevationTiming) {
+        advancedContent += `
+            <div class="advanced-section">
+                <strong>⛰️ Elevation:</strong>
+                ${Object.entries(species.elevationTiming).map(([elev, timing]) =>
+                    `<span class="detail-item">${elev}: ${timing}</span>`
+                ).join('')}
+            </div>`;
+    }
+
+    if (species.identificationNotes) {
+        advancedContent += `
+            <div class="advanced-section">
+                <strong>🔍 ID Notes:</strong>
+                ${Object.entries(species.identificationNotes).map(([key, note]) =>
+                    `<div class="detail-item"><em>${key}:</em> ${note}</div>`
+                ).join('')}
+            </div>`;
+    }
+
+    if (species.subgenusDetails) {
+        advancedContent += `
+            <div class="advanced-section">
+                <strong>🧬 Subgenera:</strong>
+                ${Object.entries(species.subgenusDetails).map(([sub, note]) =>
+                    `<div class="detail-item"><em>${sub}:</em> ${note}</div>`
+                ).join('')}
+            </div>`;
+    }
+
+    if (species.species) {
+        advancedContent += `
+            <div class="advanced-section">
+                <strong>🍄 Species:</strong>
+                ${Object.entries(species.species).map(([name, note]) =>
+                    `<div class="detail-item"><em>${name}:</em> ${note}</div>`
+                ).join('')}
+            </div>`;
+    }
+
+    if (species.microhabitat || species.preferredSites) {
+        advancedContent += `
+            <div class="advanced-section">
+                <strong>🌲 Habitat:</strong>
+                ${species.microhabitat ? `<div class="detail-item">${species.microhabitat}</div>` : ''}
+                ${species.preferredSites ? `<div class="detail-item">Sites: ${species.preferredSites.join(', ')}</div>` : ''}
+            </div>`;
+    }
+
+    if (species.soilPreference) {
+        advancedContent += `
+            <div class="advanced-section">
+                <strong>🪨 Soil:</strong> ${species.soilPreference}
+            </div>`;
+    }
+
+    // Build reference links
+    const referenceHTML = (species.mushroomExpertLink || species.boleteKeyLink) ?
+        `<div class="reference-row">
+            ${species.mushroomExpertLink ?
+                `<a href="${species.mushroomExpertLink}" target="_blank" rel="noopener">🔗 ID Guide</a>` : ''}
+            ${species.boleteKeyLink ?
+                `<a href="${species.boleteKeyLink}" target="_blank" rel="noopener">🔗 Bolete Key</a>` : ''}
+        </div>` : '';
+
+    // Create compact species information HTML
     const infoHTML = `
         <div class="species-card">
-            <h3>${species.name}</h3>
-            
-            <div class="info-section">
-                <h4>🌡️ Growing Conditions</h4>
-                <p><strong>Temperature Range:</strong> ${species.tempRange[0]}°F - ${species.tempRange[1]}°F (soil)</p>
-                <p><strong>Minimum Moisture:</strong> ${species.moistureMin}" rainfall (past 7-10 days)</p>
-                ${species.soilPreference ? `<p><strong>Soil Preference:</strong> ${species.soilPreference}</p>` : ''}
+            <div class="species-header">
+                <h3>${species.name}</h3>
+                <button class="species-collapse-btn"
+                        onclick="toggleSpeciesCard()"
+                        aria-expanded="true"
+                        aria-label="Collapse species information">
+                    <span aria-hidden="true">▼</span> Collapse
+                </button>
             </div>
-            
-            ${species.hostTrees ? `
-            <div class="info-section">
-                <h4>🌳 Habitat & Host Trees</h4>
-                <p><strong>Host Trees:</strong> ${species.hostTrees.join(', ')}</p>
-                ${species.microhabitat ? `<p><strong>Microhabitat:</strong> ${species.microhabitat}</p>` : ''}
-                ${species.preferredSites ? `<p><strong>Preferred Sites:</strong> ${species.preferredSites.join(', ')}</p>` : ''}
-            </div>
-            ` : ''}
-            
-            ${species.seasonMultiplier ? `
-            <div class="info-section">
-                <h4>📅 Seasonal Timing</h4>
-                <div class="season-grid">
-                    ${Object.entries(species.seasonMultiplier).map(([season, mult]) => 
-                        `<div class="season-item">
-                            <span class="season-name">${season.charAt(0).toUpperCase() + season.slice(1)}</span>
-                            <span class="season-value">${(mult * 100).toFixed(0)}%</span>
-                        </div>`
-                    ).join('')}
+
+            <div class="species-primary-info">
+                <div class="info-grid-2col">
+                    <div class="info-chip">
+                        <span class="chip-icon">🌡️</span>
+                        <span class="chip-label">Soil Temp</span>
+                        <span class="chip-value">${species.tempRange[0]}-${species.tempRange[1]}°F</span>
+                    </div>
+                    <div class="info-chip">
+                        <span class="chip-icon">💧</span>
+                        <span class="chip-label">Min Rain (7-10d)</span>
+                        <span class="chip-value">${species.moistureMin}"</span>
+                    </div>
                 </div>
+
+                ${hostTreesHTML}
+                ${seasonBadgesHTML}
             </div>
+
+            ${advancedContent ? `
+            <details class="species-advanced">
+                <summary class="show-more-btn">▶ Show Details (Elevation, ID Notes, Habitat)</summary>
+                <div class="advanced-content">
+                    ${advancedContent}
+                </div>
+            </details>
             ` : ''}
-            
-            ${species.elevationTiming ? `
-            <div class="info-section">
-                <h4>⛰️ Elevation Timing</h4>
-                ${Object.entries(species.elevationTiming).map(([elevation, timing]) => 
-                    `<p><strong>${elevation} elevation:</strong> ${timing}</p>`
-                ).join('')}
-            </div>
-            ` : ''}
-            
-            ${species.identificationNotes ? `
-            <div class="info-section">
-                <h4>🔍 Identification Notes</h4>
-                ${Object.entries(species.identificationNotes).map(([key, note]) => 
-                    `<p><strong>${key}:</strong> ${note}</p>`
-                ).join('')}
-            </div>
-            ` : ''}
-            
-            ${species.subgenusDetails ? `
-            <div class="info-section">
-                <h4>🧬 Subgenus Groups</h4>
-                ${Object.entries(species.subgenusDetails).map(([subgenus, note]) => 
-                    `<p><strong>${subgenus}:</strong> ${note}</p>`
-                ).join('')}
-            </div>
-            ` : ''}
-            
-            ${species.species ? `
-            <div class="info-section">
-                <h4>🍄 Species Details</h4>
-                ${Object.entries(species.species).map(([speciesName, note]) => 
-                    `<p><strong>${speciesName}:</strong> ${note}</p>`
-                ).join('')}
-            </div>
-            ` : ''}
-            
-            <div class="info-section">
-                <h4>🔗 Reference Links</h4>
-                ${species.mushroomExpertLink ? 
-                    `<p><a href="${species.mushroomExpertLink}" target="_blank" rel="noopener">MushroomExpert.com Identification Guide</a></p>` : ''}
-                ${species.boleteKeyLink ? 
-                    `<p><a href="${species.boleteKeyLink}" target="_blank" rel="noopener">Boletes WPA Club Key</a></p>` : ''}
-            </div>
+
+            ${referenceHTML}
         </div>
     `;
-    
+
     infoPanel.innerHTML = infoHTML;
     infoPanel.style.display = 'block';
 }
@@ -163,7 +216,8 @@ export function displayCountyInfo(county, countyKey = null) {
             </div>
         `;
         countyPanel.style.display = 'block';
-        countyPanel.scrollIntoView({ behavior: 'smooth' });
+        // Removed auto-scroll to prevent skipping species information card
+        // countyPanel.scrollIntoView({ behavior: 'smooth' });
         return;
     }
     
@@ -290,12 +344,21 @@ export function displayCountyInfo(county, countyKey = null) {
     
     countyPanel.innerHTML = countyHTML;
     countyPanel.style.display = 'block';
-    
-    // Scroll to county info
-    countyPanel.scrollIntoView({ behavior: 'smooth' });
-    
+
+    // Removed auto-scroll to prevent skipping species information card
+    // countyPanel.scrollIntoView({ behavior: 'smooth' });
+
     // Update weather display for this county (use countyKey for weather data)
     updateWeatherDisplay(countyKey);
+
+    // Auto-collapse species card on mobile when county is clicked
+    // This ensures both species name AND county probability are visible
+    if (window.innerHeight < 768) {
+        const speciesCard = document.getElementById('species-info');
+        if (speciesCard && !speciesCard.classList.contains('compact')) {
+            window.toggleSpeciesCard();
+        }
+    }
 }
 
 /**
@@ -1416,6 +1479,32 @@ export function initInteractions() {
 }
 // Make clear function globally available for onclick
 window.clearCountyInfo = clearCountyInfo;
+
+/**
+ * Toggle species card between expanded and compact modes
+ * Provides space-saving collapse functionality for mobile users
+ */
+window.toggleSpeciesCard = function() {
+    const card = document.getElementById('species-info');
+    if (!card) return;
+
+    const isCompact = card.classList.toggle('compact');
+    const btn = card.querySelector('.species-collapse-btn');
+
+    if (!btn) return;
+
+    // Update ARIA state for accessibility
+    btn.setAttribute('aria-expanded', !isCompact);
+
+    // Update button content and label
+    if (isCompact) {
+        btn.innerHTML = '<span aria-hidden="true">▲</span> <span class="collapse-text">Expand</span>';
+        btn.setAttribute('aria-label', 'Expand species information');
+    } else {
+        btn.innerHTML = '<span aria-hidden="true">▼</span> <span class="collapse-text">Collapse</span>';
+        btn.setAttribute('aria-label', 'Collapse species information');
+    }
+};
 
 // Add to your existing interactions.js module
 export function initEnhancedMapInteractions() {
