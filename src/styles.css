@@ -776,6 +776,95 @@ input[type="checkbox"]:focus {
     gap: var(--space-sm);
 }
 
+.species-rank-item {
+    background: var(--mushroom-cream);
+    padding: var(--space-sm);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(45, 80, 22, 0.1);
+    transition: all var(--transition-fast);
+}
+
+.species-rank-item:hover {
+    background: var(--mycelium-white);
+    transform: translateX(4px);
+    box-shadow: var(--shadow-sm);
+}
+
+.rank-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-xs);
+}
+
+.rank-number {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--forest-dark);
+}
+
+.probability-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    /* Force white text for readability on all background colors */
+    color: var(--mycelium-white) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.species-name {
+    font-weight: 600;
+    color: var(--forest-dark);
+    margin-bottom: var(--space-xs);
+    font-size: 1rem;
+}
+
+.species-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.condition-indicators {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.indicator {
+    font-size: 0.85rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    background: rgba(45, 80, 22, 0.05);
+    border: 1px solid rgba(45, 80, 22, 0.1);
+}
+
+.indicator.good {
+    background: rgba(74, 124, 26, 0.1);
+    border-color: var(--success);
+    color: var(--forest-dark);
+}
+
+.indicator.fair {
+    background: rgba(199, 125, 58, 0.1);
+    border-color: var(--warning);
+    color: var(--forest-dark);
+}
+
+.indicator.poor {
+    background: rgba(157, 74, 74, 0.1);
+    border-color: var(--danger);
+    color: var(--forest-dark);
+}
+
+.habitat-hint {
+    font-size: 0.85rem;
+    color: var(--moss-green);
+    font-style: italic;
+}
+
 .current-conditions,
 .recommendations,
 .general-info {
