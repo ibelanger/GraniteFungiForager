@@ -32,43 +32,26 @@
                         </select>
                     </div>
                     
-                    <div class="control-group">
-                        <h3>🌦️ Data Source</h3>
-                        <div id="weather-status" aria-live="polite">
-                            <span id="status-text">Loading weather data...</span>
+                    <div class="control-group control-group-compact">
+                        <h3>Data Source</h3>
+                        <div class="data-source-row" id="weather-status" aria-live="polite">
+                            <span id="status-text">Loading...</span>
                         </div>
-                        <button class="update-btn" id="refresh-weather" aria-label="Refresh weather data">
-                            Refresh Weather
-                        </button>
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="auto-weather" checked>
-                            <label for="auto-weather">Use Live Weather Data</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Live Weather Display -->
-                <div class="control-group" id="weather-display">
-                    <h3>📊 Current Conditions</h3>
-                    <div class="weather-grid">
-                        <div class="weather-item">
-                            <span class="weather-label">Recent Rainfall (7 days):</span>
-                            <span id="rainfall-display" class="weather-value">Loading...</span>
-                        </div>
-                        <div class="weather-item">
-                            <span class="weather-label">Soil Temperature:</span>
-                            <span id="soil-temp-display" class="weather-value">Loading...</span>
-                        </div>
-                        <div class="weather-item">
-                            <span class="weather-label">Air Temperature:</span>
-                            <span id="air-temp-display" class="weather-value">Loading...</span>
+                        <div class="data-source-controls">
+                            <button class="update-btn-compact" id="refresh-weather" aria-label="Refresh weather data">
+                                Refresh
+                            </button>
+                            <label class="toggle-compact">
+                                <input type="checkbox" id="auto-weather" checked>
+                                <span>Live Data</span>
+                            </label>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Manual Override Controls -->
-                <div class="control-group" id="manual-controls">
-                    <h3>⚙️ Manual Settings</h3>
+                <div class="control-group control-group-compact" id="manual-controls">
+                    <h3>Manual Settings</h3>
                     <div class="slider-group">
                         <label for="rainfall">Recent Rainfall (7-10 days):</label>
                         <input type="range" id="rainfall" min="0" max="6" step="0.1" value="2.0">
@@ -196,7 +179,7 @@
                 Species information from <a href="https://www.mushroomexpert.com" target="_blank" rel="noopener">MushroomExpert.com</a>, 
                 NH DHHS Tier 1 Species List</p>
                 <p><strong>Specialized Boletes Key:</strong> <a href="https://boletes.wpamushroomclub.org/" target="_blank" rel="noopener">WPA Mushroom Club</a></p>
-                <p>Built by GraniteFungiForager | v3.5.0 | <a href="https://github.com/GraniteFungiForager" target="_blank" rel="noopener">GitHub</a></p>
+                <p>Built by GraniteFungiForager | v3.5.1 | <a href="https://github.com/GraniteFungiForager" target="_blank" rel="noopener">GitHub</a></p>
             </div>
         </footer>
     </div>

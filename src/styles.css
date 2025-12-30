@@ -164,8 +164,8 @@ code,
 /* ==================== HEADER ==================== */
 header {
     text-align: center;
-    margin-bottom: var(--space-xl);
-    padding: var(--space-xl) 0;
+    margin-bottom: var(--space-lg);
+    padding: var(--space-md) 0;
     position: relative;
 }
 
@@ -191,6 +191,28 @@ header h1::after {
         transparent
     );
     border-radius: 2px;
+}
+
+/* Mobile header - more compact */
+@media (max-width: 768px) {
+    header {
+        padding: var(--space-sm) 0;
+        margin-bottom: var(--space-sm);
+    }
+
+    header h1 {
+        font-size: clamp(1.5rem, 6vw, 2rem);
+    }
+
+    header h1::after {
+        width: 80px;
+        bottom: -4px;
+    }
+
+    .subtitle {
+        font-size: 0.9rem;
+        margin-bottom: var(--space-sm);
+    }
 }
 
 /* ==================== MAIN CONTENT LAYOUT ==================== */
@@ -244,6 +266,102 @@ header h1::after {
     content: '🍄';
     font-size: 1.25em;
     filter: grayscale(40%);
+}
+
+/* ==================== COMPACT DATA SOURCE CARD ==================== */
+.control-group-compact {
+    padding: var(--space-sm);
+}
+
+.control-group-compact h3 {
+    font-size: 1rem;
+    margin-bottom: var(--space-xs);
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.control-group-compact h3::before {
+    content: '🌦️';
+}
+
+.data-source-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 0.85rem;
+    margin-bottom: var(--space-xs);
+    color: var(--forest-medium);
+    line-height: 1.4;
+}
+
+.data-source-controls {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.update-btn-compact {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: linear-gradient(135deg, var(--forest-medium), var(--moss-green));
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.update-btn-compact:hover {
+    background: linear-gradient(135deg, var(--forest-dark), var(--forest-medium));
+    transform: translateY(-1px);
+}
+
+.toggle-compact {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    color: var(--forest-dark);
+}
+
+.toggle-compact input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    cursor: pointer;
+}
+
+/* ==================== COMPACT MANUAL CONTROLS ==================== */
+#manual-controls.control-group-compact h3::before {
+    content: '⚙️';
+}
+
+#manual-controls.control-group-compact .slider-group {
+    margin-bottom: var(--space-xs);
+}
+
+#manual-controls.control-group-compact .slider-group label {
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+}
+
+#manual-controls.control-group-compact .slider-group span {
+    font-size: 0.85rem;
+}
+
+#manual-controls.control-group-compact select {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+}
+
+#manual-controls.control-group-compact .update-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
 }
 
 /* ==================== FORM CONTROLS ==================== */

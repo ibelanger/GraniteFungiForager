@@ -1,4 +1,4 @@
-# 🍄 GraniteFungiForager v3.5.0
+# 🍄 GraniteFungiForager v3.5.1
 
 
 [![Tests](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml/badge.svg)](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml)
@@ -9,16 +9,22 @@
 ## 🌐 **LIVE APPLICATION**
 **Try it now:** https://ibelanger.github.io/GraniteFungiForager/
 
-## 🆕 **Latest Updates** (December 2025)
+## 🆕 **What's New in v3.5.1** (December 2025)
 
-### 🎨 **Accessibility Enhancements - WCAG AAA Compliance**
-- **High Contrast Design** - All text elements now meet WCAG AAA standards (7:1+ contrast ratio)
-- **County Map Labels** - White text with shadows and stroke outlines for readability on all backgrounds
-- **Probability Badges** - Multi-layered shadows ensure clear visibility on yellow, brown, and all color backgrounds
-- **Professional UI** - Enhanced species rankings with card-based design and color-coded condition indicators
-- **Field-Ready** - Optimized for mobile foraging use with improved visibility in all lighting conditions
+### 📱 **UX Tightening & Mobile Optimization**
+- **Reduced Header Footprint** - 50% smaller on desktop, even smaller on mobile for more map visibility
+- **Weather Data Consistency** - Unified display order (Soil Temp → Rainfall → Air Temp) across species card and county details
+- **Compact Data Source Card** - 2-line format with status + controls, removed redundant sidebar weather card
+- **Manual Settings** - Compact styling matching Data Source card for hypothetical weather scenarios
+- **County Names** - Fixed capitalization (Grafton instead of grafton)
 
-## 🆕 **What's New in v3.5.0** (December 2025)
+### 🎨 **Accessibility & UI (v3.5.0)**
+- **WCAG AAA Compliance** - All text elements meet 7:1+ contrast ratio
+- **County Map Labels** - White text with shadows and stroke outlines for readability
+- **Probability Badges** - Multi-layered shadows for clear visibility on all backgrounds
+- **Field-Ready** - Optimized for mobile foraging in all lighting conditions
+
+## 🍄 **What's New in v3.5.0** (December 2025)
 
 ### 🍄 **MAJOR: King Boletes & Hedgehogs Enhancement - 10 Species Added**
 - **King Bolete Complex (7 species)** - All Boletus edulis group species now enhanced with comprehensive research-backed data

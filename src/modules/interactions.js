@@ -242,29 +242,29 @@ export function displayCountyInfo(county, countyKey = null) {
             <div class="probability-display" style="background-color: ${countyInfo.color};">
                 <h4>${countyInfo.species} Probability: ${(countyInfo.probability * 100).toFixed(1)}%</h4>
             </div>
-            
-            <div class="top-species">
-                <h4>🏆 Top 5 Most Likely Species (Current Conditions)</h4>
-                <div class="species-rankings">
-                    ${topSpeciesHTML}
-                </div>
-            </div>
-            
+
             <div class="current-conditions">
                 <h4>📊 Current Conditions</h4>
                 <div class="conditions-grid">
-                    <div class="condition-item">
-                        <span class="condition-label">Rainfall (7 days):</span>
-                        <span class="condition-value">${countyInfo.weather.rainfall?.toFixed(2) || 'N/A'}"</span>
-                    </div>
                     <div class="condition-item">
                         <span class="condition-label">Soil Temperature:</span>
                         <span class="condition-value">${countyInfo.weather.soilTemp || 'N/A'}°F</span>
                     </div>
                     <div class="condition-item">
+                        <span class="condition-label">Rainfall (7 days):</span>
+                        <span class="condition-value">${countyInfo.weather.rainfall?.toFixed(2) || 'N/A'}"</span>
+                    </div>
+                    <div class="condition-item">
                         <span class="condition-label">Air Temperature:</span>
                         <span class="condition-value">${countyInfo.weather.airTemp || 'N/A'}°F</span>
                     </div>
+                </div>
+            </div>
+
+            <div class="top-species">
+                <h4>🏆 Top 5 Most Likely Species (Current Conditions)</h4>
+                <div class="species-rankings">
+                    ${topSpeciesHTML}
                 </div>
             </div>
             

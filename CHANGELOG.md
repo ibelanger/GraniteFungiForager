@@ -7,29 +7,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-- **🎨 Major Accessibility Improvements - WCAG AAA Compliance**
-  - County map labels: Changed to white text with drop-shadow and stroke outline for readability on all background colors
-  - Probability display banner: White text with shadow on colored backgrounds
-  - Species rankings probability badges: Multi-layered shadows for maximum contrast (22.0% yellow, 4.5% brown now clearly readable)
-  - All text elements now meet WCAG AAA contrast standards (7:1+ ratio)
+### Future Improvements Planned
+- **UI Consistency:** Unify colors, emoji usage, and formatting between species card and county details
+- **Species Enhancement:** 10 remaining species to add research-backed data:
+  - Beefsteak Polypore, Cauliflower Mushroom, Trumpet Chanterelle
+  - Green Quilted Russula, Jelly Ear, Lion's Mane
+  - Blewit, Oyster Mushroom, Wine Cap, Shaggy Mane
 
-### Added
-- **🎨 Comprehensive UI Styling for County Modals**
-  - Complete styling for species rank items with hover effects
-  - Color-coded condition indicators (good/fair/poor) with proper contrast
-  - Professional card-based layout for top 5 species rankings
-  - Condition grid styling, recommendation lists, and action buttons
-  - 244+ lines of new accessible CSS styling
+## [3.5.1] - 2025-12-30
+
+### Changed
+- **📱 Mobile Header Optimization**
+  - Reduced header padding from 3rem to 1.5rem on desktop (~50% reduction)
+  - Further reduced to 1rem on mobile (≤768px) with smaller h1 font (1.5-2rem)
+  - Subtitle scaled proportionally for mobile viewports
+
+- **🌡️ Weather Data Display Consistency**
+  - Unified order: Soil Temp → Rainfall → Air Temp (both species card and county details)
+  - Species preferences now visually align with current conditions
+  - Easier comparison between optimal and actual weather
+
+- **🗜️ Compact Data Source Card**
+  - Condensed to 2-line format: status line + controls row
+  - Status display: "✓ Live • 4:18 PM • Grafton"
+  - Removed redundant "Current Conditions" sidebar card
+
+- **⚙️ Manual Settings Card**
+  - Compact styling matching Data Source card
+  - Smaller fonts and reduced spacing
+
+### Fixed
+- **County Name Capitalization:** Status text now shows "Grafton" instead of "grafton"
 
 ### Technical Details
 - All 468 tests passing (100% pass rate maintained)
+- 19 of 29 species enhanced with research-backed data (66%)
 - Backward compatible - no breaking changes
-- Mobile-friendly with improved field visibility
+
+---
 
 ## [3.5.0] - 2025-12-30
 
 ### Added
+- **🎨 Major Accessibility Improvements - WCAG AAA Compliance**
+  - County map labels: White text with drop-shadow and stroke outline for readability on all background colors
+  - Probability display banner: White text with shadow on colored backgrounds
+  - Species rankings probability badges: Multi-layered shadows for maximum contrast
+  - All text elements now meet WCAG AAA contrast standards (7:1+ ratio)
+  - Comprehensive UI styling for county modals (244+ lines CSS)
+  - Card-based layout for top 5 species rankings with hover effects
+  - Color-coded condition indicators (good/fair/poor) with proper contrast
 - **🍄 King Bolete Complex Enhancement - 7 Species**
   - Enhanced all 7 species in the Boletus edulis group with comprehensive research-backed data
   - Fixed type species naming: Boletus edulis properly represented (vs. B. chippewaensis)

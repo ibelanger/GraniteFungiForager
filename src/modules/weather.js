@@ -198,28 +198,33 @@ export async function fetchWeatherData(onComplete, onUpdate) {
 }
 
 /**
+ * Capitalize county name for display (e.g., 'grafton' -> 'Grafton')
+ * @param {string} county - County key in lowercase
+ * @returns {string} Capitalized county name
+ */
+function capitalizeCounty(county) {
+    if (!county) return '';
+    return county.charAt(0).toUpperCase() + county.slice(1);
+}
+
+/**
  * Update weather display for specific county or current data
  * @param {string} county - Optional county to display data for
  */
 export function updateWeatherDisplay(county = null) {
-    const rainfallDisplay = document.getElementById('rainfall-display');
-    const soilTempDisplay = document.getElementById('soil-temp-display');
-    const airTempDisplay = document.getElementById('air-temp-display');
     const statusText = document.getElementById('status-text');
     const autoWeatherCheckbox = document.getElementById('auto-weather');
-    
+
     let weather = currentWeatherData;
-    let countyLabel = '';
     let dataStatus = 'general';
-    
+
     // Better county data lookup with debugging
     if (county) {
         console.log(`[updateWeatherDisplay] Looking for county: ${county}`);
         console.log(`[updateWeatherDisplay] Available counties:`, Object.keys(countyWeatherData));
-        
+
         if (countyWeatherData[county]) {
             weather = countyWeatherData[county];
-            countyLabel = ` (${county})`;
             dataStatus = 'county-specific';
             console.log(`[updateWeatherDisplay] Found county data:`, weather);
         } else {
@@ -228,59 +233,47 @@ export function updateWeatherDisplay(county = null) {
         }
     }
     
-    const { rainfall, soilTemp, airTemp, lastUpdated, error } = weather || {};
-    
-    // Format display values with clear indication of missing data
-    const rainfallStr = (rainfall !== undefined && rainfall !== null) 
-        ? `${rainfall.toFixed(2)}"` : (error ? 'Error' : 'Loading...');
-    const soilTempStr = (soilTemp !== undefined && soilTemp !== null) 
-        ? `${soilTemp}°F` : (error ? 'Error' : 'Loading...');
-    const airTempStr = (airTemp !== undefined && airTemp !== null) 
-        ? `${airTemp}°F` : (error ? 'Error' : 'Loading...');
-    
-    // Update display elements
-    if (rainfallDisplay) rainfallDisplay.textContent = `${rainfallStr}${countyLabel}`;
-    if (soilTempDisplay) soilTempDisplay.textContent = `${soilTempStr}${countyLabel}`;
-    if (airTempDisplay) airTempDisplay.textContent = `${airTempStr}${countyLabel}`;
-    
+    const { lastUpdated, error } = weather || {};
+
     // Update status text with detailed information
     let source = '';
     if (autoWeatherCheckbox?.checked) {
         if (error) {
-            source = `⚠️ Data Source: Open-Meteo API (${error})`;
+            source = `⚠️ API Error`;
         } else {
-            source = 'Data Source: Open-Meteo API';
+            source = '✓ Live';
             if (lastUpdated) {
                 const date = new Date(lastUpdated);
-                source += ` (updated ${date.toLocaleTimeString([], {
-                    hour: '2-digit', 
+                source += ` • ${date.toLocaleTimeString([], {
+                    hour: '2-digit',
                     minute: '2-digit'
-                })})`;
+                })}`;
             }
         }
-        
-        // Add data status indicator
+
+        // Add county indicator with capitalized name
         if (county) {
+            const countyName = capitalizeCounty(county);
             if (dataStatus === 'county-specific') {
-                source += ` ✓ County-specific data for ${county}`;
+                source += ` • ${countyName}`;
             } else if (dataStatus === 'fallback-to-general') {
-                source += ` ⚠️ Using general data (${county} data unavailable)`;
+                source += ` • General (${countyName} unavailable)`;
             }
         }
     } else {
-        source = 'Data Source: Manual Override';
+        source = 'Manual Override';
     }
-    
+
     if (statusText) {
         statusText.textContent = source;
     }
-    
+
     // Console logging for debugging
     if (error) {
-        console.warn(`⚠️ Weather data error${county ? ` for ${county}` : ''}: ${error}`);
+        console.warn(`⚠️ Weather data error${county ? ` for ${capitalizeCounty(county)}` : ''}: ${error}`);
     }
     if (county && dataStatus === 'fallback-to-general') {
-        console.warn(`⚠️ County ${county} data not available, using general weather data`);
+        console.warn(`⚠️ ${capitalizeCounty(county)} data not available, using general weather data`);
     }
 }
 

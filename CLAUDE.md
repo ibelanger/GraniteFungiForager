@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**GraniteFungiForager v3.5.0** is a client-side web application that provides interactive probability maps for foraging New Hampshire's official DHHS Tier 1 wild mushroom species. The application combines real-time weather data with mycological expertise to calculate county-specific foraging probabilities, with conservation-focused authentication protecting sensitive location data.
+**GraniteFungiForager v3.5.1** is a client-side web application that provides interactive probability maps for foraging New Hampshire's official DHHS Tier 1 wild mushroom species. The application combines real-time weather data with mycological expertise to calculate county-specific foraging probabilities, with conservation-focused authentication protecting sensitive location data.
 
 **Live Application:** https://ibelanger.github.io/GraniteFungiForager/
 
@@ -36,6 +36,34 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Files Modified:**
   - `src/modules/interactions.js` - Compact HTML structure, auto-collapse logic
   - `src/styles.css` - 250 lines of compact layout CSS
+
+**UX Tightening & Consistency (v3.5.1):** Significant improvements for mobile usability and visual consistency:
+
+- **Reduced Header Footprint:**
+  - Desktop: Reduced header padding from 3rem to 1.5rem (~50% reduction)
+  - Mobile (≤768px): Further reduced to 1rem padding, h1 font size clamped to 1.5-2rem
+  - Subtitle scaled down proportionally for mobile
+
+- **Compact Data Source Card:**
+  - Condensed from multi-line to 2-line format
+  - Status display: "✓ Live • 4:18 PM • Grafton" (single line)
+  - Controls: Refresh button + Live Data toggle (compact row)
+  - Removed redundant "Current Conditions" card from sidebar
+
+- **Weather Data Display Consistency:**
+  - Unified order across species card and county details: Soil Temp → Rainfall → Air Temp
+  - Species preferences now align with current conditions display
+  - Easier visual comparison between optimal conditions and actual weather
+
+- **County Name Capitalization:** Fixed lowercase county names in weather status (grafton → Grafton)
+
+- **Manual Settings Card:** Compact styling matching Data Source card when "Live Data" unchecked
+
+- **Files Modified:**
+  - `src/styles.css` - Mobile header, compact controls CSS
+  - `src/modules/interactions.js` - Reordered conditions, removed weather card
+  - `src/modules/weather.js` - County name capitalization
+  - `index.html` - Restructured Data Source and Manual Settings cards
 
 **Research-Backed Data Integration:** The application now incorporates peer-reviewed mycological research for improved foraging accuracy:
 
@@ -525,6 +553,7 @@ The application includes comprehensive safety warnings and follows responsible f
 
 ## Version History
 
+- **v3.5.1** (December 2025) - UX tightening, mobile header optimization, weather display consistency, 19/29 species enhanced (66%)
 - **v3.5.0** (December 2025) - King Boletes & Hedgehogs enhancement (10 species), 17/29 species enhanced (59%), 72-77% accuracy
 - **v3.4.0** (December 2025) - Research-backed data integration (7 species), peer-reviewed sources, 70-75% accuracy
 - **v3.3.0** (December 2025) - 100% test coverage, 470 comprehensive tests, modern styling
