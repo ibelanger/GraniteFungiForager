@@ -225,7 +225,7 @@ export class ForagingReportsManager {
     exportReports() {
         const exportData = {
             exportDate: new Date().toISOString(),
-            version: '3.1.0',
+            version: '3.5.0',
             totalReports: this.reports.length,
             accuracyStats: this.calculateAccuracyStats(),
             reports: this.reports.map(report => report.toJSON())

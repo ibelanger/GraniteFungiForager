@@ -14,7 +14,7 @@ import { coverageAuditor } from './src/modules/speciesCoverageAudit.js';
  * Application configuration
  */
 const appConfig = {
-    version: '3.2.0',
+    version: '3.5.0',
     title: 'GraniteFungiForager - NH Tier 1 Mushroom Map',
     author: 'GraniteFungiForager',
     updateInterval: 300000, // 5 minutes for auto-refresh

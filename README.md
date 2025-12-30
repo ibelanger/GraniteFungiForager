@@ -1,4 +1,4 @@
-# 🍄 GraniteFungiForager v3.4.0
+# 🍄 GraniteFungiForager v3.5.0
 
 
 [![Tests](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml/badge.svg)](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml)
@@ -9,31 +9,44 @@
 ## 🌐 **LIVE APPLICATION**
 **Try it now:** https://ibelanger.github.io/GraniteFungiForager/
 
+## 🆕 **What's New in v3.5.0** (December 2025)
+
+### 🍄 **MAJOR: King Boletes & Hedgehogs Enhancement - 10 Species Added**
+- **King Bolete Complex (7 species)** - All Boletus edulis group species now enhanced with comprehensive research-backed data
+- **Hedgehog Subgenera (3 species)** - All Hydnum groups enhanced with DNA taxonomy and user field observations
+- **Total Enhanced**: 17 of 29 species (59% complete, up from 24% in v3.4.0)
+- **Estimated Accuracy**: 72-77% (up from 70-75% in v3.4.0)
+
+### 🌲 **King Bolete Complex - 7 Species Enhanced**
+- **Boletus edulis** (Type species, HIGH) - Norway Spruce 50%, conifer specialist, fixed taxonomic naming
+- **B. subcaerulescens** (Pine King, MEDIUM-HIGH) - Spruce 70%, pine 20%
+- **B. variipes** (Two-colored, MEDIUM-HIGH) - Oak 60%, summer fruiting
+- **B. atkinsonii** (Atkinson's, MEDIUM) - Oak 40%, June-Sept extended season
+- **B. separans** (Lilac-tinted, MEDIUM-HIGH) - Red Oak 60%, extended season
+- **B. nobilis** (Noble, MEDIUM) - Oak-Beech 90%, high elevation specialist
+- **B. chippewaensis** (Chippewa, MEDIUM-HIGH) - Hemlock 70% specialist
+
+### 🦔 **Hedgehog Subgenera - 3 Species Enhanced**
+- **Sweet Tooth** (HIGH) - Merrimack County user-verified, Beech 35-40%, prolific late summer
+- **Depressed Hedgehog** (MEDIUM-HIGH) - 9 eastern species, small size diagnostic, oak 35-45%
+- **White Hedgehog** (MEDIUM-HIGH) - DNA-based ID (Swenie et al. 2018), staining tests critical
+
+### 🎯 **Enhanced Features**
+- **User Field Observations** - Merrimack County late summer data integrated, increased regional probabilities
+- **Species-Specific Host Trees** - Percentage-based host associations for all Boletus species
+- **Elevation-Based Phenology** - 7-14 day delays per 1000 feet for mountain species
+- **Taxonomic Accuracy** - Fixed Boletus edulis naming (was incorrectly labeled as var. chippewaensis)
+
+### 📚 **New Research Sources**
+6+ additional peer-reviewed sources including boletes.wpamushroomclub.org, Swenie et al. 2018 DNA taxonomy, user field observations from Merrimack County.
+
 ## 🆕 **What's New in v3.4.0** (December 2025)
 
-### 🔬 **MAJOR: Research-Backed Species Data Integration**
-- **Peer-Reviewed Research** - 7 key species enhanced with data from MushroomExpert.com, USDA studies, and peer-reviewed publications
+### 🔬 **Research-Backed Species Data Integration**
+- **7 Key Species Enhanced** - Morels, Chanterelles, Matsutake, Maitake, Lobster Mushroom, Milk Caps (3), Black Trumpets
 - **13 New Data Fields** - Optimal soil temperatures, pH requirements, precipitation windows, elevation ranges, host tree frequencies
 - **Confidence Levels** - All enhanced data includes confidence ratings (High/Medium/Low) and source citations
 - **Enhanced Safety Protocols** - Critical identification checks for morels, chanterelles, milk caps, and lobster mushrooms
-
-### 🍄 **Enhanced Species with Scientific Data**
-- **Morels** (HIGH): 50-60°F optimal, pH 6.0-7.5, hollow interior check (Mihail 2014)
-- **Chanterelles** (HIGH): 54.5-72.5°F optimal, 7-21 day rain window, false gills diagnostic (USDA PNW-GTR-576)
-- **Matsutake** (MEDIUM): 54-66°F optimal, hemlock 60% primary host (Kurokochi & Lian 2018)
-- **Maitake** (HIGH): 59-68°F fruiting, oak 95-100% mandatory, perennial (5-10+ years)
-- **Lobster Mushroom** (MEDIUM-HIGH): Host-dependent, white interior check, 95%+ parasite DNA
-- **Milk Caps** (HIGH): Oak mandatory, latex taste test protocol, 3 species with co-occurrence patterns
-- **Black Trumpets** (MEDIUM-HIGH): 55-70°F optimal, moss association, 30-40+ lb patch potential
-
-### 🎯 **Smarter Probability Calculations**
-- **Oak Proximity Multiplier** - 1.2x boost in oak-rich counties for oak-dependent species
-- **Moss Association Multiplier** - 1.3x boost for Black Trumpets in high-rainfall areas
-- **Species-Specific Optima** - Enhanced multipliers using peer-reviewed temperature ranges
-- **NH Soil Challenges** - 0.9x penalty for morels in acidic granite soils
-
-### 📚 **Research Sources**
-All enhancements backed by peer-reviewed sources including USDA studies, McIlvainea journal, PMC research, and expert mycological resources.
 
 ## 🆕 **What's New in v3.3.0** (December 2025)
 
