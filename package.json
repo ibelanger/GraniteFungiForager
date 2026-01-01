@@ -1,6 +1,6 @@
 {
   "name": "granite-fungi-forager",
-  "version": "3.5.1",
+  "version": "3.5.2",
   "description": "GraniteFungiForager - NH Tier 1 Wild Mushroom Probability Map with interactive foraging conditions",
   "type": "module",
   "main": "app.js",

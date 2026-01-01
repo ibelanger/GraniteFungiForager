@@ -1,611 +1,296 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides quick reference guidance for Claude Code when working with the GraniteFungiForager codebase.
+
+**For detailed module documentation**, see [`.claude/skills/`](./.claude/skills/) - focused, triggerable deep-dives for each major system.
+
+---
 
 ## Project Overview
 
-**GraniteFungiForager v3.5.1** is a client-side web application that provides interactive probability maps for foraging New Hampshire's official DHHS Tier 1 wild mushroom species. The application combines real-time weather data with mycological expertise to calculate county-specific foraging probabilities, with conservation-focused authentication protecting sensitive location data.
+**GraniteFungiForager v3.5.2** is a client-side web application providing interactive probability maps for foraging New Hampshire's DHHS Tier 1 wild mushroom species. Combines real-time weather data with mycological research to calculate county-specific foraging probabilities. Features offline capability, ML-powered accuracy improvement, and conservation-focused location protection.
 
-**Live Application:** https://ibelanger.github.io/GraniteFungiForager/
+**Live:** https://ibelanger.github.io/GraniteFungiForager/
 
-### Recent Enhancements (December 2025)
+**Tech Stack:** Vanilla JavaScript (ES6 modules), no build process, no framework dependencies
 
-**Accessibility Improvements (Post v3.5.0):** The application now meets WCAG AAA accessibility standards with comprehensive contrast improvements:
+---
 
-- **County Map Labels:** White text with drop-shadow and stroke outline for readability on all background colors (green, brown, orange, red map states)
-- **Probability Display Banner:** Forced white text with text-shadow on colored backgrounds, ensuring "King Bolete Probability: 5.2%" is always readable
-- **Species Rankings Badges:** Multi-layered shadow technique for maximum contrast on all probability badges (22.0% yellow, 4.5% brown, etc.)
-- **Professional UI Styling:** 244+ lines of new CSS including card-based layouts, color-coded indicators, and hover effects
-- **WCAG AAA Compliance:** All text elements now achieve 7:1+ contrast ratios, making the application fully accessible and field-ready for mobile foraging
+## Quick Commands
 
-**All 468 tests passing** - accessibility enhancements are fully compatible with existing functionality.
-
-**Compact Species Card with Smart Collapse (Post v3.5.0):** Major UX improvement for mobile foraging experience:
-
-- **2-Column Compact Layout:** Species info card redesigned from ~680px to ~300px height
-  - Temperature and moisture displayed in side-by-side "chips"
-  - Host trees shown as inline tags instead of paragraphs
-  - Seasonal timing as color-coded badges (green=peak, yellow=low, gray=none)
-  - Advanced details (elevation, ID notes, habitat) in collapsible `<details>` section
-- **Auto-Collapse on Mobile:** When clicking a county on viewport height < 768px:
-  - Species card automatically collapses to ~60px header-only view
-  - Both species name AND county probability visible simultaneously
-  - No more forced scrolling that hides valuable species ID information
-- **Sticky Positioning:** Species card stays at top while scrolling on all devices
-- **WCAG AAA Compliant:** No automatic motion, keyboard accessible collapse button
-- **Files Modified:**
-  - `src/modules/interactions.js` - Compact HTML structure, auto-collapse logic
-  - `src/styles.css` - 250 lines of compact layout CSS
-
-**UX Tightening & Consistency (v3.5.1):** Significant improvements for mobile usability and visual consistency:
-
-- **Reduced Header Footprint:**
-  - Desktop: Reduced header padding from 3rem to 1.5rem (~50% reduction)
-  - Mobile (≤768px): Further reduced to 1rem padding, h1 font size clamped to 1.5-2rem
-  - Subtitle scaled down proportionally for mobile
-
-- **Compact Data Source Card:**
-  - Condensed from multi-line to 2-line format
-  - Status display: "✓ Live • 4:18 PM • Grafton" (single line)
-  - Controls: Refresh button + Live Data toggle (compact row)
-  - Removed redundant "Current Conditions" card from sidebar
-
-- **Weather Data Display Consistency:**
-  - Unified order across species card and county details: Soil Temp → Rainfall → Air Temp
-  - Species preferences now align with current conditions display
-  - Easier visual comparison between optimal conditions and actual weather
-
-- **County Name Capitalization:** Fixed lowercase county names in weather status (grafton → Grafton)
-
-- **Manual Settings Card:** Compact styling matching Data Source card when "Live Data" unchecked
-
-- **Files Modified:**
-  - `src/styles.css` - Mobile header, compact controls CSS
-  - `src/modules/interactions.js` - Reordered conditions, removed weather card
-  - `src/modules/weather.js` - County name capitalization
-  - `index.html` - Restructured Data Source and Manual Settings cards
-
-**Research-Backed Data Integration:** The application now incorporates peer-reviewed mycological research for improved foraging accuracy:
-
-- **Enhanced Species Data:** Added detailed research-backed fields to key species:
-  - `optimalSoilTemp` - Precise temperature ranges with confidence levels and sources
-  - `soilPH` - pH requirements with NH-specific notes
-  - `precipitationWindow` - 30-day correlation windows vs. simple "days after rain"
-  - `elevationRange` - Elevation-based phenological delays
-  - `hostTreeFrequencies` - Percentage-based host tree associations
-  - `phenologyNH` - NH-specific timing data
-  - `confidenceLevel` - Data quality indicators (High/Medium/Low)
-  - `safetyRating` - Safety classifications with critical warnings
-
-- **Enhanced Probability Calculations:** New research-backed multipliers in `mapCalculations.js`:
-  - **Oak Proximity Multiplier** - Critical for Maitake and Milk Caps (oakMandatory flag)
-  - **Moss Association Multiplier** - Boosts for Black Trumpets in high-rainfall areas
-  - **Species-Specific Optimal Ranges** - Precise temperature windows for each species
-  - **Regional Soil pH Considerations** - NH granite soil challenges factored in
-
-- **Primary Research Sources:**
-  - MushroomExpert.com (Michael Kuo) - Species identification and ecology
-  - USDA PNW-GTR-576 (Pilz et al. 2003) - Chanterelle ecology
-  - Mihail 2014 McIlvainea - Morel soil temperature thresholds
-  - boletes.wpamushroomclub.org - Boletus edulis complex identification
-  - PMC peer-reviewed studies - Cultivation and field data
-
-- **Species Enhanced with Research Data:**
-  - Morels (Morchella spp.) - HIGH confidence
-  - Chanterelles (Cantharellus cibarius complex) - HIGH confidence
-  - Matsutake (Tricholoma magnivelare) - MEDIUM confidence
-  - Maitake (Grifola frondosa) - HIGH confidence for oak association
-  - Lobster Mushroom (Hypomyces lactifluorum) - MEDIUM-HIGH confidence
-  - Milk Caps (Lactifluus volemus, L. corrugis, L. hygrophoroides) - HIGH confidence
-  - Black Trumpets (Craterellus fallax) - MEDIUM-HIGH confidence
-
-- **Future Work Noted:**
-  - Toxic lookalike species data (planned for future revision)
-  - GPS marking feature for perennial species like Maitake (handled in separate tool)
-
-**All 468 tests continue to pass** - enhancements are backward-compatible and non-breaking.
-
-## Development Commands
-
-- **Local Development Server:**
-  ```bash
-  npm run dev
-  # or
-  python -m http.server 8000
-  ```
-  Then open http://localhost:8000
-
-- **Start Production Server:**
-  ```bash
-  npm start
-  ```
-
-- **Run Tests:**
-  ```bash
-  npm test                # Run all tests once
-  npm run test:watch      # Run tests in watch mode (re-run on changes)
-  npm run test:ui         # Run tests with interactive UI
-  npm run test:coverage   # Run tests with coverage report
-  ```
-
-- **Testing Infrastructure:**
-  - Framework: Vitest 4.0.14 with jsdom environment
-  - 470 comprehensive tests (468 passing, 2 skipped for jsdom limitations)
-  - 100% pass rate across all 8 core modules
-  - Complete test documentation in `tests/README.md`
-
-## Architecture Overview
-
-### Core Structure
-The application uses **modular ES6 JavaScript** with a clean separation of concerns:
-
-- **Entry Point:** `index.html` + `app.js` (main application controller)
-- **Module System:** ES6 imports/exports with client-side modules
-- **No Build Process:** Pure client-side application with no compilation step
-- **No Framework Dependencies:** Vanilla HTML/CSS/JavaScript only
-
-### Key Modules (`src/modules/`)
-
-1. **`weather.js`** - Weather data integration
-   - Fetches real-time weather from Open-Meteo API
-   - County-to-coordinate mapping for all 10 NH counties
-   - Calculates soil temperature from air temperature and precipitation
-   - Auto-refresh system (5-minute intervals)
-   - **Tests:** 26 tests covering soil temp calculations, season detection, county mappings
-
-2. **`species.js`** - Species database and identification
-   - Complete DHHS Tier 1 species data (29 species including subspecies variations)
-   - Specialized support for Boletus 7-species group and Hedgehog 3-subgenera
-   - Temperature ranges, moisture requirements, seasonal multipliers
-   - Host tree associations and microhabitat preferences
-   - **NEW (Dec 2025):** Research-enhanced data fields:
-     - Optimal soil temperature with confidence levels and sources
-     - Soil pH requirements with NH-specific challenges
-     - Precipitation windows (7-30 day correlations)
-     - Elevation ranges with phenological delays
-     - Host tree frequencies with percentage associations
-     - NH-specific phenology timing
-     - Confidence levels and safety ratings
-   - **Tests:** 62 tests validating all species data and edge cases
-
-3. **`mapCalculations.js`** - Probability engine
-   - Multi-factor probability calculations (weather + region + season)
-   - County-to-region mapping for NH geographic zones
-   - Temperature, moisture, and seasonal weighting algorithms
-   - **Tests:** 48 tests covering probability calculations and color coding
-
-4. **`interactions.js`** - UI interactions and modal system
-   - County click handlers for detailed recommendations
-   - Species selection and real-time map updates
-   - Modal system for county details with accessibility features
-   - Top 5 species rankings per county with visual indicators
-   - **Tests:** 67 tests for UI interactions, modals, and event handling
-
-5. **`publicLands.js`** - Location recommendations
-   - GPS coordinates for public foraging locations (authentication protected)
-   - Access information and permit requirements
-   - Integration with authentication system for conservation
-   - **Tests:** 65 tests covering all 10 counties and authentication integration
-
-6. **`authentication.js`** - Location data protection
-   - Password-based authentication for sensitive GPS coordinates
-   - 24-hour session management with localStorage
-   - Conservation-focused access control system
-   - Modal interface for seamless user experience
-   - **Tests:** 56 tests for authentication flow, session management, and security
-
-7. **`foragingReports.js`** - User success tracking and validation
-   - Community data collection for ML accuracy improvement
-   - Success/failure tracking with species, location, and conditions
-   - Data validation and storage management
-   - Integration with iNaturalist for observation validation
-   - **Tests:** 84 tests covering data collection, validation, and storage
-
-8. **`iNaturalistIntegration.js`** - External observation data
-   - iNaturalist API integration for real-world observation data
-   - Intelligent caching system (24-hour cache with exponential backoff)
-   - Species mapping to DHHS Tier 1 species
-   - Rate limiting and error handling
-   - **Tests:** 60 tests for API integration, caching, and error scenarios
-
-9. **`speciesMapping.js`** - Species name normalization
-   - Maps iNaturalist scientific names to internal species IDs
-   - Handles subspecies variations and common name mappings
-   - Supports Boletus complex and Hedgehog subgenera variations
-
-10. **`observationAnalysis.js`** - ML data analysis
-    - Analyzes iNaturalist observation patterns
-    - Species distribution and seasonal timing analysis
-    - Geographic clustering and habitat preference detection
-
-11. **`speciesCoverageAudit.js`** - Data quality assurance
-    - Audits species data completeness across all DHHS Tier 1 species
-    - Validates temperature ranges, moisture requirements, regional data
-    - Generates reports on missing or inconsistent data
-
-### Data Flow
-1. **Weather Module** fetches real-time data and updates global state
-2. **Map Calculations** processes weather + species data → probability scores
-3. **UI Interactions** updates map colors and handles user interactions
-4. **Species Display** shows dynamic information cards based on selections
-
-### Key Features
-- **Interactive SVG County Map:** Clean grid layout (4 rows × 3 columns) representing NH counties
-- **Real-time Weather Integration:** County-specific weather data with auto-refresh
-- **Species Information Cards:** Dynamic display with identification notes and foraging tips
-- **Authentication System:** Password protection for sensitive GPS coordinates and trail data
-- **Community Data Collection:** User success tracking, iNaturalist integration, analytics dashboard
-- **Conservation Focus:** Protects sensitive locations while maintaining educational access
-- **Accessibility:** ARIA labels, keyboard navigation, modal system
-- **Mobile Responsive:** Touch-friendly interface for field use
-- **Modern Design:** Google Fonts integration (Crimson Pro, DM Mono, Newsreader) with mushroom-themed aesthetics
-- **Offline Capability:** Service worker registration (HTTPS only)
-
-### Testing & Quality Assurance (v3.3.0)
-
-The project has achieved **100% test coverage** across all core modules:
-
-#### Test Suite Overview
-- **Total Tests:** 470 tests (468 passing, 2 skipped)
-- **Pass Rate:** 100% on all testable functionality
-- **Test Duration:** ~5 seconds for full suite
-- **Coverage Tool:** @vitest/coverage-v8
-
-#### Module Test Coverage
-| Module | Tests | Key Areas |
-|--------|-------|-----------|
-| weather.js | 26 | Soil temp calculations, season detection, county mappings |
-| mapCalculations.js | 48 | Probability engine, temperature/moisture factors, color coding |
-| authentication.js | 56 | Login flow, session management, security validation |
-| foragingReports.js | 84 | Data collection, validation, storage, ML integration |
-| species.js | 62 | Species data validation, DHHS Tier 1 compliance |
-| iNaturalistIntegration.js | 60 | API integration, caching, rate limiting, error handling |
-| publicLands.js | 65 | All 10 counties, authentication integration, data protection |
-| interactions.js | 67 | UI interactions, modals, event handling, accessibility |
-
-#### Test Structure
-```
-tests/
-├── unit/              # 8 comprehensive test files
-├── helpers/           # Mock data and test utilities
-├── setup.js           # Global test configuration
-└── README.md          # Detailed test documentation
-```
-
-#### Running Tests
 ```bash
-npm test                # Run all tests
-npm run test:watch      # Watch mode for development
-npm run test:ui         # Interactive test UI
-npm run test:coverage   # Generate coverage reports
+# Development
+npm run dev              # Local server (http://localhost:8000)
+npm start                # Production server
+
+# Testing
+npm test                 # Run all 470 tests
+npm run test:watch       # Watch mode (re-run on changes)
+npm run test:ui          # Interactive test UI
+npm run test:coverage    # Generate coverage reports
+
+# Status: 468/470 passing (100% pass rate on testable code)
 ```
 
-### CI/CD Pipeline
+---
 
-#### GitHub Actions Workflows
+## File Structure
 
-**Test Workflow** (`.github/workflows/test.yml`):
-
-The test workflow ensures code quality through automated testing on every push and pull request.
-
-**Triggers:**
-- Push to `main`, `develop`, or `claude/**` branches
-- Pull requests to `main` or `develop` branches
-
-**Jobs:**
-
-1. **test** - Matrix testing across Node.js versions
-   - **Strategy:** Tests on Node 18.x, 20.x, and 22.x
-   - **Steps:**
-     - Checkout code
-     - Setup Node.js with npm caching
-     - Install dependencies (`npm ci`)
-     - Run test suite (`npm test`)
-     - Generate coverage report (Node 20.x only)
-     - Upload coverage artifacts (30-day retention)
-   - **Test Results:** 470 tests (468 passing, 2 skipped)
-   - **Duration:** ~5 seconds
-
-2. **lint-check** - Code quality validation
-   - Validates package.json structure
-   - Future: ESLint integration (commented out, ready to enable)
-   - Future: Prettier formatting checks
-
-3. **dependency-audit** - Security scanning
-   - Runs `npm audit` at moderate+ severity level
-   - Checks for outdated dependencies (informational)
-   - Continues on error to avoid blocking on non-critical issues
-
-4. **test-summary** - Results aggregation
-   - Depends on: test, lint-check, dependency-audit
-   - Reports pass/fail status for each job
-   - Fails pipeline if critical tests fail
-   - Blocks merge if required checks don't pass
-
-**Coverage Reports:**
-- Generated on Node.js 20.x only
-- Formats: text, HTML, LCOV, JSON
-- Access: Download from Actions → Workflow run → Artifacts
-- Retention: 30 days
-
-**Deploy Workflow** (`.github/workflows/deploy.yml`):
-- **Trigger:** Push to `main` branch
-- **Target:** GitHub Pages (https://ibelanger.github.io/GraniteFungiForager/)
-- **Process:**
-  - Checkout code
-  - Deploy to gh-pages branch
-  - Jekyll disabled (.nojekyll file)
-- **Result:** Zero-downtime automated deployment
-
-#### Status Badges
-
-The README displays live build status:
-```markdown
-[![Tests](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml/badge.svg)]
+```
+GraniteFungiForager/
+├── index.html           # Entry point
+├── app.js               # Application controller
+├── sw.js                # Service worker (offline capability)
+├── package.json         # Dependencies
+├── vitest.config.js     # Test configuration
+├── .github/workflows/   # CI/CD (test.yml, deploy.yml)
+├── src/
+│   ├── styles.css       # Single CSS file (no build step)
+│   ├── modules/         # 11 feature modules
+│   │   ├── weather.js
+│   │   ├── species.js
+│   │   ├── mapCalculations.js
+│   │   ├── interactions.js
+│   │   ├── publicLands.js
+│   │   ├── authentication.js
+│   │   ├── foragingReports.js
+│   │   ├── iNaturalistIntegration.js
+│   │   ├── speciesMapping.js
+│   │   ├── observationAnalysis.js
+│   │   └── speciesCoverageAudit.js
+│   └── ml/
+│       └── accuracy-improvement-pipeline.js
+├── tests/
+│   ├── unit/            # 8 test files (470 tests)
+│   ├── helpers/         # Mock data
+│   └── README.md
+├── docs/
+│   └── design-system/
+├── .claude/
+│   ├── skills/          # Detailed module docs (7 skills)
+│   ├── scripts/         # context-bar.sh
+│   └── settings.json
+├── CLAUDE.md            # This file
+├── README.md            # User documentation
+├── CHANGELOG.md         # Version history
+└── ACCURACY_IMPROVEMENT_PLAN.md  # ML roadmap
 ```
 
-**Badge States:**
-- 🟢 Passing - All tests passed
-- 🔴 Failing - One or more tests failed
-- 🟡 In Progress - Tests currently running
+---
 
-#### Local Testing Before Push
+## Module Documentation
 
-**Run tests locally to catch issues early:**
-```bash
-# Run all tests
-npm test                  # 470 tests in ~5 seconds
+**For detailed documentation on each module, use the `.claude/skills/` system:**
 
-# Watch mode (re-run on changes)
-npm run test:watch
+- **`weather-module`** - Weather API integration, soil temp calculations
+- **`species-module`** - DHHS Tier 1 species database (29 species)
+- **`map-calculations-module`** - Probability engine with research-backed multipliers
+- **`authentication-module`** - Conservation-focused location protection
+- **`testing-guide`** - Vitest setup, coverage, debugging
+- **`cicd-guide`** - GitHub Actions workflows, deployment
+- **`ml-roadmap`** - Accuracy improvement pipeline (60-70% → 85-90% target)
 
-# Interactive UI
-npm run test:ui
+These skills are triggered automatically by Claude Code based on keywords in your requests.
 
-# Coverage report
-npm run test:coverage
-```
+---
 
-#### Pull Request Requirements
+## Critical Development Conventions
 
-For a PR to be merged:
-1. ✅ All 470 tests must pass
-2. ✅ Lint checks must pass
-3. ✅ No critical security vulnerabilities
-4. ✅ Code review approval
-5. 📊 Coverage should not decrease (recommended)
-
-#### Troubleshooting CI Failures
-
-**Test failures in CI but pass locally:**
-- Check Node version matches CI (18.x, 20.x, or 22.x)
-- Clear and reinstall: `rm -rf node_modules && npm ci`
-- Check for environment-specific code (timezones, file paths)
-- Review detailed logs in GitHub Actions
-
-**Common Issues:**
-- Date/time tests may fail due to timezone differences
-- File path separators differ on Windows vs Linux
-- Node version differences in async behavior
-
-#### Development Best Practices
-- All tests must pass before merging
-- Coverage reports generated on Node 20.x
-- Security audits run automatically on every push
-- Multi-version Node.js compatibility ensured
-- Workflow uses npm caching for faster builds (30-60s speedup)
-- Matrix strategy with `fail-fast: false` continues testing all versions
-
-## Machine Learning Pipeline
-
-The `src/ml/accuracy-improvement-pipeline.js` contains a **completed framework** for improving prediction accuracy from 60-70% to 85-90% through:
-- ✅ User success tracking and validation (`foragingReports.js` - **IMPLEMENTED**)
-- ✅ iNaturalist API integration for observation data (`iNaturalistIntegration.js` - **IMPLEMENTED**)  
-- ⏳ Expert validation systems (framework exists, partnerships needed)
-- ⏳ Academic research integration (ongoing literature review)
-- ✅ Species-specific analyzers for complex groups (Boletus, Hedgehog, etc. - **IMPLEMENTED**)
-
-**Current Status:** All technical infrastructure is complete and deployed. The system is ready for data collection and model training once sufficient user reports are gathered.
-
-## Important Technical Notes
-
-### Weather API Integration
-- Uses Open-Meteo API (no API key required)
-- County coordinates hardcoded in `weather.js:countyTowns`
-- Soil temperature calculated algorithmically from air temperature + precipitation
-- Error handling for offline/API failure scenarios
-
-### Species Data Structure
-- Each species has `tempRange`, `moistureMin`, `seasonMultiplier`, and `regions` properties
-- Regional probability weights for 7 NH geographic regions
-- Specialized handling for subspecies groups (Boletus edulis complex, Hedgehog subgenera)
-
-### Map Implementation
-- Clean rectangular county grid (no overlapping polygons)
-- Geographic accuracy: Coos → Grafton/Belknap/Carroll → Sullivan/Merrimack/Strafford → Cheshire/Hillsborough/Rockingham
-- Color-coded probability visualization with smooth transitions
-- Icons show geographic features (mountains 🏔️, lakes 🌊, forests 🌲, coast 🌊)
-- Modern styling with Google Fonts: Crimson Pro (headers), Newsreader (body), DM Mono (code)
-- Mushroom-themed aesthetic with earthy color palette
-
-### Authentication System
-- Uses simple password-based authentication (`granite2024`, `forager123`)
-- Client-side only implementation suitable for conservation purposes (not high-security)
-- 24-hour session persistence using localStorage with automatic cleanup
-- Event-driven UI updates (`authStateChanged` custom events)
-- Protected data: GPS coordinates, trail names, parking locations, contact information
-- Public data: Climate information, soil types, elevation ranges, seasonal timing
-
-### Performance Considerations
-- Auto-refresh pauses when tab is not visible
-- Weather data cached to prevent excessive API calls
-- Modal system with proper cleanup and event management
-- Responsive design optimized for mobile field use
-- Authentication state managed efficiently with minimal storage footprint
-
-## Coding Conventions & Best Practices
-
-### Module Structure
-- **ES6 Modules:** All modules use `export` and `import` statements
-- **No Build Step:** Code runs directly in browser (no transpilation)
-- **Global State:** Managed through exported objects (e.g., `currentWeatherData` in weather.js)
-- **Event-Driven:** Custom events for cross-module communication (e.g., `authStateChanged`)
+### ES6 Module System
+- All modules use `export` and `import` statements
+- No build step required - code runs directly in browser
+- No transpilation (modern browser requirement)
 
 ### Code Style
-- **Function Documentation:** JSDoc comments for all public functions
-- **Naming Conventions:**
-  - camelCase for functions and variables
-  - PascalCase for classes (e.g., `SimpleAuth`, `MushroomApp`)
-  - UPPER_CASE for constants
-- **Error Handling:** Try-catch blocks with user-friendly error messages
-- **Async/Await:** Preferred over promise chains for readability
+- **Functions:** camelCase
+- **Classes:** PascalCase
+- **Constants:** UPPER_CASE
+- **Files:** kebab-case.js
 
-### Testing Guidelines
-- **Test Files:** Located in `tests/unit/` matching module names (e.g., `weather.test.js`)
-- **Mock Data:** Shared mocks in `tests/helpers/mockData.js`
-- **Coverage:** Aim for 100% coverage on new modules
-- **Test Structure:** Use `describe` blocks for grouping, clear test names
-- **Assertions:** Use Vitest's `expect` API with descriptive messages
+### Testing Requirements
+- All tests must pass before merging (`npm test`)
+- Aim for 100% coverage on new modules
+- Use Vitest's `expect` API with descriptive messages
+- Mock external APIs (Open-Meteo, iNaturalist)
 
-### Adding New Features
-1. **Create Module:** Add to `src/modules/` with clear single responsibility
-2. **Write Tests First:** Create test file in `tests/unit/` before implementation
-3. **Update Documentation:** Add to this CLAUDE.md file
-4. **Import in app.js:** Add initialization in main application controller
-5. **Run Tests:** Ensure all tests pass (`npm test`)
-6. **Manual Testing:** Test in browser with `npm run dev`
+### Global State Management
+- Modules export global objects (e.g., `currentWeatherData` in weather.js)
+- Event-driven communication via custom events (e.g., `authStateChanged`)
+- No external state management library
 
-### Common Patterns
+### Offline Capability (NEW v3.5.2)
+- Service worker caches species data and UI assets
+- IndexedDB queues foraging reports when offline
+- Auto-sync when connection restored
+- Toast notifications for status updates
 
-#### Weather Data Access
+---
+
+## Data Flow
+
+```
+User Input → interactions.js
+                ↓
+         species.js (database)
+                ↓
+         weather.js (API fetch)
+                ↓
+    mapCalculations.js (probability engine)
+                ↓
+         Update SVG map colors
+                ↓
+    County click → Modal with details
+```
+
+---
+
+## Key Features by Module
+
+| Feature | Module | Line Count | Tests |
+|---------|--------|------------|-------|
+| Real-time weather | weather.js | ~300 | 26 |
+| Species database | species.js | ~2,500 | 62 |
+| Probability calculation | mapCalculations.js | ~400 | 48 |
+| UI/interactions | interactions.js | ~1,200 | 67 |
+| Authentication | authentication.js | ~200 | 56 |
+| Location data | publicLands.js | ~400 | 65 |
+| User reports | foragingReports.js | ~500 | 84 |
+| iNaturalist integration | iNaturalistIntegration.js | ~600 | 60 |
+
+---
+
+## Adding New Features
+
+1. **Create module** in `src/modules/` with clear single responsibility
+2. **Write tests first** in `tests/unit/` before implementation
+3. **Update this file** with high-level summary
+4. **Create detailed skill** in `.claude/skills/` if significant feature
+5. **Import in app.js** if initialization needed
+6. **Run tests** - ensure all 470+ tests pass
+
+---
+
+## Common Patterns
+
+### Weather Data Access
 ```javascript
-import { currentWeatherData, getWeatherData } from './modules/weather.js';
-// Access current data
+import { currentWeatherData } from './modules/weather.js';
 const temp = currentWeatherData.counties['Grafton'].temperature;
 ```
 
-#### Authentication Checks
+### Authentication Check
 ```javascript
 import { authManager } from './modules/authentication.js';
-if (authManager.isAuthenticated()) {
-  // Show protected data
-}
+if (authManager.isAuthenticated()) { /* show protected data */ }
 ```
 
-#### Modal Display
+### Modal Display
 ```javascript
-import { showModal, hideModal } from './modules/interactions.js';
-showModal('Title', 'Content HTML');
+import { showModal } from './modules/interactions.js';
+showModal('Title', 'HTML content');
 ```
 
-### File Organization
-```
-GraniteFungiForager/
-├── index.html                    # Main entry point
-├── app.js                        # Application controller
-├── package.json                  # Dependencies and scripts
-├── vitest.config.js              # Test configuration
-├── .github/workflows/            # CI/CD pipelines
-│   ├── test.yml                  # Automated testing
-│   └── deploy.yml                # GitHub Pages deployment
-├── src/
-│   ├── styles.css                # Main stylesheet (modern design)
-│   ├── modules/                  # Feature modules (11 files)
-│   │   ├── weather.js            # Weather integration
-│   │   ├── species.js            # Species database
-│   │   ├── mapCalculations.js   # Probability engine
-│   │   ├── interactions.js       # UI interactions
-│   │   ├── publicLands.js        # Location data
-│   │   ├── authentication.js     # Auth system
-│   │   ├── foragingReports.js    # User data collection
-│   │   ├── iNaturalistIntegration.js  # External API
-│   │   ├── speciesMapping.js     # Name normalization
-│   │   ├── observationAnalysis.js     # ML analysis
-│   │   └── speciesCoverageAudit.js    # Data QA
-│   └── ml/
-│       └── accuracy-improvement-pipeline.js  # ML framework
-├── tests/
-│   ├── unit/                     # 8 test files (470 tests)
-│   ├── helpers/                  # Mock data
-│   ├── setup.js                  # Test configuration
-│   └── README.md                 # Test documentation
-├── docs/
-│   ├── design-system/
-│   │   └── GraniteFungiForager_UI_Design_System_v2_MASTER.md
-│   └── archive/                  # Archived historical documents
-│       └── Project_Roadmap_UI_Planning_ARCHIVED.md
-├── CLAUDE.md                     # This file (Development guidance)
-├── README.md                     # User documentation
-├── CHANGELOG.md                  # Version history
-├── CONTRIBUTING.md               # Contribution guidelines
-├── ACCURACY_IMPROVEMENT_PLAN.md  # ML roadmap
-├── CODE_OF_CONDUCT.md            # Community guidelines
-└── LICENSE                       # MIT License
+### Offline Report Queueing
+```javascript
+// In foraging reports - automatically queued when offline
+reportsManager.addReport(reportData);
+// Service worker syncs when online
 ```
 
-## Safety and Compliance
+---
 
-The application includes comprehensive safety warnings and follows responsible foraging practices:
-- Never eat unidentified mushrooms warning
-- Local regulations and permit requirements
-- Sustainable harvesting practices
-- Multiple expert source consultation recommendations
+## AI Model Selection Preferences
 
-## Version History
-
-- **v3.5.1** (December 2025) - UX tightening, mobile header optimization, weather display consistency, 19/29 species enhanced (66%)
-- **v3.5.0** (December 2025) - King Boletes & Hedgehogs enhancement (10 species), 17/29 species enhanced (59%), 72-77% accuracy
-- **v3.4.0** (December 2025) - Research-backed data integration (7 species), peer-reviewed sources, 70-75% accuracy
-- **v3.3.0** (December 2025) - 100% test coverage, 470 comprehensive tests, modern styling
-- **v3.2.1** (August 2025) - Authentication system for location data protection
-- **v3.2.0** (August 2025) - Top 5 rankings, expanded species database (29 species)
-- **v3.1.0** - Community data collection, iNaturalist integration
-- **v3.0.0** - Initial ML pipeline framework
-
-## Quick Reference for AI Assistants
-
-### AI Model Selection Preferences
-
-**Planning Mode:**
+**Planning Mode (EnterPlanMode):**
 - **Model:** Claude Opus 4.5 (opus)
 - **Extended Thinking:** ENABLED
-- Use Opus with extended thinking when entering plan mode for complex architectural decisions and implementation planning
-- The deeper reasoning helps explore edge cases and consider multiple approaches before execution
+- Use for: Complex architectural decisions, implementation planning, exploring edge cases
 
 **Execution Mode (Default):**
 - **Model:** Claude Sonnet 4.5 (sonnet)
-- Use Sonnet for all other tasks: coding, testing, documentation updates, bug fixes
-- Sonnet provides excellent performance with lower latency for direct implementation
+- Use for: Coding, testing, documentation updates, bug fixes, refactoring
 
-**When to use Haiku:**
-- Simple, repetitive tasks (e.g., updating version numbers across files)
-- Quick file reads or searches where no complex reasoning is needed
+**Simple Tasks:**
+- **Model:** Claude Haiku (haiku)
+- Use for: Version number updates, simple file reads, repetitive tasks
 
-### When Adding Features
-1. Always run tests first: `npm test`
-2. Create test file before implementing feature
-3. Follow ES6 module pattern (no build step required)
-4. Update this CLAUDE.md with new module documentation
-5. Ensure tests pass before committing
-6. Check browser compatibility (Chrome, Firefox, Safari, Edge)
+---
 
-### When Debugging
-1. Check browser console for errors (F12)
-2. Run specific test file: `npx vitest tests/unit/modulename.test.js`
-3. Use `npm run test:ui` for interactive debugging
-4. Check `currentWeatherData` and other global state objects
-5. Verify authentication state with `authManager.isAuthenticated()`
+## Performance & Optimization
 
-### When Modifying Calculations
-1. Update tests in corresponding test file first
-2. Verify probability ranges stay 0-100%
-3. Check edge cases (null data, extreme temperatures, etc.)
-4. Test with different species and counties
-5. Validate color coding updates correctly
+- **Auto-refresh:** Pauses when tab not visible
+- **Weather caching:** Prevents excessive API calls (5-minute cache)
+- **Service worker:** Caches static assets and species data
+- **Responsive design:** Mobile-first, field-ready UI
+- **No build step:** Direct browser execution (faster dev)
 
-### Common Tasks
-- **Add new species:** Update `src/modules/species.js` and add tests
-- **Modify probability calculation:** Update `src/modules/mapCalculations.js` and tests
-- **Change styling:** Edit `src/styles.css` (no build step needed)
-- **Add county data:** Update `publicLands.js` with new location
-- **Fix authentication:** Check `authentication.js` and localStorage state
+---
+
+## Safety & Compliance
+
+- **DHHS Tier 1 Species:** All 29 species approved for commercial sale in NH
+- **Conservation Focus:** Protected GPS coordinates with authentication
+- **Safety Warnings:** "Never eat unidentified mushrooms" prominently displayed
+- **Research-Backed:** Peer-reviewed sources for all species data
+
+---
+
+## Version History (Recent)
+
+- **v3.5.2** (Jan 2026) - Offline capability (service worker, IndexedDB queue), documentation restructuring
+- **v3.5.1** (Dec 2025) - UX tightening, mobile optimization, weather display consistency
+- **v3.5.0** (Dec 2025) - King Boletes & Hedgehogs enhancement (10 species)
+- **v3.4.0** (Dec 2025) - Research-backed data integration (peer-reviewed sources)
+- **v3.3.0** (Dec 2025) - 100% test coverage (470 tests)
+
+See [CHANGELOG.md](./CHANGELOG.md) for complete history.
+
+---
+
+## Quick Debugging
+
+```bash
+# Browser console
+console.log(window.currentWeatherData);        # Check weather state
+console.log(window.mushroomApp.getStatus());   # App status
+window.enableDebug();                           # Enable debug panel
+window.coverageAuditor.printCoverageReport();   # Species mapping coverage
+```
+
+---
+
+## Testing Checklist
+
+Before committing:
+- [ ] All tests pass: `npm test`
+- [ ] No console errors in browser (F12)
+- [ ] Test in Chrome, Firefox, Safari
+- [ ] Mobile responsive (viewport < 768px)
+- [ ] Offline mode works (DevTools → Network → Offline)
+- [ ] Service worker updates properly
+
+---
+
+## CI/CD Pipeline
+
+**GitHub Actions:**
+- Test workflow runs on push/PR (3 Node versions: 18.x, 20.x, 22.x)
+- Deploy workflow auto-deploys to GitHub Pages on push to `main`
+- Coverage reports retained for 30 days
+
+**Status:** [![Tests](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml/badge.svg)](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml)
+
+For details, trigger the `cicd-guide` skill or see `.github/workflows/`.
+
+---
+
+## Resources
+
+- **Skills:** [`.claude/skills/`](./.claude/skills/) - Detailed module documentation
+- **Tests:** [tests/README.md](./tests/README.md) - Test structure and helpers
+- **Accuracy Plan:** [ACCURACY_IMPROVEMENT_PLAN.md](./ACCURACY_IMPROVEMENT_PLAN.md) - ML roadmap
+- **Design System:** [docs/design-system/](./docs/design-system/) - UI components and patterns
+
+---
+
+*For module-specific details, Claude Code will automatically load the appropriate skill based on your query keywords.*

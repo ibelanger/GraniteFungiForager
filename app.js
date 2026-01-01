@@ -2,8 +2,15 @@
 
 import { initWeather } from './src/modules/weather.js';
 import { initMapCalculations } from './src/modules/mapCalculations.js';
-import { initInteractions } from './src/modules/interactions.js';
-import { initEnhancedMapInteractions } from './src/modules/interactions.js';
+import { initInteractions, initEnhancedMapInteractions } from './src/modules/interactions.js';
+
+// ML/Validation Infrastructure - Used by interactions.js for analytics and validation features
+// These modules create global instances and are accessed by:
+// - reportsManager: User foraging data collection (interactions.js lines 638, 740-745, 973, 992)
+// - iNatClient/obsProcessor: iNaturalist API integration (observationAnalysis.js lines 200, 204)
+// - speciesMapper: Maps iNaturalist species to DHHS Tier 1 (observationAnalysis.js line 211)
+// - observationAnalyzer: ML prediction validation (interactions.js lines 1022, 1028)
+// - coverageAuditor: Developer tool for species mapping coverage (console: window.coverageAuditor.printCoverageReport())
 import { reportsManager } from './src/modules/foragingReports.js';
 import { iNatClient, obsProcessor } from './src/modules/iNaturalistIntegration.js';
 import { speciesMapper } from './src/modules/speciesMapping.js';
@@ -14,7 +21,7 @@ import { coverageAuditor } from './src/modules/speciesCoverageAudit.js';
  * Application configuration
  */
 const appConfig = {
-    version: '3.5.1',
+    version: '3.5.2',
     title: 'GraniteFungiForager - NH Tier 1 Mushroom Map',
     author: 'GraniteFungiForager',
     updateInterval: 300000, // 5 minutes for auto-refresh
@@ -92,17 +99,147 @@ class MushroomApp {
     setupGlobalEventListeners() {
         // Handle window resize
         window.addEventListener('resize', this.handleResize.bind(this));
-        
+
         // Handle visibility change (pause/resume auto-refresh)
         document.addEventListener('visibilitychange', this.handleVisibilityChange.bind(this));
-        
+
         // Handle keyboard shortcuts
         document.addEventListener('keydown', this.handleKeyboard.bind(this));
-        
+
         // Handle orientation change for mobile
         window.addEventListener('orientationchange', () => {
             setTimeout(this.handleResize.bind(this), 100);
         });
+
+        // Handle online/offline status
+        window.addEventListener('online', this.handleOnline.bind(this));
+        window.addEventListener('offline', this.handleOffline.bind(this));
+
+        // Service worker message handler for report sync
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('message', this.handleServiceWorkerMessage.bind(this));
+        }
+    }
+
+    /**
+     * Handle online event - sync pending reports
+     */
+    handleOnline() {
+        console.log('[App] Connection restored');
+        this.showToast('📶 Back online - syncing data...', 'success');
+
+        // Trigger service worker sync if available
+        if ('serviceWorker' in navigator && 'sync' in ServiceWorkerRegistration.prototype) {
+            navigator.serviceWorker.ready.then((registration) => {
+                return registration.sync.register('sync-foraging-reports');
+            }).catch((error) => {
+                console.error('[App] Background sync registration failed:', error);
+            });
+        }
+
+        // Resume auto-refresh
+        this.setupAutoRefresh();
+    }
+
+    /**
+     * Handle offline event
+     */
+    handleOffline() {
+        console.log('[App] Connection lost');
+        this.showToast('📴 Offline mode - reports will sync when reconnected', 'info');
+    }
+
+    /**
+     * Handle service worker messages
+     */
+    handleServiceWorkerMessage(event) {
+        const { data } = event;
+
+        if (data && data.type === 'SYNC_REPORTS') {
+            console.log('[App] Received sync reports message from service worker');
+
+            // Merge reports from IndexedDB into reportsManager
+            data.reports.forEach((report) => {
+                try {
+                    reportsManager.addReport(report, { skipDuplicateCheck: false });
+                } catch (error) {
+                    console.error('[App] Failed to merge report:', error);
+                }
+            });
+
+            this.showToast(`✅ Synced ${data.reports.length} offline report(s)`, 'success');
+        }
+    }
+
+    /**
+     * Show toast notification
+     */
+    showToast(message, type = 'info') {
+        // Check if toast container exists
+        let container = document.getElementById('toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            container.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 10000;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            `;
+            document.body.appendChild(container);
+        }
+
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.textContent = message;
+
+        const colors = {
+            success: '#27ae60',
+            info: '#3498db',
+            warning: '#f39c12',
+            error: '#e74c3c'
+        };
+
+        toast.style.cssText = `
+            background: ${colors[type] || colors.info};
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            font-family: 'Newsreader', serif;
+            font-size: 0.95rem;
+            max-width: 300px;
+            animation: slideIn 0.3s ease-out;
+        `;
+
+        // Add animation keyframes if not already present
+        if (!document.getElementById('toast-animations')) {
+            const style = document.createElement('style');
+            style.id = 'toast-animations';
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(400px); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(400px); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        container.appendChild(toast);
+
+        // Auto-remove after 4 seconds
+        setTimeout(() => {
+            toast.style.animation = 'slideOut 0.3s ease-in';
+            setTimeout(() => toast.remove(), 300);
+        }, 4000);
     }
     
     /**
@@ -375,12 +512,18 @@ class MushroomApp {
         if (this.autoRefreshTimer) {
             clearInterval(this.autoRefreshTimer);
         }
-        
+
         // Remove global event listeners
         window.removeEventListener('resize', this.handleResize);
         document.removeEventListener('visibilitychange', this.handleVisibilityChange);
         document.removeEventListener('keydown', this.handleKeyboard);
-        
+        window.removeEventListener('online', this.handleOnline);
+        window.removeEventListener('offline', this.handleOffline);
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.removeEventListener('message', this.handleServiceWorkerMessage);
+        }
+
         this.initialized = false;
         console.log('Application destroyed');
     }

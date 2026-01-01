@@ -14,6 +14,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Green Quilted Russula, Jelly Ear, Lion's Mane
   - Blewit, Oyster Mushroom, Wine Cap, Shaggy Mane
 
+## [3.5.2] - 2026-01-01
+
+### Added
+- **📴 Offline Capability (Progressive Web App)**
+  - Service worker (sw.js) caches species database and UI assets
+  - Cache-first strategy for species data (rarely changes)
+  - Network-first with cache fallback for weather data (5-minute expiration)
+  - IndexedDB queue for foraging reports submitted while offline
+  - Background sync automatically uploads queued reports when connection restored
+  - Toast notifications for online/offline status changes
+  - Graceful degradation - app works without service worker
+
+- **🔔 Toast Notification System**
+  - Smooth slide-in animations for status messages
+  - Color-coded notifications (success, info, warning, error)
+  - Auto-dismiss after 4 seconds
+  - Non-blocking, accessible design
+
+### Changed
+- **📚 Documentation Restructuring (Token Efficiency)**
+  - Slimmed down CLAUDE.md from 1,107 lines to 296 lines (73% reduction)
+  - Preserved all 7 detailed module skills in .claude/skills/ for on-demand loading
+  - Skills triggered automatically by Claude Code based on keywords
+  - Single source of truth per topic (no duplication)
+  - Better token efficiency for AI-assisted development
+
+- **🔧 Code Cleanup**
+  - Combined duplicate import statements in app.js
+  - Added clarifying comments for ML/validation module imports
+  - Documented usage of reportsManager, iNatClient, observationAnalyzer, etc.
+
+### Technical Details
+- All 468 tests passing (100% pass rate maintained)
+- Service worker version: gff-v3.5.2
+- Progressive Web App features enabled (HTTPS required)
+- IndexedDB database: GraniteFungiForagerDB
+- Backward compatible - no breaking changes
+
+### Files Modified
+- **CREATED:** sw.js (390 lines) - Full-featured service worker
+- **ENHANCED:** app.js (+159 lines) - Offline/online handlers, toast notifications
+- **OPTIMIZED:** CLAUDE.md (-811 lines) - Quick reference only
+
+---
+
 ## [3.5.1] - 2025-12-30
 
 ### Changed
