@@ -1,8 +1,11 @@
 # 🍄 GraniteFungiForager v3.5.2
 
-
 [![Tests](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml/badge.svg)](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/ibelanger/GraniteFungiForager/branch/main/graph/badge.svg)](https://codecov.io/gh/ibelanger/GraniteFungiForager)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub last commit](https://img.shields.io/github/last-commit/ibelanger/GraniteFungiForager)](https://github.com/ibelanger/GraniteFungiForager)
+[![GitHub stars](https://img.shields.io/github/stars/ibelanger/GraniteFungiForager?style=social)](https://github.com/ibelanger/GraniteFungiForager)
+
 
 **GraniteFungiForager** - NH Tier 1 Wild Mushroom Probability Map with interactive foraging conditions based on real-time weather data, peer-reviewed research, and mycological expertise. Now with **offline capability** for field use!
 
