@@ -67,7 +67,7 @@ GraniteFungiForager/
 ├── docs/
 │   └── design-system/
 ├── .claude/
-│   ├── skills/          # Detailed module docs (7 skills)
+│   ├── skills/          # Detailed module docs (10 skills)
 │   ├── scripts/         # context-bar.sh
 │   └── settings.json
 ├── CLAUDE.md            # This file
@@ -89,6 +89,9 @@ GraniteFungiForager/
 - **`testing-guide`** - Vitest setup, coverage, debugging
 - **`cicd-guide`** - GitHub Actions workflows, deployment
 - **`ml-roadmap`** - Accuracy improvement pipeline (60-70% → 85-90% target)
+- **`offline-guide`** - Service worker, IndexedDB, PWA offline capability
+- **`interactions-module`** - UI interactions, modals, event handling
+- **`release`** - Commit/push workflow: version bumps, CHANGELOG, admin file updates
 
 These skills are triggered automatically by Claude Code based on keywords in your requests.
 
