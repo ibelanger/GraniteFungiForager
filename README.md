@@ -1,4 +1,4 @@
-# 🍄 GraniteFungiForager v3.5.2
+# 🍄 GraniteFungiForager v3.6.0
 
 
 [![Tests](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml/badge.svg)](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml)
@@ -10,25 +10,13 @@
 ## 🌐 **LIVE APPLICATION**
 **Try it now:** https://ibelanger.github.io/GraniteFungiForager/
 
-## 🆕 **What's New in v3.5.2** (January 2026)
+## 🆕 **What's New in v3.6.0** (March 2026)
 
-### 📴 **MAJOR: Offline Capability (Progressive Web App)**
-- **Service Worker Implementation** - Full offline support for field use without internet connection
-- **Cached Species Database** - All 29 DHHS Tier 1 species available offline
-- **Offline Report Queue** - Add foraging reports while offline, auto-sync when reconnected
-- **IndexedDB Storage** - Persistent offline data storage with background sync
-- **Toast Notifications** - Real-time status updates for online/offline state changes
-- **Field-Ready** - Perfect for remote mushroom foraging locations with no cell service
+### 🔬 **Research-Grade Species Data (Epic #17)**
+- **Trumpet Chanterelle** (*Craterellus tubaeformis*) - Added 6 research-grade fields; clearly differentiated from *C. cibarius* — fruits Sept-Nov, cooler soil (45-60°F), higher elevation (500-3000ft), wetter/boggier habitat. Sources: Petersen 1979; MushroomExpert.com
+- **Lobster Mushroom** (*Hypomyces lactifluorum*) - Completed precipitationWindow (14-28 days, host-dependency documented), NH-specific elevation notes, verified host ratios against iNaturalist data, upgraded soilPH confidence. Sources: MushroomExpert.com; Beug et al.
 
-### 📚 **Documentation Restructuring**
-- **73% Reduction in CLAUDE.md** - Slimmed from 1,107 to 296 lines for better maintainability
-- **Token-Efficient Architecture** - Modular skills loaded on-demand by Claude Code
-- **Single Source of Truth** - No duplication between docs and skills
-
-### 🔧 **Code Quality Improvements**
-- **Import Cleanup** - Clarified ML/validation module usage with documentation
-- **All Tests Passing** - 468/470 tests (100% pass rate maintained)
-- **Progressive Enhancement** - App works with or without service worker
+*Previous release notes for v3.5.2 (Offline Capability) are in [CHANGELOG.md](./CHANGELOG.md)*
 
 ### ⚠️ **Requirements**
 - **HTTPS Required** - Service worker only works on HTTPS (GitHub Pages ✓)

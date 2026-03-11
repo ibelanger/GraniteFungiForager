@@ -8,11 +8,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Future Improvements Planned
-- **UI Consistency:** Unify colors, emoji usage, and formatting between species card and county details
-- **Species Enhancement:** 10 remaining species to add research-backed data:
-  - Beefsteak Polypore, Cauliflower Mushroom, Trumpet Chanterelle
-  - Green Quilted Russula, Jelly Ear, Lion's Mane
-  - Blewit, Oyster Mushroom, Wine Cap, Shaggy Mane
+- **Species Enhancement:** 10 remaining species to add research-backed data (epic #17):
+  - Beefsteak Polypore, Cauliflower Mushroom, Green Quilted Russula
+  - Jelly Ear, Lion's Mane, Blewit, Oyster Mushroom, Wine Cap, Shaggy Mane
+
+## [3.6.0] - 2026-03-11
+
+### Added
+- **Trumpet Chanterelle research data** (*Craterellus tubaeformis*) — added 6 research-grade
+  fields clearly differentiated from the *C. cibarius* group (chanterelles entry):
+  - `optimalSoilTemp`: 40-65°F, optimal 45-60°F (vs. 54.5-72.5°F for C. cibarius); frost-tolerant
+  - `soilPH`: 3.5-5.5, optimal 4.5; sphagnum/bog specialist
+  - `precipitationWindow`: 14-30 days sustained moisture required
+  - `elevationRange`: 500-3000ft, optimal 800-2500ft; spruce-fir zone specialist
+  - `hostTreeFrequencies`: Spruce 40%, Fir 30%, Hemlock 20%, Pine 10%
+  - `phenologyNH`: September-November (6-8 weeks later than C. cibarius peak)
+  - Sources: Petersen 1979 — *Cantharelloid fungi of northeastern North America*; MushroomExpert.com
+  - Closes #20
+- **Lobster Mushroom research data** (*Hypomyces lactifluorum*) — completed partial entry:
+  - `precipitationWindow`: updated to 14-28 days (optimal 21); documents 2-3 week host
+    dependency — *Russula*/*Lactarius* must establish before *Hypomyces* parasitism can occur
+  - `elevationRange`: added NH-specific host distribution notes (*R. brevipes* 500-2000ft;
+    *L. piperatus* 0-1200ft); elevationDelay follows host phenology
+  - `hostSpecies` → `hostFrequencies`: renamed per spec; Russula ~70% / Lactarius ~30%
+    verified against NH iNaturalist observations; added nhContext
+  - `soilPH`: confidence upgraded to Medium-High; added nhNotes citing NH forest soil surveys
+  - Sources: MushroomExpert.com; Beug et al. — *North American species of Hypomyces*
+  - Closes #24
+
+### Technical Details
+- Tests: 468/470 passing (100% pass rate maintained; 2 pre-existing skips)
+- Part of epic #17 — research-grade data for all 29 DHHS Tier 1 species
+
+### Files Modified
+- **MODIFIED:** src/modules/species.js (+81/-14 lines) — Trumpet Chanterelle and Lobster Mushroom research fields
 
 ## [3.5.2] - 2026-01-01
 
