@@ -283,7 +283,6 @@ export class ObservationAnalyzer {
      */
     async compareWithModel(dhhlsSpecies, observations) {
         const modelData = [];
-        const observationData = [];
 
         // Sample various conditions and compare
         const sampleConditions = [

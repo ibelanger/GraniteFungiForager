@@ -12,10 +12,10 @@ import { initInteractions, initEnhancedMapInteractions } from './src/modules/int
 // - observationAnalyzer: ML prediction validation (interactions.js lines 1022, 1028)
 // - coverageAuditor: Developer tool for species mapping coverage (console: window.coverageAuditor.printCoverageReport())
 import { reportsManager } from './src/modules/foragingReports.js';
-import { iNatClient, obsProcessor } from './src/modules/iNaturalistIntegration.js';
-import { speciesMapper } from './src/modules/speciesMapping.js';
-import { observationAnalyzer } from './src/modules/observationAnalysis.js';
-import { coverageAuditor } from './src/modules/speciesCoverageAudit.js';
+import { iNatClient, obsProcessor } from './src/modules/iNaturalistIntegration.js'; // eslint-disable-line no-unused-vars
+import { speciesMapper } from './src/modules/speciesMapping.js'; // eslint-disable-line no-unused-vars
+import { observationAnalyzer } from './src/modules/observationAnalysis.js'; // eslint-disable-line no-unused-vars
+import { coverageAuditor } from './src/modules/speciesCoverageAudit.js'; // eslint-disable-line no-unused-vars
 
 /**
  * Application configuration

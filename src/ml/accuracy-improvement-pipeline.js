@@ -183,7 +183,7 @@ export class AccuracyImprovementPipeline {
     /**
      * Continuous Learning Model Refinement
      */
-    async setupModelRefinement(data) {
+    async setupModelRefinement(_data) {
         return {
             dataValidationPipeline: this.createValidationPipeline(),
             retrainingSchedule: 'weekly', // retrain models weekly with new data
@@ -293,7 +293,7 @@ export class AccuracyImprovementPipeline {
  */
 
 class UserSuccessTracker {
-    async collectForagingReport(report) {
+    async collectForagingReport(_report) {
         // Validate and store user success/failure reports
         // Implement post-foraging form interface
         // GPS correlation and photo verification
@@ -301,7 +301,7 @@ class UserSuccessTracker {
 }
 
 class INaturalistDataCollector {
-    async fetchNHObservations(params) {
+    async fetchNHObservations(_params) {
         // Connect to iNaturalist API
         // Filter for NH-specific observations
         // Parse observation dates and habitat notes
@@ -309,7 +309,7 @@ class INaturalistDataCollector {
 }
 
 class ExpertValidationSystem {
-    async submitForReview(species, data) {
+    async submitForReview(_species, _data) {
         // Interface with NH Mycological Society
         // Expert validation of current multipliers
         // Regional expertise consultation
@@ -317,7 +317,7 @@ class ExpertValidationSystem {
 }
 
 class SeasonalTimingOptimizer {
-    async train(trainingData) {
+    async train(_trainingData) {
         // Peak timing algorithms
         // Climate correlation analysis
         // Elevation-based timing validation
@@ -325,12 +325,11 @@ class SeasonalTimingOptimizer {
 }
 
 class RegionalAdjustmentModel {
-    async calculateAdjustments(regionData) {
+    async calculateAdjustments(_regionData) {
         // Geographic adjustment factors
         // Microclimate variations analysis
         // County-level precision improvements
     }
 }
 
-// Export for integration with main application
-export { AccuracyImprovementPipeline };
+// Class is exported at declaration above

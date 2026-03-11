@@ -1722,7 +1722,7 @@ window.selectSpeciesFromRanking = function(speciesKey) {
 /**
  * Listen for authentication state changes to refresh county displays
  */
-document.addEventListener('authStateChanged', function(e) {
+document.addEventListener('authStateChanged', function() {
     // Check both county-info panel (main page) and county-modal (modal view)
     const countyPanel = document.getElementById('county-info');
     const countyModal = document.getElementById('county-modal');

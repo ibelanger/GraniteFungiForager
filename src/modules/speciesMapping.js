@@ -1,6 +1,6 @@
 // speciesMapping.js - Maps iNaturalist species to DHHS Tier 1 species
 
-import { speciesData } from './species.js';
+// speciesData imported by consumers of this module via species.js directly
 
 /**
  * Mapping between iNaturalist taxon names and our DHHS Tier 1 species

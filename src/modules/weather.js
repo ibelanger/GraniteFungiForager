@@ -9,7 +9,7 @@ export let currentWeatherData = {
     lastUpdated: null
 };
 
-export let countyWeatherData = {};
+export const countyWeatherData = {};
 
 // County-to-town mapping with coordinates for Open-Meteo API
 export const countyTowns = {

@@ -253,9 +253,6 @@ export function updateMap(selectedSpecies = null) {
         return;
     }
     
-    // Get current weather conditions
-    const weather = getWeatherData();
-    
     // Update each county
     Object.entries(countyRegions).forEach(([county, region]) => {
         // Get county-specific weather if available
