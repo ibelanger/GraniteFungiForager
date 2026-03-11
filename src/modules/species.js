@@ -285,6 +285,62 @@ export const speciesData = {
         hostTrees: ['conifer', 'birch'],
         microhabitat: 'mossy conifer forests, bog edges',
         soilPreference: 'moist, mossy, acidic',
+
+        // RESEARCH-ENHANCED DATA (March 2026)
+        // NOTE: Clearly differentiated from C. cibarius group (chanterelles entry above)
+        // Trumpet Chanterelle fruits LATER, COOLER, HIGHER, and WETTER than golden chanterelles
+        optimalSoilTemp: {
+            min: 40,
+            max: 65,
+            optimal: { min: 45, max: 60 },
+            measurementDepth: '2-4 inches',
+            notes: 'Markedly cooler preference than C. cibarius (54.5-72.5°F); frost-tolerant',
+            confidence: 'High',
+            source: 'Petersen 1979 - Cantharelloid fungi of northeastern North America; MushroomExpert.com'
+        },
+        soilPH: {
+            min: 3.5,
+            max: 5.5,
+            optimal: 4.5,
+            nhNotes: 'Sphagnum bog and wet conifer preference; highly acidic; narrower range than C. cibarius (4.0-6.0)',
+            confidence: 'High',
+            source: 'Petersen 1979; MushroomExpert.com - C. tubaeformis page'
+        },
+        precipitationWindow: {
+            min: 14,
+            max: 30,
+            optimal: 21,
+            correlationPeriod: 30,
+            requirement: 'Sustained moisture essential; mossy/boggy substrate must remain saturated',
+            notes: 'Higher moisture requirement than C. cibarius; thrives in sphagnum-dominated wet conifer understory',
+            confidence: 'High',
+            source: 'Petersen 1979; MushroomExpert.com'
+        },
+        elevationRange: {
+            min: 500,
+            max: 3000,
+            optimal: { min: 800, max: 2500 },
+            elevationDelay: '5-7 days per 1000 feet',
+            notes: 'Higher elevation preference than C. cibarius (0-4000ft, optimal 500ft); spruce-fir zone specialist'
+        },
+        hostTreeFrequencies: {
+            'Spruce (Picea)': '40%',
+            'Fir (Abies)': '30%',
+            'Hemlock (Tsuga)': '20%',
+            'Pine (Pinus)': '10%',
+            specificity: 'Strongly associated with conifers in wet/boggy habitat; contrast with C. cibarius oak/beech dominance'
+        },
+        phenologyNH: {
+            start: 'Early September',
+            peak: 'September - October',
+            end: 'November (frost-tolerant)',
+            notes: 'Fruits 6-8 weeks later than C. cibarius peak (July 15 - Aug 31); one of last edibles of NH season',
+            triggers: 'Cool temperatures (40-60°F) + sustained precipitation + mossy substrate',
+            highElevation: 'White Mountains peak mid-Sept through October'
+        },
+        confidenceLevel: 'High',
+        safetyRating: 'SAFE - No deadly lookalikes; blunt ridges (not true gills) distinguish from gilled species',
+
         identificationNotes: {
             'Shape': 'Small, trumpet-shaped',
             'Color': 'Gray-brown cap, yellow stem',
