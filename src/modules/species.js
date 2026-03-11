@@ -1248,36 +1248,47 @@ export const speciesData = {
         microhabitat: 'parasitized Lactarius/Russula species',
         soilPreference: 'acidic forest soils where host mushrooms grow',
 
-        // RESEARCH-ENHANCED DATA (December 2025)
+        // RESEARCH-ENHANCED DATA (December 2025, updated March 2026)
         optimalSoilTemp: {
             min: 55,
             max: 75,
             optimal: 65,
             notes: 'Follows host mushroom (Russula/Lactarius) requirements',
-            confidence: 'Medium-High'
+            confidence: 'Medium-High',
+            source: 'MushroomExpert.com - Hypomyces lactifluorum; Beug et al. - North American Hypomyces'
         },
         soilPH: {
             min: 4.5,
             max: 6.5,
             optimal: 5.5,
-            notes: 'Follows host species preferences',
-            confidence: 'Medium'
+            nhNotes: 'NH forest soil surveys confirm pH 4.5-6.0 typical in mixed hardwood-conifer zones where Russula/Lactarius hosts fruit; granite-derived NH soils trend toward lower end of range',
+            confidence: 'Medium-High',
+            source: 'NH forest soil surveys; follows Russula/Lactarius host preferences'
         },
         precipitationWindow: {
-            min: 7,
-            max: 14,
-            optimal: 10,
-            notes: 'Follows host mushroom patterns'
+            min: 14,
+            max: 28,
+            optimal: 21,
+            correlationPeriod: 30,
+            requirement: 'Host Russula/Lactarius must fruit first — requires 2-3 weeks sustained moisture for host establishment before Hypomyces parasitism can occur',
+            notes: 'Indirect moisture dependency: lobster cannot fruit without host; host requires sustained soil saturation over 2-3 weeks, not a single rainfall event',
+            confidence: 'High',
+            source: 'MushroomExpert.com - Hypomyces lactifluorum; Beug et al. - North American species of Hypomyces'
         },
         elevationRange: {
             min: 0,
             max: 3500,
-            optimal: { min: 500, max: 2000 }
+            optimal: { min: 500, max: 2000 },
+            elevationDelay: '5-7 days per 1000 feet (follows host phenology)',
+            nhNotes: 'Host Russula brevipes widespread 500-2000ft in NH mixed hardwood-conifer; Lactarius piperatus prefers lower elevations (0-1200ft) in beech-maple; peak lobster habitat overlaps both hosts at 500-1500ft in Lakes Region, Dartmouth-Sunapee, and Monadnock',
+            notes: 'Elevation range defined by host species distribution, not direct abiotic tolerance of Hypomyces'
         },
-        hostSpecies: {
-            'Russula brevipes': 'Primary host - 70-80%',
-            'Lactarius piperatus': 'Secondary host - 20-30%',
-            parasiteTransformation: 'Parasite DNA 95%+ in mature specimens'
+        hostFrequencies: {
+            'Russula brevipes': '~70%',
+            'Lactarius piperatus': '~30%',
+            nhContext: 'NH iNaturalist observations consistent with national ratio; Russula brevipes dominant host in White Mtns and Lakes Region spruce-fir transition; Lactarius piperatus more common in southern NH hardwood forests',
+            parasiteTransformation: 'Parasite DNA 95%+ in mature specimens; host toxins neutralized',
+            source: 'MushroomExpert.com; NH iNaturalist data; Beug et al.'
         },
         phenologyNH: {
             start: 'July',
