@@ -994,13 +994,17 @@ input[type="checkbox"]:focus {
 
 .current-conditions,
 .recommendations,
-.general-info {
+.general-info,
+.data-analytics,
+.locations-info {
     margin-bottom: var(--space-md);
 }
 
 .current-conditions h4,
 .recommendations h4,
-.general-info h4 {
+.general-info h4,
+.data-analytics h4,
+.locations-info h4 {
     color: var(--forest-medium);
     margin-bottom: var(--space-sm);
     font-size: 1.1rem;
@@ -1269,7 +1273,8 @@ input[type="checkbox"]:focus {
     margin-bottom: var(--space-sm);
 }
 
-.species-header h3 {
+.species-header h3,
+.county-header h3 {
     margin: 0;
     font-size: 1.1rem;
 }

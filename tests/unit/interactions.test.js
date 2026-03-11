@@ -364,7 +364,7 @@ describe('Interactions Module', () => {
             displayCountyInfo('Coos County', 'coos');
 
             const countyPanel = document.getElementById('county-info');
-            expect(countyPanel.innerHTML).toContain('📊 Current Conditions');
+            expect(countyPanel.innerHTML).toContain('🌤️ Current Conditions');
             expect(countyPanel.innerHTML).toContain('1.20"'); // rainfall
             expect(countyPanel.innerHTML).toContain('65°F'); // soil temp
         });

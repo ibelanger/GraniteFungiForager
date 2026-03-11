@@ -244,7 +244,7 @@ export function displayCountyInfo(county, countyKey = null) {
             </div>
 
             <div class="current-conditions">
-                <h4>📊 Current Conditions</h4>
+                <h4>🌤️ Current Conditions</h4>
                 <div class="conditions-grid">
                     <div class="condition-item">
                         <span class="condition-label">Soil Temperature:</span>
