@@ -8,6 +8,76 @@ import { reportsManager } from './foragingReports.js';
 import { observationAnalyzer } from './observationAnalysis.js';
 
 /**
+ * Build the "Ecology & Research Notes" expandable section from research-grade fields.
+ * Returns an empty string when no content is present (species not yet enhanced).
+ * @param {Object} s - Species data object
+ * @returns {string} HTML string
+ */
+function buildResearchNotesHTML(s) {
+    const sections = [];
+
+    const phen = s.phenologyNH;
+    if (phen?.triggers || phen?.highElevation || phen?.notes) {
+        sections.push({
+            label: '⚡ Fruiting Triggers',
+            text: [phen.triggers, phen.highElevation, phen.notes].filter(Boolean).join(' ')
+        });
+    }
+
+    const host = s.hostTreeFrequencies || s.hostFrequencies;
+    if (host?.specificity || host?.nhContext || host?.parasiteTransformation) {
+        sections.push({
+            label: '🌲 Host & Habitat',
+            text: [host.specificity, host.nhContext, host.parasiteTransformation].filter(Boolean).join(' ')
+        });
+    }
+
+    const precip = s.precipitationWindow;
+    if (precip?.requirement || precip?.notes || precip?.drought) {
+        sections.push({
+            label: '🌧️ Moisture',
+            text: [precip.requirement, precip.notes, precip.drought].filter(Boolean).join(' ')
+        });
+    }
+
+    if (s.soilPH?.nhNotes || s.elevationRange?.nhNotes || s.elevationRange?.notes) {
+        const elev = s.elevationRange;
+        sections.push({
+            label: '🏔️ Soil & Elevation (NH)',
+            text: [s.soilPH?.nhNotes, elev?.nhNotes, elev?.notes].filter(Boolean).join(' ')
+        });
+    }
+
+    if (s.optimalSoilTemp?.notes) {
+        sections.push({
+            label: '🌡️ Temperature',
+            text: s.optimalSoilTemp.notes
+        });
+    }
+
+    if (!sections.length) return '';
+
+    const confidenceBadge = s.confidenceLevel
+        ? `<span class="confidence-badge">Data confidence: ${s.confidenceLevel}</span>`
+        : '';
+
+    const inner = sections.map(sec =>
+        `<div class="advanced-section research-notes-section">
+            <strong>${sec.label}</strong>
+            <p>${sec.text}</p>
+        </div>`
+    ).join('');
+
+    return `<details class="species-advanced" style="margin-top:8px">
+        <summary class="show-more-btn">🔬 Ecology &amp; Research Notes</summary>
+        <div class="advanced-content">
+            ${inner}
+            ${confidenceBadge}
+        </div>
+    </details>`;
+}
+
+/**
  * Display detailed species information in compact 2-column layout
  * @param {string} speciesKey - Species identifier
  */
@@ -147,6 +217,8 @@ export function displaySpeciesInfo(speciesKey) {
                 </div>
             </details>
             ` : ''}
+
+            ${buildResearchNotesHTML(species)}
 
             ${referenceHTML}
         </div>

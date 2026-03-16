@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.8.0] - 2026-03-16
+
+### Added
+- **Ecology & Research Notes** — research-grade data from Epic #17 is now visible in the UI.
+  Selecting a species shows a new collapsible "🔬 Ecology & Research Notes" section with:
+  - ⚡ Fruiting Triggers — conditions that initiate fruiting (temp + rain triggers, elevation timing)
+  - 🌲 Host & Habitat — host tree specificity and NH-specific ecological context
+  - 🌧️ Moisture — precipitation window requirements and drought tolerance
+  - 🏔️ Soil & Elevation (NH) — NH-specific soil pH guidance and elevation range notes
+  - 🌡️ Temperature — fruiting temperature research context
+  - Data confidence badge when available
+- 9 new interaction tests covering research notes rendering (500 total, up from 491)
+
 ## [3.7.0] - 2026-03-16
 
 ### Added

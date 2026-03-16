@@ -71,6 +71,55 @@ vi.mock('../../src/modules/species.js', () => ({
                 'Monadnock Region': 0.5,
                 'Seacoast': 0.4
             }
+        },
+        sweettooth: {
+            name: 'Sweet Tooth (Hydnum repandum)',
+            tempRange: [45, 65],
+            moistureMin: 1.2,
+            seasonMultiplier: { spring: 0.1, summer: 0.5, fall: 1.0, winter: 0.0 },
+            hostTrees: ['beech', 'oak', 'hemlock'],
+            microhabitat: 'mixed hardwood forest floors',
+            soilPreference: 'acidic, well-drained',
+            identificationNotes: { spines: 'tooth-like spines instead of gills' },
+            optimalSoilTemp: {
+                notes: 'Fruiting triggered by cooling soils in autumn.',
+                confidence: 'High',
+                source: 'Cultivation studies'
+            },
+            soilPH: {
+                nhNotes: 'Prefers acidic NH granite soils pH 4.5-5.5.'
+            },
+            precipitationWindow: {
+                requirement: 'Sustained autumn rainfall 2 weeks before fruiting.',
+                notes: 'Precipitation-evapotranspiration balance is key predictor.',
+                drought: 'Tolerates brief dry spells of 3-5 days.'
+            },
+            elevationRange: {
+                nhNotes: 'Found 200-3000ft in NH, peak 800-2500ft.',
+                notes: 'Higher elevation preference than golden chanterelle.'
+            },
+            hostTreeFrequencies: {
+                'Beech (Fagus)': '40%',
+                'Oak (Quercus)': '30%',
+                specificity: 'Obligate ectomycorrhizal; not host-specific but strongly beech-associated.'
+            },
+            phenologyNH: {
+                start: 'Late August',
+                peak: 'September-October',
+                end: 'November',
+                triggers: 'Cool temps (45-55°F) + sustained rainfall.',
+                highElevation: 'White Mountains peak mid-September.'
+            },
+            confidenceLevel: 'High (extensive cultivation data)',
+            regions: {
+                'Great North Woods': 0.7,
+                'White Mountains': 0.8,
+                'Dartmouth-Sunapee': 0.6,
+                'Merrimack Valley': 0.5,
+                'Lakes Region': 0.6,
+                'Monadnock Region': 0.5,
+                'Seacoast': 0.4
+            }
         }
     },
     populateSpeciesDropdown: vi.fn(),
@@ -303,6 +352,110 @@ describe('Interactions Module', () => {
             expect(infoPanel.innerHTML).toContain('🔍 ID Notes');
             expect(infoPanel.innerHTML).toContain('cap');
             expect(infoPanel.innerHTML).toContain('honeycomb appearance');
+        });
+    });
+
+    describe('Ecology & Research Notes section', () => {
+        test('should render research section for research-enhanced species', () => {
+            const infoPanel = document.createElement('div');
+            infoPanel.id = 'species-info';
+            document.body.appendChild(infoPanel);
+
+            displaySpeciesInfo('sweettooth');
+
+            expect(infoPanel.innerHTML).toContain('🔬 Ecology');
+            expect(infoPanel.innerHTML).toContain('Research Notes');
+        });
+
+        test('should render Fruiting Triggers section from phenologyNH', () => {
+            const infoPanel = document.createElement('div');
+            infoPanel.id = 'species-info';
+            document.body.appendChild(infoPanel);
+
+            displaySpeciesInfo('sweettooth');
+
+            expect(infoPanel.innerHTML).toContain('⚡ Fruiting Triggers');
+            expect(infoPanel.innerHTML).toContain('Cool temps (45-55°F)');
+            expect(infoPanel.innerHTML).toContain('White Mountains peak mid-September');
+        });
+
+        test('should render Host & Habitat section from hostTreeFrequencies', () => {
+            const infoPanel = document.createElement('div');
+            infoPanel.id = 'species-info';
+            document.body.appendChild(infoPanel);
+
+            displaySpeciesInfo('sweettooth');
+
+            expect(infoPanel.innerHTML).toContain('🌲 Host &amp; Habitat');
+            expect(infoPanel.innerHTML).toContain('Obligate ectomycorrhizal');
+        });
+
+        test('should render Moisture section from precipitationWindow', () => {
+            const infoPanel = document.createElement('div');
+            infoPanel.id = 'species-info';
+            document.body.appendChild(infoPanel);
+
+            displaySpeciesInfo('sweettooth');
+
+            expect(infoPanel.innerHTML).toContain('🌧️ Moisture');
+            expect(infoPanel.innerHTML).toContain('Sustained autumn rainfall');
+            expect(infoPanel.innerHTML).toContain('Precipitation-evapotranspiration');
+            expect(infoPanel.innerHTML).toContain('Tolerates brief dry spells');
+        });
+
+        test('should render Soil & Elevation section from soilPH and elevationRange', () => {
+            const infoPanel = document.createElement('div');
+            infoPanel.id = 'species-info';
+            document.body.appendChild(infoPanel);
+
+            displaySpeciesInfo('sweettooth');
+
+            expect(infoPanel.innerHTML).toContain('🏔️ Soil &amp; Elevation');
+            expect(infoPanel.innerHTML).toContain('NH granite soils');
+            expect(infoPanel.innerHTML).toContain('Higher elevation preference');
+        });
+
+        test('should render Temperature Notes section from optimalSoilTemp', () => {
+            const infoPanel = document.createElement('div');
+            infoPanel.id = 'species-info';
+            document.body.appendChild(infoPanel);
+
+            displaySpeciesInfo('sweettooth');
+
+            expect(infoPanel.innerHTML).toContain('🌡️ Temperature');
+            expect(infoPanel.innerHTML).toContain('Fruiting triggered by cooling soils');
+        });
+
+        test('should render confidence badge when confidenceLevel present', () => {
+            const infoPanel = document.createElement('div');
+            infoPanel.id = 'species-info';
+            document.body.appendChild(infoPanel);
+
+            displaySpeciesInfo('sweettooth');
+
+            expect(infoPanel.innerHTML).toContain('confidence-badge');
+            expect(infoPanel.innerHTML).toContain('High (extensive cultivation data)');
+        });
+
+        test('should not render research section for species without research fields', () => {
+            const infoPanel = document.createElement('div');
+            infoPanel.id = 'species-info';
+            document.body.appendChild(infoPanel);
+
+            displaySpeciesInfo('morels');
+
+            expect(infoPanel.innerHTML).not.toContain('🔬 Ecology');
+            expect(infoPanel.innerHTML).not.toContain('research-notes-section');
+        });
+
+        test('should handle species with only partial research fields', () => {
+            const infoPanel = document.createElement('div');
+            infoPanel.id = 'species-info';
+            document.body.appendChild(infoPanel);
+
+            // chanterelles has no research fields — should not throw
+            expect(() => displaySpeciesInfo('chanterelles')).not.toThrow();
+            expect(infoPanel.innerHTML).not.toContain('research-notes-section');
         });
     });
 

@@ -1446,6 +1446,22 @@ input[type="checkbox"]:focus {
     font-weight: 500;
 }
 
+/* Research notes section */
+.research-notes-section p {
+    font-size: 0.8rem;
+    color: var(--forest-dark);
+    line-height: 1.5;
+    margin: 4px 0 0 0;
+}
+
+.confidence-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    color: var(--forest-medium);
+    font-style: italic;
+    padding-top: 4px;
+}
+
 /* Reference links compact */
 .reference-row {
     display: flex;
