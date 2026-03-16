@@ -3,6 +3,45 @@
 import { getWeatherData } from './weather.js';
 import { speciesData } from './species.js';
 
+// NH County average soil pH by county — USDA NRCS Web Soil Survey aggregates
+const NH_COUNTY_SOIL_PH = {
+    'coos':         { avgPH: 4.8, texture: 'sandy-loam' },  // boreal granite
+    'grafton':      { avgPH: 5.0, texture: 'loam' },
+    'carroll':      { avgPH: 5.1, texture: 'sandy-loam' },
+    'belknap':      { avgPH: 5.3, texture: 'loam' },
+    'merrimack':    { avgPH: 5.5, texture: 'loam' },
+    'sullivan':     { avgPH: 6.0, texture: 'silt-loam' },   // CT River valley
+    'cheshire':     { avgPH: 6.1, texture: 'silt-loam' },   // CT River valley
+    'hillsborough': { avgPH: 5.6, texture: 'loam' },
+    'rockingham':   { avgPH: 5.8, texture: 'sandy-loam' },
+    'strafford':    { avgPH: 5.7, texture: 'loam' }
+};
+
+/**
+ * Calculate soil pH probability multiplier for a species in a given county.
+ * Returns 1.0 when pH data is absent (graceful fallback).
+ * @param {string} speciesKey - Species identifier
+ * @param {string} county - Lowercase county key (e.g. 'coos')
+ * @returns {number} Multiplier in range [0.6, 1.0]
+ */
+export function calculatePHMultiplier(speciesKey, county) {
+    const soilPH = speciesData[speciesKey]?.soilPH;
+    const countySoil = NH_COUNTY_SOIL_PH[county];
+    if (!soilPH || !countySoil) return 1.0;
+
+    const { min, max, optimal } = soilPH;
+    if (min == null || max == null || optimal == null) return 1.0;
+
+    const ph = countySoil.avgPH;
+    if (ph < min || ph > max) return 0.6;
+    if (ph === optimal) return 1.0;
+
+    const distFromOptimal = Math.abs(ph - optimal);
+    const range = ph < optimal ? (optimal - min) : (max - optimal);
+    if (range === 0) return 1.0;
+    return 1.0 - (0.3 * distFromOptimal / range);
+}
+
 // NH County regions for species probability calculations
 export const countyRegions = {
     'coos': 'Great North Woods',
@@ -64,8 +103,11 @@ export function calculateProbability(speciesKey, weather, region) {
     // Use nullish coalescing (??) to preserve 0.0 values (0.0 || 0.5 would incorrectly use 0.5)
     const seasonalMultiplier = species.seasonMultiplier[season] ?? 0.5;
     
+    // Soil pH factor — uses county-level average pH vs species soilPH tolerance
+    const phMultiplier = calculatePHMultiplier(speciesKey, weather.county);
+
     // Combine all factors
-    probability = probability * finalTempFactor * moistureFactor * seasonalMultiplier;
+    probability = probability * finalTempFactor * moistureFactor * seasonalMultiplier * phMultiplier;
     
     // Apply special species adjustments
     probability = applySpeciesAdjustments(speciesKey, probability, weather, season);
@@ -124,10 +166,7 @@ function applySpeciesAdjustments(speciesKey, baseProbability, weather, season) {
             } else if (season === 'spring' && weather.soilTemp >= 55 && weather.soilTemp <= 70) {
                 adjustedProbability *= 1.2;  // Still good, wider range
             }
-            // NH soil pH challenge (typically <6.0, morels prefer 6.0-7.5)
-            // Connecticut River Valley has better soil
-            const nhSoilPenalty = 0.9;  // Slight penalty for acidic NH soils
-            adjustedProbability *= nhSoilPenalty;
+            // Note: NH granite soil penalty removed — now handled by calculatePHMultiplier()
             break;
 
         case 'chanterelles':

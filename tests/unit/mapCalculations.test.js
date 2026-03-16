@@ -6,6 +6,7 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import {
   calculateProbability,
+  calculatePHMultiplier,
   getProbabilityColor,
   getCountyInfo,
   getTopSpeciesForCounty,
@@ -531,6 +532,49 @@ describe('Map Calculations Module', () => {
         // (unless conditions and regional prefs happen to align perfectly)
         expect(coosTopProb).not.toBe(rockinghamMatch.probability);
       }
+    });
+  });
+
+  describe('calculatePHMultiplier', () => {
+
+    test('should return 1.0 for species without soilPH data', () => {
+      expect(calculatePHMultiplier('nonexistent', 'coos')).toBe(1.0);
+    });
+
+    test('should return 1.0 for unknown county', () => {
+      expect(calculatePHMultiplier('morels', 'unknown_county')).toBe(1.0);
+    });
+
+    test('should return 0.6 when county pH is outside species tolerance', () => {
+      // morels soilPH min ~6.0; coos avgPH 4.8 → out of range
+      const result = calculatePHMultiplier('morels', 'coos');
+      expect(result).toBe(0.6);
+    });
+
+    test('morel multiplier should be higher in Cheshire/Sullivan than Coos', () => {
+      const coosMultiplier = calculatePHMultiplier('morels', 'coos');        // pH 4.8 — too acidic
+      const sullivanMultiplier = calculatePHMultiplier('morels', 'sullivan'); // pH 6.0 — at min
+      const cheshireMultiplier = calculatePHMultiplier('morels', 'cheshire'); // pH 6.1 — in range
+
+      expect(cheshireMultiplier).toBeGreaterThan(coosMultiplier);
+      expect(sullivanMultiplier).toBeGreaterThan(coosMultiplier);
+    });
+
+    test('should return a value in [0.6, 1.0] for valid inputs', () => {
+      const result = calculatePHMultiplier('chanterelles', 'grafton');
+      expect(result).toBeGreaterThanOrEqual(0.6);
+      expect(result).toBeLessThanOrEqual(1.0);
+    });
+
+    test('should apply pH multiplier inside calculateProbability', () => {
+      // Morel in coos (pH 4.8, out of range) vs cheshire (pH 6.1, in range)
+      const springWeather = { rainfall: 2.0, soilTemp: 58, airTemp: 58, season: 'spring', county: 'coos' };
+      const cheshireWeather = { ...springWeather, county: 'cheshire' };
+
+      const coosProb = calculateProbability('morels', springWeather, 'Great North Woods');
+      const cheshireProb = calculateProbability('morels', cheshireWeather, 'Monadnock Region');
+
+      expect(cheshireProb).toBeGreaterThan(coosProb);
     });
   });
 });
