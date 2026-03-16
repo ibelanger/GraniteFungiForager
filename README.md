@@ -1,4 +1,4 @@
-# 🍄 GraniteFungiForager v3.6.0
+# 🍄 GraniteFungiForager v3.7.0
 
 
 [![Tests](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml/badge.svg)](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml)
@@ -10,13 +10,15 @@
 ## 🌐 **LIVE APPLICATION**
 **Try it now:** https://ibelanger.github.io/GraniteFungiForager/
 
-## 🆕 **What's New in v3.6.0** (March 2026)
+## 🆕 **What's New in v3.7.0** (March 2026)
 
-### 🔬 **Research-Grade Species Data (Epic #17)**
-- **Trumpet Chanterelle** (*Craterellus tubaeformis*) - Added 6 research-grade fields; clearly differentiated from *C. cibarius* — fruits Sept-Nov, cooler soil (45-60°F), higher elevation (500-3000ft), wetter/boggier habitat. Sources: Petersen 1979; MushroomExpert.com
-- **Lobster Mushroom** (*Hypomyces lactifluorum*) - Completed precipitationWindow (14-28 days, host-dependency documented), NH-specific elevation notes, verified host ratios against iNaturalist data, upgraded soilPH confidence. Sources: MushroomExpert.com; Beug et al.
+### 🔬 **Research-Grade Species Data Complete (Epic #17 Done!)**
+All **29 DHHS Tier 1 species** now have full research-grade data with 6 peer-reviewed fields each:
+- **9 species enhanced:** Beefsteak Polypore, Cauliflower Mushroom, Green Quilted Russula, Jelly Ear, Lion's Mane/Hericium (3 spp.), Blewit, Oyster Mushroom (3 spp.), Wine Cap, Shaggy Mane
+- **Key highlights:** Jelly Ear fruits year-round; Oyster species provide near-year-round coverage; Shaggy Mane prefers alkaline soils (unique among NH fungi)
+- **491 tests** validating all species data fields
 
-*Previous release notes for v3.5.2 (Offline Capability) are in [CHANGELOG.md](./CHANGELOG.md)*
+*Previous release notes in [CHANGELOG.md](./CHANGELOG.md)*
 
 ### ⚠️ **Requirements**
 - **HTTPS Required** - Service worker only works on HTTPS (GitHub Pages ✓)

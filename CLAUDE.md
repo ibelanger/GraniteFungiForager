@@ -8,7 +8,7 @@ This file provides quick reference guidance for Claude Code when working with th
 
 ## Project Overview
 
-**GraniteFungiForager v3.6.0** is a client-side web application providing interactive probability maps for foraging New Hampshire's DHHS Tier 1 wild mushroom species. Combines real-time weather data with mycological research to calculate county-specific foraging probabilities. Features offline capability, ML-powered accuracy improvement, and conservation-focused location protection.
+**GraniteFungiForager v3.7.0** is a client-side web application providing interactive probability maps for foraging New Hampshire's DHHS Tier 1 wild mushroom species. Combines real-time weather data with mycological research to calculate county-specific foraging probabilities. Features offline capability, ML-powered accuracy improvement, and conservation-focused location protection.
 
 **Live:** https://ibelanger.github.io/GraniteFungiForager/
 
@@ -24,12 +24,12 @@ npm run dev              # Local server (http://localhost:8000)
 npm start                # Production server
 
 # Testing
-npm test                 # Run all 470 tests
+npm test                 # Run all 493 tests
 npm run test:watch       # Watch mode (re-run on changes)
 npm run test:ui          # Interactive test UI
 npm run test:coverage    # Generate coverage reports
 
-# Status: 468/470 passing (100% pass rate on testable code)
+# Status: 491/493 passing (100% pass rate on testable code)
 ```
 
 ---
@@ -61,7 +61,7 @@ GraniteFungiForager/
 │   └── ml/
 │       └── accuracy-improvement-pipeline.js
 ├── tests/
-│   ├── unit/            # 8 test files (470 tests)
+│   ├── unit/            # 8 test files (493 tests)
 │   ├── helpers/         # Mock data
 │   └── README.md
 ├── docs/
@@ -169,7 +169,7 @@ User Input → interactions.js
 3. **Update this file** with high-level summary
 4. **Create detailed skill** in `.claude/skills/` if significant feature
 5. **Import in app.js** if initialization needed
-6. **Run tests** - ensure all 470+ tests pass
+6. **Run tests** - ensure all 493+ tests pass
 
 ---
 
@@ -240,7 +240,8 @@ reportsManager.addReport(reportData);
 
 ## Version History (Recent)
 
-- **v3.6.0** (Mar 2026) - Research-grade data: Trumpet Chanterelle (#20), Lobster Mushroom (#24); epic #17 in progress
+- **v3.7.0** (Mar 2026) - Research-grade data complete: all 29 species enhanced; epic #17 closed
+- **v3.6.0** (Mar 2026) - Research-grade data: Trumpet Chanterelle (#20), Lobster Mushroom (#24)
 - **v3.5.2** (Jan 2026) - Offline capability (service worker, IndexedDB queue), documentation restructuring
 - **v3.5.1** (Dec 2025) - UX tightening, mobile optimization, weather display consistency
 - **v3.5.0** (Dec 2025) - King Boletes & Hedgehogs enhancement (10 species)

@@ -7,10 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Future Improvements Planned
-- **Species Enhancement:** 10 remaining species to add research-backed data (epic #17):
-  - Beefsteak Polypore, Cauliflower Mushroom, Green Quilted Russula
-  - Jelly Ear, Lion's Mane, Blewit, Oyster Mushroom, Wine Cap, Shaggy Mane
+## [3.7.0] - 2026-03-16
+
+### Added
+- **Research-grade data for all 9 remaining species** — completes Epic #17:
+  - **Beefsteak Polypore** (*Fistulina hepatica*) — oak-specialist wound parasite (>90% Quercus);
+    warm-season fruiter (65-75°F); pH 4.0-7.0; elevation 0-1500ft; closes #18
+  - **Cauliflower Mushroom** (*Sparassis americana*) — pine butt rot parasite; strongly acidic
+    pH 4.0-5.5; soil cooling trigger (55-65°F); elevation 200-2500ft; closes #19
+  - **Green Quilted Russula** (*R. parvovirescens*) — ectomycorrhizal oak-beech; summer fruiter
+    (65-75°F); pH 5.0-6.5; fixed species name typo; closes #21
+  - **Jelly Ear** (*Auricularia americana*) — year-round fruiter including winter thaws;
+    cold-tolerant to 35°F; rehydration from desiccated state; pH 5.0-7.0; closes #22
+  - **Lion's Mane / Hericium** (3 spp.) — beech-dominant (45-55%); NH beech bark disease
+    creates abundant habitat; frost-tolerant into November; closes #23
+  - **Blewit** (*Lepista nuda*) — latest-fruiting NH species (Oct-Dec); frost-tolerant to 25°F;
+    unusually broad pH 5.5-8.0; saprotroph on leaf litter; closes #25
+  - **Oyster Mushroom** (3 *Pleurotus* spp.) — near-year-round coverage via seasonal
+    partitioning: P. populinus (Apr-Aug), P. pulmonarius (May-Sep), P. ostreatus (Sep-Feb);
+    widest temp range (35-80°F); closes #26
+  - **Wine Cap** (*Stropharia rugosoannulata*) — bimodal May-Jun/Sep-Oct; human-modified
+    landscapes; broad pH 5.0-8.0; wood chip substrate specialist; closes #27
+  - **Shaggy Mane** (*Coprinus comatus*) — disturbed ground specialist; prefers alkaline
+    pH 6.0-8.0 (unique among NH fungi); rapid 24-48hr fruiting response; closes #28
+- **23 new validation tests** for research-grade fields across all 29 species; closes #29
+
+### Fixed
+- **Typo:** `Russula parvoviresens` → `Russula parvovirescens` (missing 'c' in species name)
+
+### Technical Details
+- Tests: 491/493 passing (100% pass rate maintained; 2 pre-existing skips)
+- All 29 DHHS Tier 1 species now have complete research-grade data (6 fields each)
+- **Epic #17 fully closed** — 100% species coverage achieved
+- Closes #17
+
+### Files Modified
+- **MODIFIED:** src/modules/species.js (+526 lines) — 9 species research-enhanced data blocks
+- **MODIFIED:** tests/unit/species.test.js (+194 lines) — 23 new validation tests
 
 ## [3.6.0] - 2026-03-11
 

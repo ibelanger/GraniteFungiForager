@@ -574,4 +574,198 @@ describe('Species Module', () => {
       });
     });
   });
+
+  // ── Research-Grade Data Validation (Epic #17) ──────────────────────
+
+  describe('Research-Grade Fields — All 29 Species', () => {
+
+    const speciesKeys = Object.keys(speciesData);
+
+    test('every species should have optimalSoilTemp with min/max', () => {
+      speciesKeys.forEach(key => {
+        const s = speciesData[key];
+        expect(s.optimalSoilTemp, `${key} missing optimalSoilTemp`).toBeDefined();
+        expect(typeof s.optimalSoilTemp.min).toBe('number');
+        expect(typeof s.optimalSoilTemp.max).toBe('number');
+        expect(s.optimalSoilTemp.min).toBeLessThan(s.optimalSoilTemp.max);
+        // Fahrenheit bounds: 30-100°F
+        expect(s.optimalSoilTemp.min).toBeGreaterThanOrEqual(30);
+        expect(s.optimalSoilTemp.max).toBeLessThanOrEqual(100);
+      });
+    });
+
+    test('every species should have soilPH with valid ranges', () => {
+      speciesKeys.forEach(key => {
+        const s = speciesData[key];
+        expect(s.soilPH, `${key} missing soilPH`).toBeDefined();
+        expect(typeof s.soilPH.min).toBe('number');
+        expect(typeof s.soilPH.max).toBe('number');
+        expect(s.soilPH.min).toBeGreaterThanOrEqual(3.0);
+        expect(s.soilPH.max).toBeLessThanOrEqual(9.0);
+        expect(s.soilPH.min).toBeLessThan(s.soilPH.max);
+        expect(typeof s.soilPH.optimal).toBe('number');
+        expect(s.soilPH.optimal).toBeGreaterThanOrEqual(s.soilPH.min);
+        expect(s.soilPH.optimal).toBeLessThanOrEqual(s.soilPH.max);
+      });
+    });
+
+    test('every species should have precipitationWindow', () => {
+      speciesKeys.forEach(key => {
+        const s = speciesData[key];
+        expect(s.precipitationWindow, `${key} missing precipitationWindow`).toBeDefined();
+      });
+    });
+
+    test('every species should have elevationRange with valid bounds', () => {
+      speciesKeys.forEach(key => {
+        const s = speciesData[key];
+        expect(s.elevationRange, `${key} missing elevationRange`).toBeDefined();
+        expect(typeof s.elevationRange.min).toBe('number');
+        expect(typeof s.elevationRange.max).toBe('number');
+        expect(s.elevationRange.min).toBeGreaterThanOrEqual(0);
+        expect(s.elevationRange.max).toBeLessThanOrEqual(6500); // Mt Washington = 6288ft
+        expect(s.elevationRange.min).toBeLessThan(s.elevationRange.max);
+      });
+    });
+
+    test('every species should have host tree/substrate frequencies', () => {
+      speciesKeys.forEach(key => {
+        const s = speciesData[key];
+        // Lobster uses hostFrequencies; all others use hostTreeFrequencies
+        const hosts = s.hostTreeFrequencies || s.hostFrequencies;
+        expect(hosts, `${key} missing host frequencies`).toBeDefined();
+      });
+    });
+
+    test('every species should have phenologyNH', () => {
+      speciesKeys.forEach(key => {
+        const s = speciesData[key];
+        expect(s.phenologyNH, `${key} missing phenologyNH`).toBeDefined();
+        // Most species use start/peak/end; chanterelles uses elevation-based format
+        if (key !== 'chanterelles') {
+          expect(typeof s.phenologyNH.start).toBe('string');
+          expect(typeof s.phenologyNH.peak).toBe('string');
+          expect(typeof s.phenologyNH.end).toBe('string');
+        }
+      });
+    });
+
+    test('every species should have a confidenceLevel', () => {
+      speciesKeys.forEach(key => {
+        expect(speciesData[key].confidenceLevel, `${key} missing confidenceLevel`).toBeDefined();
+      });
+    });
+
+    // Stricter checks for March 2026 research-enhanced species (full field set)
+    const march2026Species = [
+      'beefsteak', 'cauliflower', 'greenrussula', 'jellyear',
+      'hericium', 'blewit', 'oyster', 'winecap', 'shaggymane'
+    ];
+
+    test('March 2026 enhanced species should have full optimalSoilTemp structure', () => {
+      march2026Species.forEach(key => {
+        const t = speciesData[key].optimalSoilTemp;
+        expect(t.optimal, `${key} missing optimal`).toBeDefined();
+        expect(t.mycelialGrowth, `${key} missing mycelialGrowth`).toBeDefined();
+        expect(typeof t.mycelialGrowth.optimal).toBe('number');
+        expect(typeof t.source).toBe('string');
+        expect(typeof t.confidence).toBe('string');
+      });
+    });
+
+    test('March 2026 enhanced species should have full soilPH structure', () => {
+      march2026Species.forEach(key => {
+        const ph = speciesData[key].soilPH;
+        expect(typeof ph.nhNotes).toBe('string');
+        expect(typeof ph.source).toBe('string');
+        expect(typeof ph.confidence).toBe('string');
+      });
+    });
+
+    test('March 2026 enhanced species should have full precipitationWindow', () => {
+      march2026Species.forEach(key => {
+        const pw = speciesData[key].precipitationWindow;
+        expect(typeof pw.min).toBe('number');
+        expect(typeof pw.max).toBe('number');
+        expect(pw.min).toBeLessThan(pw.max);
+        expect(typeof pw.requirement).toBe('string');
+        expect(typeof pw.source).toBe('string');
+      });
+    });
+
+    test('March 2026 enhanced species should have nhNotes in elevationRange', () => {
+      march2026Species.forEach(key => {
+        expect(typeof speciesData[key].elevationRange.nhNotes).toBe('string');
+      });
+    });
+
+    test('March 2026 enhanced species should have specificity in host frequencies', () => {
+      march2026Species.forEach(key => {
+        const hosts = speciesData[key].hostTreeFrequencies;
+        expect(hosts, `${key} missing hostTreeFrequencies`).toBeDefined();
+        expect(typeof hosts.specificity).toBe('string');
+      });
+    });
+
+    test('March 2026 enhanced species should have triggers in phenologyNH', () => {
+      march2026Species.forEach(key => {
+        expect(typeof speciesData[key].phenologyNH.triggers).toBe('string');
+      });
+    });
+  });
+
+  describe('Research-Grade Fields — Species-Specific Validation', () => {
+
+    test('beefsteak should be oak-specialist (>90% Quercus)', () => {
+      const hosts = speciesData.beefsteak.hostTreeFrequencies;
+      const oakKeys = Object.keys(hosts).filter(k => k.includes('Oak'));
+      expect(oakKeys.length).toBeGreaterThanOrEqual(2);
+    });
+
+    test('jellyear should fruit year-round (cold-tolerant)', () => {
+      expect(speciesData.jellyear.optimalSoilTemp.min).toBeLessThanOrEqual(40);
+      expect(speciesData.jellyear.phenologyNH.start).toMatch(/year|Year/i);
+    });
+
+    test('shaggymane should prefer neutral-alkaline soil (pH >= 6.0)', () => {
+      expect(speciesData.shaggymane.soilPH.min).toBeGreaterThanOrEqual(5.5);
+      expect(speciesData.shaggymane.soilPH.optimal).toBeGreaterThanOrEqual(6.5);
+    });
+
+    test('blewit should be a late-season fruiter', () => {
+      expect(speciesData.blewit.phenologyNH.peak).toMatch(/October|November/);
+      expect(speciesData.blewit.optimalSoilTemp.min).toBeLessThanOrEqual(45);
+    });
+
+    test('oyster should have widest temperature range among all species', () => {
+      const oysterRange = speciesData.oyster.optimalSoilTemp.max - speciesData.oyster.optimalSoilTemp.min;
+      expect(oysterRange).toBeGreaterThanOrEqual(40);
+    });
+
+    test('winecap should have bimodal phenology', () => {
+      expect(speciesData.winecap.phenologyNH.peak).toMatch(/bimodal|May.*September|May.*October/i);
+    });
+
+    test('cauliflower should be pine-dominated host association', () => {
+      const hosts = speciesData.cauliflower.hostTreeFrequencies;
+      const pineKeys = Object.keys(hosts).filter(k => k.includes('Pine'));
+      expect(pineKeys.length).toBeGreaterThanOrEqual(1);
+    });
+
+    test('hericium should be beech-dominant host association', () => {
+      const hosts = speciesData.hericium.hostTreeFrequencies;
+      const beechKey = Object.keys(hosts).find(k => k.includes('Beech'));
+      expect(beechKey).toBeDefined();
+    });
+
+    test('greenrussula should be ectomycorrhizal with oak-beech', () => {
+      const hosts = speciesData.greenrussula.hostTreeFrequencies;
+      expect(hosts.specificity).toMatch(/ectomycorrhizal/i);
+    });
+
+    test('lobster should use hostFrequencies (not hostTreeFrequencies)', () => {
+      expect(speciesData.lobster.hostFrequencies).toBeDefined();
+      expect(speciesData.lobster.hostTreeFrequencies).toBeUndefined();
+    });
+  });
 });
