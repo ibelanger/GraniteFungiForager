@@ -37,28 +37,39 @@ export class SimpleAuth {
     }
     
     /**
-     * Simple password authentication
+     * Password authentication using SHA-256 hash comparison.
+     * Plaintext passwords are never stored in source.
+     * To update passwords: compute SHA-256 hex of new password and replace the hash below.
+     *   node -e "require('crypto').createHash('sha256').update('newpassword').digest('hex')"
+     * Note: rotate these passwords since prior plaintext versions existed in git history.
      * @param {string} password - The password to check
      */
-    authenticate(password) {
-        // Simple password check - you can change this password
-        const validPasswords = [
-            'granite2024',  // Main password
-            'forager123',   // Backup password
+    async authenticate(password) {
+        if (password == null || typeof password !== 'string') return false;
+
+        const validHashes = [
+            '9d35a69bf19f233406aa143e5d311ac33b424340e7b8a6b3c987395e6d95b480',
+            '68adc86be73fa9c4e586e56c8cca9a84feae68ee0f09df097c10fb4945de6b4c',
         ];
-        
-        if (validPasswords.includes(password)) {
+
+        const encoded = new TextEncoder().encode(password);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', encoded);
+        const hex = Array.from(new Uint8Array(hashBuffer))
+            .map(b => b.toString(16).padStart(2, '0'))
+            .join('');
+
+        if (validHashes.includes(hex)) {
             const authData = {
                 authenticated: true,
                 expires: Date.now() + (24 * 60 * 60 * 1000), // 24 hours
                 timestamp: Date.now()
             };
-            
+
             localStorage.setItem(this.storageKey, JSON.stringify(authData));
             this.isAuthenticated = true;
             return true;
         }
-        
+
         return false;
     }
     
@@ -171,13 +182,13 @@ window.closeAuthModal = function() {
     }
 };
 
-window.handleAuthSubmit = function(event) {
+window.handleAuthSubmit = async function(event) {
     event.preventDefault();
-    
+
     const password = document.getElementById('auth-password').value;
     const errorDiv = document.getElementById('auth-error');
-    
-    if (auth.authenticate(password)) {
+
+    if (await auth.authenticate(password)) {
         // Success - close modal and refresh display
         window.closeAuthModal();
         

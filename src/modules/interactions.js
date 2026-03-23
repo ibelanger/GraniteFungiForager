@@ -779,10 +779,11 @@ function showReportSubmissionError(errorMessage) {
     message.innerHTML = `
         <div class="toast-content">
             <h4>❌ Submission Failed</h4>
-            <p>Error: ${errorMessage}</p>
+            <p class="error-detail"></p>
             <p>Please try again or check your browser's console for details.</p>
         </div>
     `;
+    message.querySelector('.error-detail').textContent = `Error: ${errorMessage}`;
     
     message.style.cssText = `
         position: fixed;

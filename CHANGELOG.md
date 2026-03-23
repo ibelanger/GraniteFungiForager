@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.9.1] - 2026-03-23
+
+### Security
+- **XSS fix in error toast** — `showReportSubmissionError()` now sets error message via `textContent` instead of `innerHTML`, preventing DOM-based XSS via crafted error strings
+- **Hardcoded credentials removed** — `authenticate()` now compares SHA-256 hashes via Web Crypto API (`crypto.subtle`) instead of storing plaintext passwords in source; `handleAuthSubmit` updated to `async/await` accordingly
+
 ## [3.9.0] - 2026-03-23
 
 ### Added

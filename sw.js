@@ -1,7 +1,7 @@
 // GraniteFungiForager Service Worker
 // Provides offline capability for mushroom species data and foraging reports
 
-const CACHE_VERSION = 'gff-v3.9.0';
+const CACHE_VERSION = 'gff-v3.9.1';
 const CACHE_NAME = `${CACHE_VERSION}-static`;
 const DATA_CACHE_NAME = `${CACHE_VERSION}-data`;
 const WEATHER_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes

@@ -138,20 +138,20 @@ describe('Authentication Module', () => {
 
     describe('Valid Passwords', () => {
 
-      test('should authenticate with primary password "granite2024"', () => {
-        const result = testAuth.authenticate('granite2024');
+      test('should authenticate with primary password "granite2024"', async () => {
+        const result = await testAuth.authenticate('granite2024');
         expect(result).toBe(true);
         expect(testAuth.isAuthenticated).toBe(true);
       });
 
-      test('should authenticate with backup password "forager123"', () => {
-        const result = testAuth.authenticate('forager123');
+      test('should authenticate with backup password "forager123"', async () => {
+        const result = await testAuth.authenticate('forager123');
         expect(result).toBe(true);
         expect(testAuth.isAuthenticated).toBe(true);
       });
 
-      test('should store auth data in localStorage on successful auth', () => {
-        testAuth.authenticate('granite2024');
+      test('should store auth data in localStorage on successful auth', async () => {
+        await testAuth.authenticate('granite2024');
 
         const stored = localStorage.getItem(testAuth.storageKey);
         expect(stored).not.toBeNull();
@@ -162,9 +162,9 @@ describe('Authentication Module', () => {
         expect(authData.timestamp).toBeDefined();
       });
 
-      test('should set expiry to 24 hours from now', () => {
+      test('should set expiry to 24 hours from now', async () => {
         const now = Date.now();
-        testAuth.authenticate('granite2024');
+        await testAuth.authenticate('granite2024');
 
         const stored = localStorage.getItem(testAuth.storageKey);
         const authData = JSON.parse(stored);
@@ -173,9 +173,9 @@ describe('Authentication Module', () => {
         expect(authData.expires).toBe(expectedExpiry);
       });
 
-      test('should set timestamp to current time', () => {
+      test('should set timestamp to current time', async () => {
         const now = Date.now();
-        testAuth.authenticate('granite2024');
+        await testAuth.authenticate('granite2024');
 
         const stored = localStorage.getItem(testAuth.storageKey);
         const authData = JSON.parse(stored);
@@ -186,78 +186,78 @@ describe('Authentication Module', () => {
 
     describe('Invalid Passwords', () => {
 
-      test('should reject empty password', () => {
-        const result = testAuth.authenticate('');
+      test('should reject empty password', async () => {
+        const result = await testAuth.authenticate('');
         expect(result).toBe(false);
         expect(testAuth.isAuthenticated).toBe(false);
       });
 
-      test('should reject incorrect password', () => {
-        const result = testAuth.authenticate('wrongpassword');
+      test('should reject incorrect password', async () => {
+        const result = await testAuth.authenticate('wrongpassword');
         expect(result).toBe(false);
         expect(testAuth.isAuthenticated).toBe(false);
       });
 
-      test('should reject password with wrong case', () => {
-        const result = testAuth.authenticate('GRANITE2024'); // Uppercase
+      test('should reject password with wrong case', async () => {
+        const result = await testAuth.authenticate('GRANITE2024'); // Uppercase
         expect(result).toBe(false);
         expect(testAuth.isAuthenticated).toBe(false);
       });
 
-      test('should reject password with extra spaces', () => {
-        const result = testAuth.authenticate(' granite2024 ');
+      test('should reject password with extra spaces', async () => {
+        const result = await testAuth.authenticate(' granite2024 ');
         expect(result).toBe(false);
         expect(testAuth.isAuthenticated).toBe(false);
       });
 
-      test('should reject almost-correct password', () => {
-        const result = testAuth.authenticate('granite2023'); // Off by one year
+      test('should reject almost-correct password', async () => {
+        const result = await testAuth.authenticate('granite2023'); // Off by one year
         expect(result).toBe(false);
         expect(testAuth.isAuthenticated).toBe(false);
       });
 
-      test('should not store anything in localStorage on failed auth', () => {
-        testAuth.authenticate('wrongpassword');
+      test('should not store anything in localStorage on failed auth', async () => {
+        await testAuth.authenticate('wrongpassword');
 
         const stored = localStorage.getItem(testAuth.storageKey);
         expect(stored).toBeNull();
       });
 
-      test('should reject null password', () => {
-        const result = testAuth.authenticate(null);
+      test('should reject null password', async () => {
+        const result = await testAuth.authenticate(null);
         expect(result).toBe(false);
       });
 
-      test('should reject undefined password', () => {
-        const result = testAuth.authenticate(undefined);
+      test('should reject undefined password', async () => {
+        const result = await testAuth.authenticate(undefined);
         expect(result).toBe(false);
       });
     });
 
     describe('Multiple Authentication Attempts', () => {
 
-      test('should update auth on re-authentication with valid password', () => {
+      test('should update auth on re-authentication with valid password', async () => {
         // First auth
-        testAuth.authenticate('granite2024');
+        await testAuth.authenticate('granite2024');
         const firstStored = localStorage.getItem(testAuth.storageKey);
 
         // Advance time
         vi.spyOn(Date, 'now').mockReturnValue(Date.now() + 1000);
 
         // Second auth
-        testAuth.authenticate('forager123');
+        await testAuth.authenticate('forager123');
         const secondStored = localStorage.getItem(testAuth.storageKey);
 
         expect(secondStored).not.toBe(firstStored);
       });
 
-      test('should remain authenticated after failed password attempt', () => {
+      test('should remain authenticated after failed password attempt', async () => {
         // Successful auth first
-        testAuth.authenticate('granite2024');
+        await testAuth.authenticate('granite2024');
         expect(testAuth.isAuthenticated).toBe(true);
 
         // Failed attempt
-        const result = testAuth.authenticate('wrongpassword');
+        const result = await testAuth.authenticate('wrongpassword');
         expect(result).toBe(false);
 
         // Should still be authenticated from first attempt
@@ -268,9 +268,9 @@ describe('Authentication Module', () => {
 
   describe('logout', () => {
 
-    test('should set isAuthenticated to false', () => {
+    test('should set isAuthenticated to false', async () => {
       // Set up authenticated state
-      testAuth.authenticate('granite2024');
+      await testAuth.authenticate('granite2024');
       expect(testAuth.isAuthenticated).toBe(true);
 
       // Logout
@@ -278,9 +278,9 @@ describe('Authentication Module', () => {
       expect(testAuth.isAuthenticated).toBe(false);
     });
 
-    test('should remove auth data from localStorage', () => {
+    test('should remove auth data from localStorage', async () => {
       // Set up authenticated state
-      testAuth.authenticate('granite2024');
+      await testAuth.authenticate('granite2024');
       expect(localStorage.getItem(testAuth.storageKey)).not.toBeNull();
 
       // Logout
@@ -297,8 +297,8 @@ describe('Authentication Module', () => {
       expect(testAuth.isAuthenticated).toBe(false);
     });
 
-    test('should work multiple times', () => {
-      testAuth.authenticate('granite2024');
+    test('should work multiple times', async () => {
+      await testAuth.authenticate('granite2024');
       testAuth.logout();
       testAuth.logout(); // Second logout
 
@@ -313,25 +313,25 @@ describe('Authentication Module', () => {
       expect(testAuth.hasLocationAccess()).toBe(false);
     });
 
-    test('should return true when authenticated', () => {
-      testAuth.authenticate('granite2024');
+    test('should return true when authenticated', async () => {
+      await testAuth.authenticate('granite2024');
       expect(testAuth.hasLocationAccess()).toBe(true);
     });
 
-    test('should return false after logout', () => {
-      testAuth.authenticate('granite2024');
+    test('should return false after logout', async () => {
+      await testAuth.authenticate('granite2024');
       expect(testAuth.hasLocationAccess()).toBe(true);
 
       testAuth.logout();
       expect(testAuth.hasLocationAccess()).toBe(false);
     });
 
-    test('should reflect current authentication state', () => {
+    test('should reflect current authentication state', async () => {
       // Not authenticated
       expect(testAuth.hasLocationAccess()).toBe(false);
 
       // Authenticate
-      testAuth.authenticate('granite2024');
+      await testAuth.authenticate('granite2024');
       expect(testAuth.hasLocationAccess()).toBe(true);
 
       // Manually set to false (simulating expiry check)
@@ -342,8 +342,8 @@ describe('Authentication Module', () => {
 
   describe('Session Expiry', () => {
 
-    test('should expire after 24 hours', () => {
-      testAuth.authenticate('granite2024');
+    test('should expire after 24 hours', async () => {
+      await testAuth.authenticate('granite2024');
 
       // Fast-forward 24 hours + 1 second
       const futureTime = Date.now() + (24 * 60 * 60 * 1000) + 1000;
@@ -354,8 +354,8 @@ describe('Authentication Module', () => {
       expect(result).toBe(false);
     });
 
-    test('should still be valid after 23 hours 59 minutes', () => {
-      testAuth.authenticate('granite2024');
+    test('should still be valid after 23 hours 59 minutes', async () => {
+      await testAuth.authenticate('granite2024');
 
       // Fast-forward 23 hours 59 minutes
       const futureTime = Date.now() + (23 * 60 * 60 * 1000) + (59 * 60 * 1000);
@@ -366,8 +366,8 @@ describe('Authentication Module', () => {
       expect(result).toBe(true);
     });
 
-    test('should clear expired session from localStorage', () => {
-      testAuth.authenticate('granite2024');
+    test('should clear expired session from localStorage', async () => {
+      await testAuth.authenticate('granite2024');
       expect(localStorage.getItem(testAuth.storageKey)).not.toBeNull();
 
       // Fast-forward past expiry
@@ -382,8 +382,8 @@ describe('Authentication Module', () => {
 
   describe('showLoginModal', () => {
 
-    test('should return true if already authenticated', () => {
-      testAuth.authenticate('granite2024');
+    test('should return true if already authenticated', async () => {
+      await testAuth.authenticate('granite2024');
       const result = testAuth.showLoginModal();
       expect(result).toBe(true);
     });
@@ -408,8 +408,8 @@ describe('Authentication Module', () => {
       expect(modal.style.display).toBe('flex');
     });
 
-    test('should not create modal if already authenticated', () => {
-      testAuth.authenticate('granite2024');
+    test('should not create modal if already authenticated', async () => {
+      await testAuth.authenticate('granite2024');
       testAuth.showLoginModal();
 
       const modal = document.getElementById('auth-modal');
@@ -495,13 +495,13 @@ describe('Authentication Module', () => {
 
   describe('requireAuth function', () => {
 
-    test('should return result from auth.showLoginModal', () => {
+    test('should return result from auth.showLoginModal', async () => {
       // When not authenticated, should return false
       const result1 = requireAuth();
       expect(result1).toBe(false);
 
       // When authenticated, should return true
-      auth.authenticate('granite2024');
+      await auth.authenticate('granite2024');
       const result2 = requireAuth();
       expect(result2).toBe(true);
     });
@@ -509,10 +509,8 @@ describe('Authentication Module', () => {
 
   describe('Security Considerations', () => {
 
-    test('should store passwords as plain strings (documented limitation)', () => {
-      // This test documents that passwords are stored as plain strings in code
-      // For a client-side only app, this is acceptable but limited security
-      testAuth.authenticate('granite2024');
+    test('should not store plaintext password in localStorage', async () => {
+      await testAuth.authenticate('granite2024');
 
       const stored = localStorage.getItem(testAuth.storageKey);
       const authData = JSON.parse(stored);
@@ -527,19 +525,19 @@ describe('Authentication Module', () => {
       expect(authData.password).toBeUndefined();
     });
 
-    test('should use case-sensitive password comparison', () => {
+    test('should use case-sensitive password comparison', async () => {
       // Ensures no accidental case-insensitive matching
-      expect(testAuth.authenticate('granite2024')).toBe(true);
+      expect(await testAuth.authenticate('granite2024')).toBe(true);
       testAuth.logout();
-      expect(testAuth.authenticate('Granite2024')).toBe(false);
+      expect(await testAuth.authenticate('Granite2024')).toBe(false);
       testAuth.logout();
-      expect(testAuth.authenticate('GRANITE2024')).toBe(false);
+      expect(await testAuth.authenticate('GRANITE2024')).toBe(false);
     });
 
-    test('should not authenticate with password substring', () => {
-      expect(testAuth.authenticate('granite')).toBe(false);
-      expect(testAuth.authenticate('2024')).toBe(false);
-      expect(testAuth.authenticate('forager')).toBe(false);
+    test('should not authenticate with password substring', async () => {
+      expect(await testAuth.authenticate('granite')).toBe(false);
+      expect(await testAuth.authenticate('2024')).toBe(false);
+      expect(await testAuth.authenticate('forager')).toBe(false);
     });
   });
 });
