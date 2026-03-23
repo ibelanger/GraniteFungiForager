@@ -178,6 +178,17 @@ export function displaySpeciesInfo(speciesKey) {
                 `<a href="${species.boleteKeyLink}" target="_blank" rel="noopener">🔗 Bolete Key</a>` : ''}
         </div>` : '';
 
+    // Build fruiting style badge
+    const fruitingStyleLabels = {
+        gregarious: { icon: '🌊', label: 'Abundant', cls: 'fruiting-gregarious' },
+        scattered:  { icon: '🍄', label: 'Scattered', cls: 'fruiting-scattered' },
+        sparse:     { icon: '💎', label: 'Rare Find', cls: 'fruiting-sparse' }
+    };
+    const fsInfo = fruitingStyleLabels[species.fruitingStyle];
+    const fruitingStyleHTML = fsInfo
+        ? `<span class="fruiting-style-badge ${fsInfo.cls}" title="Fruiting abundance: ${species.fruitingStyle}">${fsInfo.icon} ${fsInfo.label}</span>`
+        : '';
+
     // Create compact species information HTML
     const infoHTML = `
         <div class="species-card">
@@ -204,6 +215,7 @@ export function displaySpeciesInfo(speciesKey) {
                         <span class="chip-value">${species.moistureMin}"</span>
                     </div>
                 </div>
+                ${fruitingStyleHTML}
 
                 ${hostTreesHTML}
                 ${seasonBadgesHTML}

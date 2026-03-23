@@ -3,6 +3,26 @@
 import { getWeatherData } from './weather.js';
 import { speciesData } from './species.js';
 
+// Abundance-based probability ceilings — reflects harvestable mass per productive trip
+export const ABUNDANCE_CEILINGS = {
+    gregarious: 1.0,   // Dense patches, fill-the-basket fruiting
+    scattered:  0.85,  // Several specimens, solid finds
+    sparse:     0.70   // 1–5 specimens even under ideal conditions — prized rarities
+};
+
+// Species that grow on wood or self-select alkaline microhabitats —
+// county-level mineral soil pH does not apply to their substrate
+const PH_EXEMPT_SPECIES = new Set([
+    'shaggymane',   // limed lawns, road shoulders — find their own alkaline spots
+    'blewit',       // garden beds, compost, wood chips — lime-amended substrates
+    'hericium',     // wood substrate pH, not mineral soil
+    'jellyear',     // wood substrate pH, not mineral soil
+    'oyster',       // wood substrate pH, not mineral soil
+    'cauliflower',  // root zone / wood substrate pH
+    'lobster',      // follows host mushroom, not mineral soil
+    'winecap'       // wood chips, mulch, sawdust — substrate pH, not mineral soil
+]);
+
 // NH County average soil pH by county — USDA NRCS Web Soil Survey aggregates
 const NH_COUNTY_SOIL_PH = {
     'coos':         { avgPH: 4.8, texture: 'sandy-loam' },  // boreal granite
@@ -25,6 +45,8 @@ const NH_COUNTY_SOIL_PH = {
  * @returns {number} Multiplier in range [0.6, 1.0]
  */
 export function calculatePHMultiplier(speciesKey, county) {
+    if (PH_EXEMPT_SPECIES.has(speciesKey)) return 1.0;
+
     const soilPH = speciesData[speciesKey]?.soilPH;
     const countySoil = NH_COUNTY_SOIL_PH[county];
     if (!soilPH || !countySoil) return 1.0;
@@ -112,8 +134,9 @@ export function calculateProbability(speciesKey, weather, region) {
     // Apply special species adjustments
     probability = applySpeciesAdjustments(speciesKey, probability, weather, season);
     
-    // Ensure probability stays within bounds
-    return Math.max(0, Math.min(1, probability));
+    // Apply abundance ceiling — caps max probability by fruiting style (gregarious/scattered/sparse)
+    const abundanceCeiling = ABUNDANCE_CEILINGS[species.fruitingStyle] ?? 1.0;
+    return Math.max(0, Math.min(abundanceCeiling, probability));
 }
 
 /**
@@ -248,6 +271,76 @@ function applySpeciesAdjustments(speciesKey, baseProbability, weather, season) {
             if ((season === 'summer' || season === 'fall') &&
                 weather.soilTemp >= 55 && weather.soilTemp <= 75) {
                 adjustedProbability *= 1.2;  // Optimal host conditions
+            }
+            break;
+
+        case 'trumpetchanterelle':
+            // Fall peak; cold-tolerant chanterelle prefers cool moist conditions
+            if (season === 'fall' && weather.soilTemp >= 45 && weather.soilTemp <= 65 &&
+                weather.rainfall > 1.5) {
+                adjustedProbability *= 1.25;
+            }
+            break;
+
+        case 'sweettooth':
+            // Gregarious fall fruiter; triggers on sustained cool moisture
+            if (season === 'fall' && weather.soilTemp >= 45 && weather.soilTemp <= 65 &&
+                weather.rainfall > 1.2) {
+                adjustedProbability *= 1.25;
+            }
+            break;
+
+        case 'depressedhedgehog':
+            // Fall gregarious fruiter; slightly wetter trigger than sweettooth
+            if (season === 'fall' && weather.soilTemp >= 45 && weather.soilTemp <= 65 &&
+                weather.rainfall > 1.0) {
+                adjustedProbability *= 1.2;
+            }
+            break;
+
+        case 'whitehedgehog':
+            // Cooler temp window than other hedgehogs
+            if (season === 'fall' && weather.soilTemp >= 40 && weather.soilTemp <= 60 &&
+                weather.rainfall > 1.0) {
+                adjustedProbability *= 1.2;
+            }
+            break;
+
+        case 'jellyear':
+            // Year-round rehydration fruiter — rain is the primary trigger
+            if (weather.rainfall > 1.0) {
+                adjustedProbability *= 1.2;
+            }
+            break;
+
+        case 'hericium':
+            // Lion's mane / bear's head — fall fruiting on wounds
+            if (season === 'fall' && weather.soilTemp >= 50 && weather.soilTemp <= 65 &&
+                weather.rainfall > 1.2) {
+                adjustedProbability *= 1.3;
+            }
+            break;
+
+        case 'cauliflower':
+            // Cauliflower mushroom — fall, base of conifers
+            if (season === 'fall' && weather.soilTemp >= 50 && weather.soilTemp <= 65 &&
+                weather.rainfall > 1.5) {
+                adjustedProbability *= 1.2;
+            }
+            break;
+
+        case 'blewit':
+            // Blewit — late-fall cold-tolerant fruiter
+            if (season === 'fall' && weather.soilTemp >= 40 && weather.soilTemp <= 55) {
+                adjustedProbability *= 1.2;
+            }
+            break;
+
+        case 'greenrussula':
+            // Summer fruiter in hot moist hardwoods
+            if (season === 'summer' && weather.soilTemp >= 65 && weather.soilTemp <= 75 &&
+                weather.rainfall > 0.8) {
+                adjustedProbability *= 1.2;
             }
             break;
     }

@@ -768,4 +768,35 @@ describe('Species Module', () => {
       expect(speciesData.lobster.hostTreeFrequencies).toBeUndefined();
     });
   });
+
+  describe('fruitingStyle field', () => {
+    const validStyles = ['gregarious', 'scattered', 'sparse'];
+
+    test('all 29 species should have a fruitingStyle field', () => {
+      Object.keys(speciesData).forEach(key => {
+        expect(speciesData[key].fruitingStyle, `${key} missing fruitingStyle`).toBeDefined();
+      });
+    });
+
+    test('all fruitingStyle values should be gregarious, scattered, or sparse', () => {
+      Object.entries(speciesData).forEach(([key, species]) => {
+        expect(validStyles, `${key} has invalid fruitingStyle: ${species.fruitingStyle}`)
+          .toContain(species.fruitingStyle);
+      });
+    });
+
+    test('known gregarious species should be assigned correctly', () => {
+      const gregarious = ['chanterelles', 'blacktrumpets', 'sweettooth', 'depressedhedgehog', 'lobster', 'blewit', 'oyster', 'jellyear', 'shaggymane', 'winecap', 'trumpetchanterelle'];
+      gregarious.forEach(key => {
+        expect(speciesData[key].fruitingStyle, `${key} should be gregarious`).toBe('gregarious');
+      });
+    });
+
+    test('known sparse species should be assigned correctly', () => {
+      const sparse = ['beefsteak', 'cauliflower', 'hericium', 'maitake', 'matsutake', 'boletusNobilis'];
+      sparse.forEach(key => {
+        expect(speciesData[key].fruitingStyle, `${key} should be sparse`).toBe('sparse');
+      });
+    });
+  });
 });

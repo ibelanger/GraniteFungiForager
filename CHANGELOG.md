@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.9.0] - 2026-03-23
+
+### Added
+- **`fruitingStyle` field on all 29 species** — classifies each species as `gregarious`, `scattered`, or `sparse` based on harvestable abundance under ideal conditions
+- **Abundance-aware probability ceilings** — `ABUNDANCE_CEILINGS` export caps max probability by fruiting style: gregarious (1.0), scattered (0.85), sparse (0.70)
+- **9 new species-specific probability boosts** — trumpetchanterelle, sweettooth, depressedhedgehog, whitehedgehog, jellyear, hericium, cauliflower, blewit, greenrussula
+- **Fruiting style badge in species card** — 🌊 Abundant / 🍄 Scattered / 💎 Rare Find badge with per-style color coding
+- **13 new tests** — fruitingStyle validation; abundance ceiling verification; pH exemption coverage; all 29 species provably reach ≥ 0.65 under ideal conditions (515 total)
+
+### Changed
+- Raised regional base values for 8 species to ensure ≥ 0.65 is achievable: beefsteak, cauliflower, whitehedgehog, jellyear, hericium, lobster, greenrussula, blewit
+- Expanded `PH_EXEMPT_SPECIES` to include winecap (wood chips/mulch substrate)
+- Sparse species (beefsteak, cauliflower, hericium, maitake, matsutake, boletusNobilis) capped at 0.70 — prized rarities correctly can't show "Very High" probability
+
 ## [3.8.0] - 2026-03-16
 
 ### Added

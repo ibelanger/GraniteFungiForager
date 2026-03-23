@@ -69,6 +69,7 @@ export const speciesData = {
             'CRITICAL SAFETY': 'MUST cut lengthwise - interior must be COMPLETELY HOLLOW',
             'Safety Check': 'False morels (Gyromitra) are TOXIC - chambered interior, brain-like cap'
         },
+        fruitingStyle: 'scattered',
         regions: {
             'Great North Woods': 0.6,
             'White Mountains': 0.7,
@@ -148,14 +149,15 @@ export const speciesData = {
             'Pores': 'Distinct, large pores on underside',
             'Color': 'Deep red to pink, beef-like appearance'
         },
+        fruitingStyle: 'sparse',
         regions: {
-            'Great North Woods': 0.2,
-            'White Mountains': 0.25,
-            'Dartmouth-Sunapee': 0.4,
-            'Merrimack Valley': 0.5,
-            'Lakes Region': 0.4,
-            'Monadnock Region': 0.6,
-            'Seacoast': 0.25
+            'Great North Woods': 0.55,
+            'White Mountains': 0.55,
+            'Dartmouth-Sunapee': 0.65,
+            'Merrimack Valley': 0.75,
+            'Lakes Region': 0.65,
+            'Monadnock Region': 0.75,
+            'Seacoast': 0.60
         }
     },
     blacktrumpets: {
@@ -224,6 +226,7 @@ export const speciesData = {
             'Safety': 'NO TOXIC LOOKALIKES - all Craterellus species are edible',
             'Abundance': 'Often fruit in large patches once located - 30-40+ lbs possible'
         },
+        fruitingStyle: 'gregarious',
         regions: {
             'Great North Woods': 0.3,
             'White Mountains': 0.45,
@@ -302,14 +305,15 @@ export const speciesData = {
             'Color': 'Cream to pale yellow',
             'Texture': 'Brittle, easily broken'
         },
+        fruitingStyle: 'sparse',
         regions: {
-            'Great North Woods': 0.4,
-            'White Mountains': 0.55,
-            'Dartmouth-Sunapee': 0.5,
-            'Merrimack Valley': 0.45,
-            'Lakes Region': 0.6,
-            'Monadnock Region': 0.5,
-            'Seacoast': 0.25
+            'Great North Woods': 0.60,
+            'White Mountains': 0.70,
+            'Dartmouth-Sunapee': 0.65,
+            'Merrimack Valley': 0.60,
+            'Lakes Region': 0.70,
+            'Monadnock Region': 0.65,
+            'Seacoast': 0.50
         }
     },
     chanterelles: {
@@ -378,6 +382,7 @@ export const speciesData = {
             'CRITICAL SAFETY': 'Jack O\'Lanterns are TOXIC - true gills, grow on wood in clusters',
             'Safety Test': 'Pick at "gills" - false gills do not separate easily'
         },
+        fruitingStyle: 'gregarious',
         regions: {
             'Great North Woods': 0.7,
             'White Mountains': 0.8,
@@ -457,6 +462,7 @@ export const speciesData = {
             'Color': 'Gray-brown cap, yellow stem',
             'Gills': 'Blunt, widely spaced ridges'
         },
+        fruitingStyle: 'gregarious',
         regions: {
             'Great North Woods': 0.6,
             'White Mountains': 0.7,
@@ -536,13 +542,14 @@ export const speciesData = {
             'Taste': 'Mild - these species are edible (unlike many Russulas)',
             'Surface': 'Distinctive cracked, quilted appearance on cap'
         },
+        fruitingStyle: 'scattered',
         regions: {
             'Great North Woods': 0.6,
-            'White Mountains': 0.7,
-            'Dartmouth-Sunapee': 0.6,
-            'Merrimack Valley': 0.55,
-            'Lakes Region': 0.6,
-            'Monadnock Region': 0.6,
+            'White Mountains': 0.75,
+            'Dartmouth-Sunapee': 0.80,
+            'Merrimack Valley': 0.65,
+            'Lakes Region': 0.65,
+            'Monadnock Region': 0.70,
             'Seacoast': 0.45
         }
     },
@@ -622,6 +629,7 @@ export const speciesData = {
             'Research_Note': 'DNA studies show H. repandum does not occur in North America',
             'Safety': 'NO toxic lookalikes - teeth underneath are unique'
         },
+        fruitingStyle: 'gregarious',
         regions: {
             'Great North Woods': 0.7,
             'White Mountains': 0.7,
@@ -708,6 +716,7 @@ export const speciesData = {
             'Research_Note': 'H. rufescens is European - 9 species documented in eastern US (Swenie et al. 2018)',
             'Safety': 'All Hydnum species safe - perfect for beginners'
         },
+        fruitingStyle: 'gregarious',
         regions: {
             'Great North Woods': 0.6,
             'White Mountains': 0.6,
@@ -797,14 +806,15 @@ export const speciesData = {
             'Merrimack_County': 'Less common than Sweet Tooth/Depressed but present in moist conditions',
             'Safety': 'All Hydnum species safe - excellent for beginners'
         },
+        fruitingStyle: 'scattered',
         regions: {
-            'Great North Woods': 0.5,
-            'White Mountains': 0.5,
-            'Dartmouth-Sunapee': 0.4,
-            'Merrimack Valley': 0.55,  // Slightly increased for consistency with other Hydnum
-            'Lakes Region': 0.4,
-            'Monadnock Region': 0.4,
-            'Seacoast': 0.3
+            'Great North Woods': 0.65,
+            'White Mountains': 0.70,
+            'Dartmouth-Sunapee': 0.65,
+            'Merrimack Valley': 0.70,
+            'Lakes Region': 0.65,
+            'Monadnock Region': 0.65,
+            'Seacoast': 0.55
         }
     },
     jellyear: {
@@ -879,14 +889,15 @@ export const speciesData = {
             'Color': 'Brown, ear-shaped',
             'Habitat': 'On dead wood, especially elder'
         },
+        fruitingStyle: 'gregarious',
         regions: {
-            'Great North Woods': 0.3,
-            'White Mountains': 0.4,
-            'Dartmouth-Sunapee': 0.5,
-            'Merrimack Valley': 0.5,
-            'Lakes Region': 0.5,
-            'Monadnock Region': 0.5,
-            'Seacoast': 0.6
+            'Great North Woods': 0.60,
+            'White Mountains': 0.65,
+            'Dartmouth-Sunapee': 0.70,
+            'Merrimack Valley': 0.70,
+            'Lakes Region': 0.70,
+            'Monadnock Region': 0.70,
+            'Seacoast': 0.70
         }
     },
     // King Bolete Complex - Split into Individual Species
@@ -958,6 +969,7 @@ export const speciesData = {
             'TOXIC LOOKALIKE': 'Boletus huronensis - causes GI distress; distinguishable by blue-staining pores and yellow stem',
             'Key Safety': 'White reticulation on stem, no strong blue staining, conifer association'
         },
+        fruitingStyle: 'scattered',
         regions: {
             'Great North Woods': 0.9,  // Excellent conifer habitat
             'White Mountains': 0.8,   // Good mixed conifer forests
@@ -1036,6 +1048,7 @@ export const speciesData = {
             'Secondary Lookalike': 'Tylopilus felleus (bitter) - dark reticulation on light stem (opposite pattern)',
             'Key Safety': 'NO blue staining upon cutting or bruising'
         },
+        fruitingStyle: 'scattered',
         regions: {
             'Great North Woods': 0.5,
             'White Mountains': 0.7,
@@ -1120,6 +1133,7 @@ export const speciesData = {
             'Secondary Lookalike': 'Tylopilus felleus (bitter bolete) - dark reticulation on light stem (opposite), pinkish pores',
             'Key Safety': 'White net-like reticulation on upper stem, NO blue staining, white flesh'
         },
+        fruitingStyle: 'scattered',
         regions: {
             'Great North Woods': 0.9,
             'White Mountains': 0.9,
@@ -1199,6 +1213,7 @@ export const speciesData = {
             'TOXIC LOOKALIKE': 'Boletus sensibilis - stains blue/black rapidly (B. atkinsonii does NOT)',
             'Key Safety': 'Wrinkled cap, prominent white reticulation, purple ammonia reaction on cap, NO rapid blue staining'
         },
+        fruitingStyle: 'scattered',
         regions: {
             'Great North Woods': 0.6,
             'White Mountains': 0.7,
@@ -1276,6 +1291,7 @@ export const speciesData = {
             'Lookalikes': 'Few concerning lookalikes due to distinctive lilac/lavender cap tones',
             'Key Safety': 'Yellow pores that don\'t bruise significantly, mycorrhizal with oaks'
         },
+        fruitingStyle: 'scattered',
         regions: {
             'Great North Woods': 0.4,
             'White Mountains': 0.6,
@@ -1352,6 +1368,7 @@ export const speciesData = {
             'Lookalikes': 'Closely related to B. separans; distinguished by morphology',
             'Key Feature': 'Elongated narrow stem, beige skin, white pores aging brownish-yellow, often pitted or wrinkled cap'
         },
+        fruitingStyle: 'sparse',
         regions: {
             'Great North Woods': 0.5,
             'White Mountains': 0.6,
@@ -1431,6 +1448,7 @@ export const speciesData = {
             'TOXIC LOOKALIKE': 'Boletus huronensis - blue staining, yellow stem with red traces',
             'Key Safety': 'Brown reticulation, NO blue staining, hemlock habitat'
         },
+        fruitingStyle: 'scattered',
         regions: {
             'Great North Woods': 0.8,
             'White Mountains': 0.9,  // Excellent hemlock habitat
@@ -1512,14 +1530,15 @@ export const speciesData = {
             'Habitat': 'On dead or dying hardwoods',
             'Texture': 'Soft, watery when fresh'
         },
+        fruitingStyle: 'sparse',
         regions: {
-            'Great North Woods': 0.3,
-            'White Mountains': 0.4,
-            'Dartmouth-Sunapee': 0.5,
-            'Merrimack Valley': 0.5,
-            'Lakes Region': 0.5,
-            'Monadnock Region': 0.5,
-            'Seacoast': 0.5
+            'Great North Woods': 0.65,
+            'White Mountains': 0.70,
+            'Dartmouth-Sunapee': 0.70,
+            'Merrimack Valley': 0.70,
+            'Lakes Region': 0.70,
+            'Monadnock Region': 0.70,
+            'Seacoast': 0.65
         }
     },
     lobster: {
@@ -1591,14 +1610,15 @@ export const speciesData = {
             'Firmness Test': 'Very dense, hard to break',
             'Quebec DNA Study': 'Mature lobster 95%+ parasite DNA - host toxins neutralized'
         },
+        fruitingStyle: 'gregarious',
         regions: {
-            'Great North Woods': 0.3,
-            'White Mountains': 0.4,
-            'Dartmouth-Sunapee': 0.5,
-            'Merrimack Valley': 0.5,
-            'Lakes Region': 0.5,
-            'Monadnock Region': 0.5,
-            'Seacoast': 0.5
+            'Great North Woods': 0.60,
+            'White Mountains': 0.65,
+            'Dartmouth-Sunapee': 0.70,
+            'Merrimack Valley': 0.70,
+            'Lakes Region': 0.70,
+            'Monadnock Region': 0.70,
+            'Seacoast': 0.65
         }
     },
     maitake: {
@@ -1662,6 +1682,7 @@ export const speciesData = {
             'Lookalike': 'Meripilus sumstinei (Black-staining Polypore) also edible but stains BLACK',
             'Key to Success': 'Mark productive oak trees - they fruit repeatedly'
         },
+        fruitingStyle: 'sparse',
         regions: {
             'Great North Woods': 0.2,
             'White Mountains': 0.3,
@@ -1743,14 +1764,15 @@ export const speciesData = {
             'Color': 'Lilac to purple cap and gills',
             'Spore Print': 'Pale pink'
         },
+        fruitingStyle: 'gregarious',
         regions: {
             'Great North Woods': 0.2,
             'White Mountains': 0.3,
-            'Dartmouth-Sunapee': 0.4,
-            'Merrimack Valley': 0.5,
-            'Lakes Region': 0.5,
-            'Monadnock Region': 0.5,
-            'Seacoast': 0.5
+            'Dartmouth-Sunapee': 0.55,
+            'Merrimack Valley': 0.65,
+            'Lakes Region': 0.55,
+            'Monadnock Region': 0.60,
+            'Seacoast': 0.65
         }
     },
     oyster: {
@@ -1835,6 +1857,7 @@ export const speciesData = {
             'Habitat': 'Always on wood - dead trees, logs, stumps',
             'Season': 'Year-round, peak fall/winter'
         },
+        fruitingStyle: 'gregarious',
         regions: {
             'Great North Woods': 0.7,
             'White Mountains': 0.7,
@@ -1908,6 +1931,7 @@ export const speciesData = {
             'Stem Test': 'Firm, resists crushing (vs. brittle Amanita)',
             'Key Feature': 'Cinnamon odor is diagnostic - always verify'
         },
+        fruitingStyle: 'sparse',
         regions: {
             'Great North Woods': 0.8,
             'White Mountains': 0.9,
@@ -1990,6 +2014,7 @@ export const speciesData = {
             'Gills': 'Purple-brown to black spores',
             'Habitat': 'Wood chip mulch, especially fresh chips'
         },
+        fruitingStyle: 'gregarious',
         regions: {
             'Great North Woods': 0.3,
             'White Mountains': 0.4,
@@ -2071,6 +2096,7 @@ export const speciesData = {
             'Timing': 'Must harvest before gills turn black',
             'Habitat': 'Disturbed soil, lawns, urban areas'
         },
+        fruitingStyle: 'gregarious',
         regions: {
             'Great North Woods': 0.4,
             'White Mountains': 0.5,
@@ -2139,6 +2165,7 @@ export const speciesData = {
             'REJECT if': 'Latex is HOT, PEPPERY, or ACRID',
             'Key Difference': 'More wrinkled cap, darker, weaker odor than L. volemus'
         },
+        fruitingStyle: 'scattered',
         regions: {
             'Great North Woods': 0.4,
             'White Mountains': 0.5,
@@ -2208,6 +2235,7 @@ export const speciesData = {
             'REJECT if': 'Latex is HOT, PEPPERY, or ACRID',
             'Key Difference': 'Widely spaced gills, no fishy odor, no strong latex staining'
         },
+        fruitingStyle: 'scattered',
         regions: {
             'Great North Woods': 0.4,
             'White Mountains': 0.5,
@@ -2278,6 +2306,7 @@ export const speciesData = {
             'REJECT if': 'Latex is HOT, PEPPERY, or ACRID (indicates toxic species)',
             'Safety Protocol': 'All three NH milk caps have MILD latex - acrid = reject'
         },
+        fruitingStyle: 'scattered',
         regions: {
             'Great North Woods': 0.5,
             'White Mountains': 0.6,

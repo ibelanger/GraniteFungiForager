@@ -10,7 +10,8 @@ import {
   getProbabilityColor,
   getCountyInfo,
   getTopSpeciesForCounty,
-  countyRegions
+  countyRegions,
+  ABUNDANCE_CEILINGS
 } from '../../src/modules/mapCalculations.js';
 import { mockWeatherData, mockCountyRegions } from '../helpers/mockData.js';
 
@@ -247,8 +248,9 @@ describe('Map Calculations Module', () => {
         const baseWeather = { airTemp: 62, season: 'fall' };
 
         // Boletes get 1.3x bonus with soil temp < 70 and rainfall > 2.0
-        const idealBoletus = calculateProbability('boletusEdulis', { ...baseWeather, soilTemp: 65, rainfall: 2.5 }, 'White Mountains');
-        const warmBoletus = calculateProbability('boletusEdulis', { ...baseWeather, soilTemp: 72, rainfall: 2.5 }, 'White Mountains');
+        // Use Merrimack Valley (base 0.5) so the boost is visible without hitting the 0.85 scattered ceiling
+        const idealBoletus = calculateProbability('boletusEdulis', { ...baseWeather, soilTemp: 65, rainfall: 2.5 }, 'Merrimack Valley');
+        const warmBoletus = calculateProbability('boletusEdulis', { ...baseWeather, soilTemp: 72, rainfall: 2.5 }, 'Merrimack Valley');
 
         expect(idealBoletus).toBeGreaterThan(warmBoletus);
       });
@@ -575,6 +577,81 @@ describe('Map Calculations Module', () => {
       const cheshireProb = calculateProbability('morels', cheshireWeather, 'Monadnock Region');
 
       expect(cheshireProb).toBeGreaterThan(coosProb);
+    });
+
+    test('pH-exempt species should return 1.0 regardless of county', () => {
+      const phExemptSpecies = ['shaggymane', 'blewit', 'hericium', 'jellyear', 'oyster', 'cauliflower', 'lobster', 'winecap'];
+      phExemptSpecies.forEach(speciesKey => {
+        // coos is the most acidic county (pH 4.8) — exempt species should not be penalized
+        expect(calculatePHMultiplier(speciesKey, 'coos')).toBe(1.0);
+        expect(calculatePHMultiplier(speciesKey, 'merrimack')).toBe(1.0);
+      });
+    });
+  });
+
+  describe('ABUNDANCE_CEILINGS', () => {
+    test('should export ceiling constants for all three fruiting styles', () => {
+      expect(ABUNDANCE_CEILINGS.gregarious).toBe(1.0);
+      expect(ABUNDANCE_CEILINGS.scattered).toBe(0.85);
+      expect(ABUNDANCE_CEILINGS.sparse).toBe(0.70);
+    });
+
+    test('sparse species should never exceed 0.70 even under ideal conditions', () => {
+      const sparseSpecies = ['beefsteak', 'cauliflower', 'hericium', 'maitake', 'matsutake', 'boletusNobilis'];
+      const idealFallWeather = { rainfall: 3.0, soilTemp: 60, airTemp: 60, season: 'fall', county: 'merrimack' };
+      sparseSpecies.forEach(speciesKey => {
+        const prob = calculateProbability(speciesKey, idealFallWeather, 'Merrimack Valley');
+        expect(prob).toBeLessThanOrEqual(0.70 + 0.001); // small float tolerance
+      });
+    });
+
+    test('scattered species should never exceed 0.85', () => {
+      const scatteredSpecies = ['morels', 'boletusEdulis', 'boletusVariipes', 'greenrussula', 'tawnymilky'];
+      const idealWeather = { rainfall: 3.0, soilTemp: 65, airTemp: 65, season: 'fall', county: 'cheshire' };
+      scatteredSpecies.forEach(speciesKey => {
+        const prob = calculateProbability(speciesKey, idealWeather, 'Monadnock Region');
+        expect(prob).toBeLessThanOrEqual(0.85 + 0.001);
+      });
+    });
+
+    test('all 29 species should reach >= 0.65 under ideal conditions in their best region', () => {
+      // Ideal conditions: peak season, optimal soil temp, good rainfall, best region
+      const allSpecies = [
+        { key: 'morels',                 weather: { rainfall: 2.0, soilTemp: 58, airTemp: 58, season: 'spring', county: 'cheshire' }, region: 'Monadnock Region' },
+        { key: 'beefsteak',              weather: { rainfall: 2.0, soilTemp: 70, airTemp: 70, season: 'fall',   county: 'merrimack' }, region: 'Merrimack Valley' },
+        { key: 'blacktrumpets',          weather: { rainfall: 3.0, soilTemp: 62, airTemp: 62, season: 'fall',   county: 'merrimack' }, region: 'Merrimack Valley' },
+        { key: 'cauliflower',            weather: { rainfall: 2.0, soilTemp: 58, airTemp: 58, season: 'fall',   county: 'grafton'   }, region: 'White Mountains' },
+        { key: 'chanterelles',           weather: { rainfall: 3.0, soilTemp: 65, airTemp: 65, season: 'fall',   county: 'grafton'   }, region: 'White Mountains' },
+        { key: 'trumpetchanterelle',     weather: { rainfall: 2.0, soilTemp: 55, airTemp: 55, season: 'fall',   county: 'grafton'   }, region: 'White Mountains' },
+        { key: 'greenrussula',           weather: { rainfall: 1.5, soilTemp: 70, airTemp: 70, season: 'summer', county: 'sullivan'  }, region: 'Dartmouth-Sunapee' },
+        { key: 'sweettooth',             weather: { rainfall: 2.0, soilTemp: 55, airTemp: 55, season: 'fall',   county: 'merrimack' }, region: 'Merrimack Valley' },
+        { key: 'depressedhedgehog',      weather: { rainfall: 2.0, soilTemp: 55, airTemp: 55, season: 'fall',   county: 'merrimack' }, region: 'Merrimack Valley' },
+        { key: 'whitehedgehog',          weather: { rainfall: 2.0, soilTemp: 58, airTemp: 58, season: 'fall',   county: 'merrimack' }, region: 'Merrimack Valley' },
+        { key: 'jellyear',               weather: { rainfall: 2.0, soilTemp: 65, airTemp: 65, season: 'fall',   county: 'merrimack' }, region: 'Merrimack Valley' },
+        { key: 'boletusSubcaerulescens', weather: { rainfall: 2.5, soilTemp: 62, airTemp: 62, season: 'fall',   county: 'grafton'   }, region: 'White Mountains' },
+        { key: 'boletusVariipes',        weather: { rainfall: 2.5, soilTemp: 68, airTemp: 68, season: 'summer', county: 'merrimack' }, region: 'Merrimack Valley' },
+        { key: 'boletusEdulis',          weather: { rainfall: 2.5, soilTemp: 62, airTemp: 62, season: 'fall',   county: 'grafton'   }, region: 'White Mountains' },
+        { key: 'boletusAtkinsonii',      weather: { rainfall: 2.5, soilTemp: 68, airTemp: 68, season: 'fall',   county: 'merrimack' }, region: 'Merrimack Valley' },
+        { key: 'boletus_separans',       weather: { rainfall: 2.5, soilTemp: 68, airTemp: 68, season: 'fall',   county: 'grafton'   }, region: 'White Mountains' },
+        { key: 'boletusNobilis',         weather: { rainfall: 2.5, soilTemp: 65, airTemp: 65, season: 'fall',   county: 'merrimack' }, region: 'Merrimack Valley' },
+        { key: 'boletusChippewaensis',   weather: { rainfall: 2.5, soilTemp: 62, airTemp: 62, season: 'fall',   county: 'grafton'   }, region: 'White Mountains' },
+        { key: 'hericium',               weather: { rainfall: 2.0, soilTemp: 58, airTemp: 58, season: 'fall',   county: 'grafton'   }, region: 'White Mountains' },
+        { key: 'lobster',                weather: { rainfall: 2.0, soilTemp: 65, airTemp: 65, season: 'summer', county: 'merrimack' }, region: 'Merrimack Valley' },
+        { key: 'maitake',                weather: { rainfall: 2.0, soilTemp: 63, airTemp: 63, season: 'fall',   county: 'merrimack' }, region: 'Merrimack Valley' },
+        { key: 'blewit',                 weather: { rainfall: 2.0, soilTemp: 48, airTemp: 48, season: 'fall',   county: 'merrimack' }, region: 'Merrimack Valley' },
+        { key: 'oyster',                 weather: { rainfall: 2.0, soilTemp: 45, airTemp: 45, season: 'winter', county: 'merrimack' }, region: 'Merrimack Valley' },
+        { key: 'matsutake',              weather: { rainfall: 1.5, soilTemp: 60, airTemp: 60, season: 'fall',   county: 'grafton'   }, region: 'White Mountains' },
+        { key: 'winecap',                weather: { rainfall: 2.0, soilTemp: 65, airTemp: 65, season: 'summer', county: 'merrimack' }, region: 'Merrimack Valley' },
+        { key: 'shaggymane',             weather: { rainfall: 2.0, soilTemp: 65, airTemp: 65, season: 'fall',   county: 'merrimack' }, region: 'Merrimack Valley' },
+        { key: 'corrugatedmilky',        weather: { rainfall: 2.0, soilTemp: 68, airTemp: 68, season: 'summer', county: 'merrimack' }, region: 'Merrimack Valley' },
+        { key: 'orangemilky',            weather: { rainfall: 2.0, soilTemp: 68, airTemp: 68, season: 'summer', county: 'merrimack' }, region: 'Merrimack Valley' },
+        { key: 'tawnymilky',             weather: { rainfall: 2.0, soilTemp: 68, airTemp: 68, season: 'summer', county: 'merrimack' }, region: 'Merrimack Valley' },
+      ];
+
+      allSpecies.forEach(({ key, weather, region }) => {
+        const prob = calculateProbability(key, weather, region);
+        expect(prob, `${key} should reach >= 0.65 (got ${prob.toFixed(3)})`).toBeGreaterThanOrEqual(0.65);
+      });
     });
   });
 });
