@@ -1632,6 +1632,12 @@ input[type="checkbox"]:focus {
     transform: translateY(0);
 }
 
+.donate-paypal-form {
+    margin: 0;
+    padding: 0;
+    display: inline-flex;
+}
+
 .donate-paypal {
     background: #003087;
 }
