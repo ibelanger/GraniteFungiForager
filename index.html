@@ -174,19 +174,88 @@
                 and practice sustainable harvesting. Leave no trace and respect private property.</p>
             </div>
             
+            <!-- Donate Section -->
+            <div class="donate-section">
+                <h4>☕ Support GraniteFungiForager</h4>
+                <p class="donate-tagline">Help keep this tool free and ad-free</p>
+
+                <div class="donate-tabs" role="tablist" aria-label="Donation frequency">
+                    <button class="donate-tab active" role="tab" data-panel="donate-onetime"
+                            aria-selected="true" aria-controls="donate-onetime">One-time</button>
+                    <button class="donate-tab" role="tab" data-panel="donate-monthly"
+                            aria-selected="false" aria-controls="donate-monthly">Monthly</button>
+                </div>
+
+                <div class="donate-panel active" id="donate-onetime" role="tabpanel">
+                    <a href="https://paypal.me/IBelanger" target="_blank" rel="noopener noreferrer"
+                       class="donate-btn donate-paypal" aria-label="Donate via PayPal (one-time)">
+                        <svg class="donate-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill="currentColor" d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 4.643-5.813 4.643h-2.19a1.59 1.59 0 0 0-1.57 1.344l-1.12 7.106-.314 1.987h3.468l.44-2.789.028-.157a1.59 1.59 0 0 1 1.57-1.344h.988c3.246 0 5.79-1.318 6.529-5.127.31-1.589.15-2.916-.368-3.376z"/>
+                        </svg>
+                        PayPal
+                    </a>
+                    <a href="https://venmo.com/u/Ian-Belanger" target="_blank" rel="noopener noreferrer"
+                       class="donate-btn donate-venmo" aria-label="Donate via Venmo (one-time)">
+                        <svg class="donate-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill="currentColor" d="M19.285 0c.608 1.013 .88 2.057.88 3.393 0 4.228-3.608 9.72-6.537 13.58H6.937L4.094 .507l6.005-.57 1.502 12.124C13.218 9.498 15.088 5.395 15.088 2.618c0-1.435-.24-2.41-.602-3.21z"/>
+                        </svg>
+                        Venmo
+                    </a>
+                </div>
+
+                <div class="donate-panel" id="donate-monthly" role="tabpanel" hidden>
+                    <a href="https://www.paypal.com/donate?business=IBelanger&no_recurring=0&currency_code=USD&item_name=Monthly+Support+for+GraniteFungiForager"
+                       target="_blank" rel="noopener noreferrer"
+                       class="donate-btn donate-paypal" aria-label="Donate via PayPal (monthly recurring)">
+                        <svg class="donate-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill="currentColor" d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 4.643-5.813 4.643h-2.19a1.59 1.59 0 0 0-1.57 1.344l-1.12 7.106-.314 1.987h3.468l.44-2.789.028-.157a1.59 1.59 0 0 1 1.57-1.344h.988c3.246 0 5.79-1.318 6.529-5.127.31-1.589.15-2.916-.368-3.376z"/>
+                        </svg>
+                        PayPal Monthly
+                    </a>
+                    <div class="donate-venmo-monthly">
+                        <span class="donate-venmo-handle">@Ian-Belanger on Venmo</span>
+                        <small>Venmo doesn't support recurring — use one-time each month</small>
+                    </div>
+                </div>
+            </div>
+
             <div class="credits">
-                <p><strong>Data Sources:</strong> Weather data from <a href="https://wttr.in" target="_blank" rel="noopener">wttr.in</a>, 
-                Species information from <a href="https://www.mushroomexpert.com" target="_blank" rel="noopener">MushroomExpert.com</a>, 
+                <p><strong>Data Sources:</strong> Weather data from <a href="https://wttr.in" target="_blank" rel="noopener">wttr.in</a>,
+                Species information from <a href="https://www.mushroomexpert.com" target="_blank" rel="noopener">MushroomExpert.com</a>,
                 NH DHHS Tier 1 Species List</p>
                 <p><strong>Specialized Boletes Key:</strong> <a href="https://boletes.wpamushroomclub.org/" target="_blank" rel="noopener">WPA Mushroom Club</a></p>
                 <p>Built by GraniteFungiForager | v3.5.1 | <a href="https://github.com/GraniteFungiForager" target="_blank" rel="noopener">GitHub</a></p>
             </div>
         </footer>
     </div>
-    
+
     <!-- Fallback for browsers without module support -->
     <script nomodule>
         alert('This application requires a modern browser with ES6 module support. Please update your browser.');
+    </script>
+
+    <script>
+        (function () {
+            var tabs = document.querySelectorAll('.donate-tab');
+            tabs.forEach(function (tab) {
+                tab.addEventListener('click', function () {
+                    var panelId = this.dataset.panel;
+                    tabs.forEach(function (t) {
+                        t.classList.remove('active');
+                        t.setAttribute('aria-selected', 'false');
+                    });
+                    document.querySelectorAll('.donate-panel').forEach(function (p) {
+                        p.classList.remove('active');
+                        p.hidden = true;
+                    });
+                    this.classList.add('active');
+                    this.setAttribute('aria-selected', 'true');
+                    var panel = document.getElementById(panelId);
+                    panel.classList.add('active');
+                    panel.hidden = false;
+                });
+            });
+        })();
     </script>
 </body>
 </html>
