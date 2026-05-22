@@ -1540,3 +1540,147 @@ input[type="checkbox"]:focus {
         font-size: 0.6rem;
     }
 }
+
+/* ==================== DONATE SECTION ==================== */
+.donate-section {
+    border-top: 1px solid var(--mushroom-cream);
+    border-bottom: 1px solid var(--mushroom-cream);
+    padding: var(--space-md) 0;
+    margin: var(--space-md) 0;
+    text-align: center;
+}
+
+.donate-section h4 {
+    color: var(--forest-medium);
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+}
+
+.donate-tagline {
+    color: var(--spore-brown);
+    font-size: 0.85rem;
+    margin: 0 0 var(--space-sm);
+}
+
+.donate-tabs {
+    display: inline-flex;
+    background: var(--mushroom-cream);
+    border-radius: var(--radius-xl);
+    padding: 3px;
+    gap: 2px;
+    margin-bottom: var(--space-sm);
+}
+
+.donate-tab {
+    background: transparent;
+    border: none;
+    border-radius: calc(var(--radius-xl) - 2px);
+    color: var(--spore-brown);
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.35rem 1.1rem;
+    transition: all 0.2s ease;
+}
+
+.donate-tab.active,
+.donate-tab[aria-selected="true"] {
+    background: var(--mycelium-white);
+    box-shadow: var(--shadow-sm);
+    color: var(--forest-dark);
+}
+
+.donate-tab:hover:not(.active) {
+    color: var(--forest-medium);
+}
+
+.donate-panel {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.donate-panel.active {
+    display: flex;
+}
+
+.donate-btn {
+    align-items: center;
+    border-radius: var(--radius-md);
+    color: #fff;
+    display: inline-flex;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 500;
+    gap: 0.5rem;
+    padding: 0.55rem 1.25rem;
+    text-decoration: none;
+    transition: filter 0.2s ease, transform 0.15s ease;
+}
+
+.donate-btn:hover {
+    filter: brightness(1.12);
+    transform: translateY(-1px);
+}
+
+.donate-btn:active {
+    transform: translateY(0);
+}
+
+.donate-paypal-form {
+    margin: 0;
+    padding: 0;
+    display: inline-flex;
+}
+
+.donate-paypal {
+    background: #003087;
+}
+
+.donate-venmo {
+    background: #3D95CE;
+}
+
+.donate-logo {
+    height: 1em;
+    width: auto;
+    flex-shrink: 0;
+}
+
+.donate-venmo-monthly {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    color: var(--spore-brown);
+}
+
+.donate-venmo-handle {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--forest-dark);
+}
+
+.donate-venmo-monthly small {
+    font-size: 0.72rem;
+    color: var(--oyster-grey);
+    font-style: italic;
+}
+
+@media (max-width: 480px) {
+    .donate-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .donate-panel {
+        flex-direction: column;
+        align-items: center;
+    }
+}

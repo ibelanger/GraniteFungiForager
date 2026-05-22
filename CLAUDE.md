@@ -8,7 +8,7 @@ This file provides quick reference guidance for Claude Code when working with th
 
 ## Project Overview
 
-**GraniteFungiForager v3.9.1** is a client-side web application providing interactive probability maps for foraging New Hampshire's DHHS Tier 1 wild mushroom species. Combines real-time weather data with mycological research to calculate county-specific foraging probabilities. Features offline capability, ML-powered accuracy improvement, and conservation-focused location protection.
+**GraniteFungiForager v3.10.0** is a client-side web application providing interactive probability maps for foraging New Hampshire's DHHS Tier 1 wild mushroom species. Combines real-time weather data with mycological research to calculate county-specific foraging probabilities. Features offline capability, ML-powered accuracy improvement, and conservation-focused location protection.
 
 **Live:** https://ibelanger.github.io/GraniteFungiForager/
 
@@ -240,6 +240,7 @@ reportsManager.addReport(reportData);
 
 ## Version History (Recent)
 
+- **v3.10.0** (May 2026) - Donate section: PayPal (one-time + $1.99/mo subscription) and Venmo in footer
 - **v3.9.1** (Mar 2026) - Security: XSS fix in error toast; SHA-256 password hashing replaces plaintext credentials
 - **v3.9.0** (Mar 2026) - Abundance-aware probability ceilings; fruitingStyle on all 29 species; 515 tests
 - **v3.8.0** (Mar 2026) - Ecology & Research Notes surfaced in UI; 500 tests
