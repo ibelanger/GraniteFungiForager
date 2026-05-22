@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.10.0] - 2026-05-22
+
+### Added
+- **Donate section in footer** — PayPal and Venmo support with One-time / Monthly tab toggle. One-time: PayPal.me link + Venmo (@Ian-Belanger). Monthly: hosted PayPal subscription button ($1.99/mo). Venmo monthly tab shows handle with a note that Venmo doesn't support recurring payments.
+- **Donate styles** — `.donate-section`, tab toggle, branded PayPal/Venmo buttons, mobile column layout (≤480px), ARIA-compliant tab panel (`tablist`/`tab`/`tabpanel`)
+
+### Technical Details
+- Tests: 515/517 passing (100% pass rate maintained)
+- Closes #45
+
+### Files Modified
+- **MODIFIED:** `index.html` (+78/-3 lines) — donate widget in footer
+- **MODIFIED:** `src/styles.css` (+144 lines) — donate section styles
+
 ## [3.9.1] - 2026-03-23
 
 ### Security

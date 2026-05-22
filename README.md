@@ -1,4 +1,4 @@
-# 🍄 GraniteFungiForager v3.7.0
+# 🍄 GraniteFungiForager v3.10.0
 
 
 [![Tests](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml/badge.svg)](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml)
@@ -10,13 +10,12 @@
 ## 🌐 **LIVE APPLICATION**
 **Try it now:** https://ibelanger.github.io/GraniteFungiForager/
 
-## 🆕 **What's New in v3.7.0** (March 2026)
+## 🆕 **What's New in v3.10.0** (May 2026)
 
-### 🔬 **Research-Grade Species Data Complete (Epic #17 Done!)**
-All **29 DHHS Tier 1 species** now have full research-grade data with 6 peer-reviewed fields each:
-- **9 species enhanced:** Beefsteak Polypore, Cauliflower Mushroom, Green Quilted Russula, Jelly Ear, Lion's Mane/Hericium (3 spp.), Blewit, Oyster Mushroom (3 spp.), Wine Cap, Shaggy Mane
-- **Key highlights:** Jelly Ear fruits year-round; Oyster species provide near-year-round coverage; Shaggy Mane prefers alkaline soils (unique among NH fungi)
-- **491 tests** validating all species data fields
+### 💚 **Support the Project**
+A donate widget is now in the footer — help keep GraniteFungiForager free and ad-free:
+- **One-time:** PayPal (paypal.me/IBelanger) or Venmo (@Ian-Belanger)
+- **Monthly:** $1.99/month PayPal subscription via hosted button
 
 *Previous release notes in [CHANGELOG.md](./CHANGELOG.md)*
 
