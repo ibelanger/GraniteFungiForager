@@ -1,4 +1,4 @@
-# 🍄 GraniteFungiForager v3.10.0
+# 🍄 GraniteFungiForager v3.10.1
 
 
 [![Tests](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml/badge.svg)](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml)
@@ -9,6 +9,21 @@
 
 ## 🌐 **LIVE APPLICATION**
 **Try it now:** https://ibelanger.github.io/GraniteFungiForager/
+
+## 🆕 **What's New in v3.10.1** (July 2026)
+
+### 🛠️ **Front-End UX/QC Fixes**
+A source-code audit surfaced and fixed 10 usability/reliability issues:
+- Fixed the "Top 5 Most Likely Species" temperature indicator, which always showed ❌ regardless of actual conditions
+- Weather auto-refresh now runs on a single interval that correctly respects the Live Data toggle
+- Manual condition sliders no longer recalculate twice per drag tick
+- Weather fetches now time out after 8s so one stalled county can't block the rest
+- Switching Live→Manual now seeds sliders from the last real weather reading instead of jumping to fixed defaults
+- Larger touch targets on sliders and the Live Data checkbox for field use with gloves/cold hands
+- The county map now scales cleanly on narrow phones without letterboxing
+- Minor CSS/markup fixes (missing color variable, duplicate emoji, mobile breakpoint check)
+
+*Previous release notes in [CHANGELOG.md](./CHANGELOG.md)*
 
 ## 🆕 **What's New in v3.10.0** (May 2026)
 

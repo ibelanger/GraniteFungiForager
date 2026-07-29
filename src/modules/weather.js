@@ -91,8 +91,15 @@ export async function fetchWeatherData(onComplete, onUpdate) {
             `timezone=America/New_York&past_days=7&forecast_days=1`;
         
         try {
-            const response = await fetch(url);
-            
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s per-county timeout
+            let response;
+            try {
+                response = await fetch(url, { signal: controller.signal });
+            } finally {
+                clearTimeout(timeoutId);
+            }
+
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
@@ -163,8 +170,9 @@ export async function fetchWeatherData(onComplete, onUpdate) {
             });
             
         } catch (error) {
-            console.error(`❌ Weather fetch error for ${county} (${location.name}):`, error.message);
-            
+            const errorMessage = error.name === 'AbortError' ? 'Request timed out' : error.message;
+            console.error(`❌ Weather fetch error for ${county} (${location.name}):`, errorMessage);
+
             // Set error indicator instead of misleading fallback data
             countyWeatherData[county] = {
                 rainfall: null,
@@ -173,7 +181,7 @@ export async function fetchWeatherData(onComplete, onUpdate) {
                 season: getCurrentSeason(),
                 lastUpdated: new Date(),
                 town: location.name,
-                error: error.message,
+                error: errorMessage,
                 hasData: false
             };
         }
@@ -328,13 +336,39 @@ export function getWeatherData(county = null) {
 }
 
 /**
+ * Seed the manual override sliders from the last successful weather fetch,
+ * so switching Live -> Manual starts from today's real conditions instead
+ * of jumping to fixed defaults.
+ */
+function seedManualControlsFromLastWeather() {
+    if (!currentWeatherData.lastUpdated) return; // no live data fetched yet
+
+    const sliders = [
+        { id: 'rainfall', value: currentWeatherData.rainfall, decimals: 1 },
+        { id: 'soil-temp', value: currentWeatherData.soilTemp, decimals: 0 },
+        { id: 'air-temp', value: currentWeatherData.airTemp, decimals: 0 }
+    ];
+
+    sliders.forEach(({ id, value, decimals }) => {
+        if (value == null) return;
+        const slider = document.getElementById(id);
+        if (!slider) return;
+
+        const min = parseFloat(slider.min);
+        const max = parseFloat(slider.max);
+        slider.value = Math.min(max, Math.max(min, value)).toFixed(decimals);
+        slider.dispatchEvent(new Event('input'));
+    });
+}
+
+/**
  * Toggle between automatic weather and manual override
  */
 export function toggleWeatherMode() {
     const autoWeatherCheckbox = document.getElementById('auto-weather');
     const manualControls = document.getElementById('manual-controls');
     const weatherDisplay = document.getElementById('weather-display');
-    
+
     if (autoWeatherCheckbox?.checked) {
         if (manualControls) manualControls.style.display = 'none';
         if (weatherDisplay) weatherDisplay.style.display = 'block';
@@ -342,6 +376,7 @@ export function toggleWeatherMode() {
     } else {
         if (manualControls) manualControls.style.display = 'block';
         if (weatherDisplay) weatherDisplay.style.display = 'none';
+        seedManualControlsFromLastWeather();
     }
 }
 
@@ -403,13 +438,8 @@ export function initWeather() {
     // Initial weather fetch
     console.log('🌤️ Initializing weather module with Open-Meteo API');
     fetchWeatherData(null, updateWeatherDisplay);
-    
-    // Set up automatic refresh every 15 minutes
-    setInterval(() => {
-        const autoWeatherCheckbox = document.getElementById('auto-weather');
-        if (autoWeatherCheckbox?.checked) {
-            console.log('🔄 Auto-refresh weather data');
-            fetchWeatherData(null, updateWeatherDisplay);
-        }
-    }, 15 * 60 * 1000); // 15 minutes
+
+    // Periodic auto-refresh is handled by app.js's setupAutoRefresh(), which
+    // gates on this same auto-weather checkbox — kept in one place to avoid
+    // two independent timers double-fetching.
 }

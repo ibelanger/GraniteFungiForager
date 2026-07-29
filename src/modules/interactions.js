@@ -437,7 +437,7 @@ export function displayCountyInfo(county, countyKey = null) {
 
     // Auto-collapse species card on mobile when county is clicked
     // This ensures both species name AND county probability are visible
-    if (window.innerHeight < 768) {
+    if (window.matchMedia('(max-width: 768px)').matches) {
         const speciesCard = document.getElementById('species-info');
         if (speciesCard && !speciesCard.classList.contains('compact')) {
             window.toggleSpeciesCard();

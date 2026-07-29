@@ -43,6 +43,23 @@ beforeEach(() => {
   // Mock fetch for API calls (individual tests can override)
   global.fetch = vi.fn();
 
+  // jsdom doesn't implement matchMedia; approximate it against innerWidth
+  // so width-based breakpoint checks in app code behave like a real browser
+  window.matchMedia = vi.fn().mockImplementation((query) => {
+    const widthMatch = query.match(/\(max-width:\s*(\d+)px\)/);
+    const matches = widthMatch ? window.innerWidth <= parseInt(widthMatch[1], 10) : false;
+    return {
+      matches,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn()
+    };
+  });
+
   // Mock console methods to reduce noise (tests can restore if needed)
   vi.spyOn(console, 'error').mockImplementation(() => {});
   vi.spyOn(console, 'warn').mockImplementation(() => {});

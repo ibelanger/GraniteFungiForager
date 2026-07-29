@@ -259,8 +259,12 @@ class MushroomApp {
     
     /**
      * Refresh weather data
+     * @param {boolean} force - Bypass the Live Data toggle (used by explicit user actions like Ctrl+R)
      */
-    async refreshWeatherData() {
+    async refreshWeatherData(force = false) {
+        const autoWeatherCheckbox = document.getElementById('auto-weather');
+        if (!force && !autoWeatherCheckbox?.checked) return;
+
         try {
             const weatherModule = await import('./src/modules/weather.js');
             await weatherModule.fetchWeatherData(
@@ -328,7 +332,7 @@ class MushroomApp {
         // R key - refresh weather (Ctrl+R or Cmd+R)
         if (event.key === 'r' && (event.ctrlKey || event.metaKey)) {
             event.preventDefault();
-            this.refreshWeatherData();
+            this.refreshWeatherData(true);
         }
         
         // Number keys 1-8 - select species

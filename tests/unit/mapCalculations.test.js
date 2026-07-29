@@ -535,6 +535,25 @@ describe('Map Calculations Module', () => {
         expect(coosTopProb).not.toBe(rockinghamMatch.probability);
       }
     });
+
+    test('should set currentTemp from actual soil temperature, not undefined', () => {
+      const results = getTopSpeciesForCounty('grafton', 5);
+
+      results.forEach(species => {
+        expect(species.currentTemp).toBeDefined();
+        expect(typeof species.currentTemp).toBe('number');
+      });
+    });
+
+    test('currentTemp should reflect species tempRange match when in range', () => {
+      const results = getTopSpeciesForCounty('grafton', 29);
+      const inRange = results.find(species =>
+        species.currentTemp >= species.tempRange[0] && species.currentTemp <= species.tempRange[1]
+      );
+
+      // With default currentWeatherData.soilTemp of 65, at least one species should match
+      expect(inRange).toBeDefined();
+    });
   });
 
   describe('calculatePHMultiplier', () => {

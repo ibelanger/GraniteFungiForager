@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.10.1] - 2026-07-29
+
+### Fixed
+- **Temp-match indicator always false** — `getTopSpeciesForCounty()` read the nonexistent `weather.temperature` instead of `weather.soilTemp`, so the 🌡️ Temp indicator in the Top 5 Species list showed ❌ for every species regardless of actual conditions (closes #47)
+- **Duplicate weather auto-refresh intervals** — `app.js` (5 min) and `weather.js` (15 min) both auto-refreshed independently, and the `app.js` timer ignored the Live Data toggle. Consolidated to a single interval gated on the toggle; Ctrl+R still force-refreshes (closes #48)
+- **Manual sliders recalculated twice per input** — `interactions.js` and `mapCalculations.js` both attached an `input` listener to the rainfall/soil-temp/air-temp sliders. Removed the duplicate in `mapCalculations.js` (closes #49)
+- **No timeout on Open-Meteo fetch calls** — a single stalled county request could block the whole weather update. Added an 8s per-county `AbortController` timeout (closes #50)
+- **Missing `--forest-light` CSS variable** — tree-tag chips and advanced-section borders referenced an undefined custom property and rendered with no background/border (closes #51)
+- **Double mushroom emoji on Species Selection heading** — a CSS-generated 🍄 stacked with a literal 🍄 already in the markup (closes #52)
+- **Mobile auto-collapse breakpoint mismatch** — the species-panel auto-collapse checked `innerHeight < 768` instead of viewport width, so it rarely triggered on modern phones in portrait. Switched to `matchMedia('(max-width: 768px)')`, matching existing CSS breakpoints (closes #53)
+
+### Changed
+- **Manual mode now seeds from live data** — toggling Live→Manual seeds rainfall/soil-temp/air-temp sliders from the last successful fetch instead of jumping to hardcoded defaults (closes #54)
+- **Larger touch targets** — slider thumb 24px→32px, Live Data checkbox 16px→20px with expanded label tap area, for field use with cold hands or gloves (closes #57)
+- **SVG map scales without letterboxing** — `#nh-map` now uses `aspect-ratio: 450/380; height: auto` instead of fixed pixel heights (closes #58)
+
+### Technical Details
+- Tests: 517/519 passing (2 pre-existing skips); added 2 regression tests for the temp-match fix
+- Added a `matchMedia` mock to `tests/setup.js` (jsdom doesn't implement it) to support the width-based breakpoint fix
+- Full front-end UX/QC review tracked in #46 (epic); remaining lower-priority items (#55, #56, #59, #60) deferred pending product decisions on replacement UX
+
+### Files Modified
+- **MODIFIED:** `app.js` — gate auto-refresh on Live Data toggle; force-refresh flag for Ctrl+R
+- **MODIFIED:** `src/modules/weather.js` — removed duplicate interval; added fetch timeout; seed manual sliders from last-known weather
+- **MODIFIED:** `src/modules/interactions.js` — matchMedia breakpoint fix
+- **MODIFIED:** `src/modules/mapCalculations.js` — fixed `currentTemp` field; removed duplicate slider listener
+- **MODIFIED:** `src/styles.css` — added `--forest-light`; larger touch targets; SVG aspect-ratio
+- **MODIFIED:** `index.html` — removed duplicate emoji
+- **MODIFIED:** `tests/setup.js` — added `matchMedia` mock
+- **MODIFIED:** `tests/unit/mapCalculations.test.js` — regression tests for `currentTemp` fix
+
 ## [3.10.0] - 2026-05-22
 
 ### Added

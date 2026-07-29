@@ -486,7 +486,7 @@ export function getTopSpeciesForCounty(county, topCount = 5) {
             hostTrees: speciesInfo.hostTrees || [],
             microhabitat: speciesInfo.microhabitat || '',
             // Add current conditions context
-            currentTemp: weather.temperature,
+            currentTemp: weather.soilTemp,
             currentMoisture: weather.rainfall,
             currentSeason: getCurrentSeason()
         });
@@ -586,15 +586,14 @@ export function initMapCalculations() {
         });
     }
     
-    // Set up manual control change handlers
-    const manualControls = ['rainfall', 'soil-temp', 'air-temp', 'season'];
-    manualControls.forEach(controlId => {
-        const control = document.getElementById(controlId);
-        if (control) {
-            control.addEventListener('change', () => updateMap());
-            control.addEventListener('input', () => updateMap());
-        }
-    });
+    // Set up season control change handler.
+    // Note: rainfall/soil-temp/air-temp sliders already trigger updateMap()
+    // via setupManualControls() in interactions.js — attaching listeners here
+    // too would fire the recalculation twice per drag tick.
+    const seasonControl = document.getElementById('season');
+    if (seasonControl) {
+        seasonControl.addEventListener('change', () => updateMap());
+    }
     
     // Initial map update
     updateMap();
