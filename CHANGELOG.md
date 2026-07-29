@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.10.2] - 2026-07-29
+
+### Fixed
+- **Wine Cap / Shaggy Mane structural over-prediction bug** — both species were exempt from the county soil-pH penalty *and* absent from the species-specific trigger-condition logic that gates every other desirable species, so there was no weather condition under which they could score low. Combined with wide temp ranges and low moisture minimums, they structurally could not be suppressed the way real forest species (chanterelles, boletes, milk caps) are when conditions miss the mark — causing them to dominate the "Top 5 Most Likely Species" list even during dry mid-summer stretches when nobody was finding them (closes #62)
+- **Wine Cap seasonMultiplier data bug** — coded to peak in summer, directly contradicting its own research notes ("summer pause during heat... bimodal fruiting"); corrected to favor its real spring/fall bimodal peaks (closes #62)
+- **Oyster mushroom same structural gap** — pH-exempt with no trigger condition; added a genuine rain-trigger gate without discounting its regional base (dead-wood substrate is a legitimate common forest resource, unlike Wine Cap/Shaggy Mane's disturbed-landscape dependency) or splitting its 3 blended taxa (kept at 29 species, DHHS-tied count) (closes #62)
+- **12 more species with seasonMultiplier values contradicting their own phenology notes** — jellyear, boletusAtkinsonii, greenrussula, chanterelles, corrugatedmilky, and tawnymilky were coded to peak in a season their own research notes describe as low or absent; 6 more had overvalued "avoided" seasons (trumpetchanterelle, hericium, boletusChippewaensis, boletusSubcaerulescens, boletus_separans, orangemilky) (closes #63)
+- **22 of 29 species missing an explicit winter value** — `seasonMultiplier[season] ?? 0.5` silently defaulted absent species to a flat 0.5 in winter; morels (a true spring ephemeral) now correctly gets 0.0, and jellyear (NH's one genuinely winter-active species, per its own "January-February thaws" notes) gets a deliberate 0.45 instead of an arbitrary fallback (closes #64)
+- **8 species whose regional base probability exceeded their own fruitingStyle ceiling** before any multiplier applied — matsutake was the worst offender (0.9 base against a 0.70 "sparse" ceiling, despite being the textbook prized rarity); morels, beefsteak, boletusSubcaerulescens, boletusVariipes, boletusEdulis, boletusChippewaensis, and maitake also rebalanced. 3 more species (hericium, cauliflower, boletusNobilis) sat exactly at their ceiling in multiple regions with zero headroom for legitimate bonuses to matter (closes #65)
+- **beefsteak had no bonus mechanism at all** — discovered while rebalancing its regional base; added a trigger case matching its own documented fruiting conditions (sustained summer/fall warmth + soaking rain) so it isn't left permanently underscored
+
+### Technical Details
+- Tests: 527/529 passing (10 new regression tests added; 2 pre-existing skips unchanged)
+- Verified against the real probability engine, not just data review: in a typical mid-summer scenario, winecap dropped from a 63.5% average (topping several counties) to 13.1%, while chanterelles/lobster/milk caps now correctly rank above it — matching the original user report that these three were never actually being found
+- Full species-data audit tracked in #61 (epic)
+
+### Files Modified
+- **MODIFIED:** `src/modules/species.js` — seasonMultiplier corrections, regional-base rebalancing, and winter-value additions across ~27 of 29 species
+- **MODIFIED:** `src/modules/mapCalculations.js` — new trigger-condition switch-cases for winecap, shaggymane, oyster, and beefsteak
+- **MODIFIED:** `tests/unit/species.test.js`, `tests/unit/mapCalculations.test.js` — new regression coverage plus corrected assertions that had hardcoded the old buggy values as "ideal conditions"
+
 ## [3.10.1] - 2026-07-29
 
 ### Fixed

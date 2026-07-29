@@ -1,4 +1,4 @@
-# 🍄 GraniteFungiForager v3.10.1
+# 🍄 GraniteFungiForager v3.10.2
 
 
 [![Tests](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml/badge.svg)](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml)
@@ -9,6 +9,17 @@
 
 ## 🌐 **LIVE APPLICATION**
 **Try it now:** https://ibelanger.github.io/GraniteFungiForager/
+
+## 🆕 **What's New in v3.10.2** (July 2026)
+
+### 🍄 **Probability Model Accuracy Audit**
+A user report that Wine Cap and Shaggy Mane were showing as top predictions despite nobody finding them led to a full audit of the 29-species probability model:
+- Fixed a structural bug where Wine Cap, Shaggy Mane, and Oyster Mushroom couldn't be scored low by any weather condition — they now correctly drop during dry spells and spike during their real spring/fall fruiting windows
+- Corrected 18 species whose seasonal data contradicted their own research notes (e.g. Wine Cap was coded to peak in summer despite its own notes describing a "summer pause during heat")
+- Added missing winter-season data to 22 species that were silently defaulting to an inflated placeholder value
+- Rebalanced 11 species (Matsutake was the worst) whose baseline probability already exceeded their own realistic ceiling before weather was even factored in
+
+*Previous release notes in [CHANGELOG.md](./CHANGELOG.md)*
 
 ## 🆕 **What's New in v3.10.1** (July 2026)
 

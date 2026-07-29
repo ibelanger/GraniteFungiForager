@@ -8,7 +8,7 @@ This file provides quick reference guidance for Claude Code when working with th
 
 ## Project Overview
 
-**GraniteFungiForager v3.10.1** is a client-side web application providing interactive probability maps for foraging New Hampshire's DHHS Tier 1 wild mushroom species. Combines real-time weather data with mycological research to calculate county-specific foraging probabilities. Features offline capability, ML-powered accuracy improvement, and conservation-focused location protection.
+**GraniteFungiForager v3.10.2** is a client-side web application providing interactive probability maps for foraging New Hampshire's DHHS Tier 1 wild mushroom species. Combines real-time weather data with mycological research to calculate county-specific foraging probabilities. Features offline capability, ML-powered accuracy improvement, and conservation-focused location protection.
 
 **Live:** https://ibelanger.github.io/GraniteFungiForager/
 
@@ -24,12 +24,12 @@ npm run dev              # Local server (http://localhost:8000)
 npm start                # Production server
 
 # Testing
-npm test                 # Run all 519 tests
+npm test                 # Run all 529 tests
 npm run test:watch       # Watch mode (re-run on changes)
 npm run test:ui          # Interactive test UI
 npm run test:coverage    # Generate coverage reports
 
-# Status: 517/519 passing (100% pass rate on testable code)
+# Status: 527/529 passing (100% pass rate on testable code)
 ```
 
 ---
@@ -61,7 +61,7 @@ GraniteFungiForager/
 │   └── ml/
 │       └── accuracy-improvement-pipeline.js
 ├── tests/
-│   ├── unit/            # 8 test files (519 tests)
+│   ├── unit/            # 8 test files (529 tests)
 │   ├── helpers/         # Mock data
 │   └── README.md
 ├── docs/
@@ -169,7 +169,7 @@ User Input → interactions.js
 3. **Update this file** with high-level summary
 4. **Create detailed skill** in `.claude/skills/` if significant feature
 5. **Import in app.js** if initialization needed
-6. **Run tests** - ensure all 519+ tests pass
+6. **Run tests** - ensure all 529+ tests pass
 
 ---
 
@@ -240,6 +240,7 @@ reportsManager.addReport(reportData);
 
 ## Version History (Recent)
 
+- **v3.10.2** (Jul 2026) - Probability model data audit: fixed winecap/shaggymane/oyster structural over-prediction bug, 18 species seasonMultiplier corrections, 22 missing winter values, 11 regional-base ceiling rebalances; 529 tests
 - **v3.10.1** (Jul 2026) - Front-end UX/QC fixes: temp-match bug, duplicate refresh/slider listeners, fetch timeout, touch targets, SVG aspect-ratio; 519 tests
 - **v3.10.0** (May 2026) - Donate section: PayPal (one-time + $1.99/mo subscription) and Venmo in footer
 - **v3.9.1** (Mar 2026) - Security: XSS fix in error toast; SHA-256 password hashing replaces plaintext credentials

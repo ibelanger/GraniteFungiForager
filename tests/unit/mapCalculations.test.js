@@ -13,6 +13,7 @@ import {
   countyRegions,
   ABUNDANCE_CEILINGS
 } from '../../src/modules/mapCalculations.js';
+import { speciesData } from '../../src/modules/species.js';
 import { mockWeatherData, mockCountyRegions } from '../helpers/mockData.js';
 
 describe('Map Calculations Module', () => {
@@ -650,7 +651,7 @@ describe('Map Calculations Module', () => {
         { key: 'boletusSubcaerulescens', weather: { rainfall: 2.5, soilTemp: 62, airTemp: 62, season: 'fall',   county: 'grafton'   }, region: 'White Mountains' },
         { key: 'boletusVariipes',        weather: { rainfall: 2.5, soilTemp: 68, airTemp: 68, season: 'summer', county: 'merrimack' }, region: 'Merrimack Valley' },
         { key: 'boletusEdulis',          weather: { rainfall: 2.5, soilTemp: 62, airTemp: 62, season: 'fall',   county: 'grafton'   }, region: 'White Mountains' },
-        { key: 'boletusAtkinsonii',      weather: { rainfall: 2.5, soilTemp: 68, airTemp: 68, season: 'fall',   county: 'merrimack' }, region: 'Merrimack Valley' },
+        { key: 'boletusAtkinsonii',      weather: { rainfall: 2.5, soilTemp: 68, airTemp: 68, season: 'summer', county: 'merrimack' }, region: 'Merrimack Valley' },
         { key: 'boletus_separans',       weather: { rainfall: 2.5, soilTemp: 68, airTemp: 68, season: 'fall',   county: 'grafton'   }, region: 'White Mountains' },
         { key: 'boletusNobilis',         weather: { rainfall: 2.5, soilTemp: 65, airTemp: 65, season: 'fall',   county: 'merrimack' }, region: 'Merrimack Valley' },
         { key: 'boletusChippewaensis',   weather: { rainfall: 2.5, soilTemp: 62, airTemp: 62, season: 'fall',   county: 'grafton'   }, region: 'White Mountains' },
@@ -660,7 +661,7 @@ describe('Map Calculations Module', () => {
         { key: 'blewit',                 weather: { rainfall: 2.0, soilTemp: 48, airTemp: 48, season: 'fall',   county: 'merrimack' }, region: 'Merrimack Valley' },
         { key: 'oyster',                 weather: { rainfall: 2.0, soilTemp: 45, airTemp: 45, season: 'winter', county: 'merrimack' }, region: 'Merrimack Valley' },
         { key: 'matsutake',              weather: { rainfall: 1.5, soilTemp: 60, airTemp: 60, season: 'fall',   county: 'grafton'   }, region: 'White Mountains' },
-        { key: 'winecap',                weather: { rainfall: 2.0, soilTemp: 65, airTemp: 65, season: 'summer', county: 'merrimack' }, region: 'Merrimack Valley' },
+        { key: 'winecap',                weather: { rainfall: 2.0, soilTemp: 65, airTemp: 65, season: 'fall',   county: 'strafford'  }, region: 'Seacoast' },
         { key: 'shaggymane',             weather: { rainfall: 2.0, soilTemp: 65, airTemp: 65, season: 'fall',   county: 'merrimack' }, region: 'Merrimack Valley' },
         { key: 'corrugatedmilky',        weather: { rainfall: 2.0, soilTemp: 68, airTemp: 68, season: 'summer', county: 'merrimack' }, region: 'Merrimack Valley' },
         { key: 'orangemilky',            weather: { rainfall: 2.0, soilTemp: 68, airTemp: 68, season: 'summer', county: 'merrimack' }, region: 'Merrimack Valley' },
@@ -671,6 +672,53 @@ describe('Map Calculations Module', () => {
         const prob = calculateProbability(key, weather, region);
         expect(prob, `${key} should reach >= 0.65 (got ${prob.toFixed(3)})`).toBeGreaterThanOrEqual(0.65);
       });
+    });
+
+    test('no species regional base should exceed its own fruitingStyle ceiling', () => {
+      Object.entries(speciesData).forEach(([key, species]) => {
+        const ceiling = ABUNDANCE_CEILINGS[species.fruitingStyle];
+        Object.entries(species.regions).forEach(([region, base]) => {
+          expect(base, `${key} in ${region} (${base}) should not exceed its ${species.fruitingStyle} ceiling (${ceiling})`)
+            .toBeLessThanOrEqual(ceiling);
+        });
+      });
+    });
+  });
+
+  describe('seasonMultiplier data completeness', () => {
+    test('every species should define an explicit winter value', () => {
+      Object.entries(speciesData).forEach(([key, species]) => {
+        expect(species.seasonMultiplier, `${key} should have a seasonMultiplier`).toBeDefined();
+        expect(species.seasonMultiplier.winter, `${key} should have an explicit winter value`).toBeDefined();
+      });
+    });
+  });
+
+  describe('winecap/shaggymane/oyster structural fix (#62)', () => {
+    test('winecap should not dominate a dry mid-summer stretch', () => {
+      const dryWeather = { rainfall: 1.2, soilTemp: 72, airTemp: 78, season: 'summer', county: 'strafford' };
+      const prob = calculateProbability('winecap', dryWeather, 'Seacoast');
+      expect(prob).toBeLessThan(0.5);
+    });
+
+    test('winecap should spike under real spring/fall trigger conditions', () => {
+      const triggerWeather = { rainfall: 2.0, soilTemp: 65, airTemp: 65, season: 'fall', county: 'strafford' };
+      const prob = calculateProbability('winecap', triggerWeather, 'Seacoast');
+      expect(prob).toBeGreaterThanOrEqual(0.65);
+    });
+
+    test('shaggymane should not dominate a dry mid-summer stretch', () => {
+      const dryWeather = { rainfall: 1.2, soilTemp: 72, airTemp: 78, season: 'summer', county: 'merrimack' };
+      const prob = calculateProbability('shaggymane', dryWeather, 'Merrimack Valley');
+      expect(prob).toBeLessThan(0.5);
+    });
+
+    test('oyster should score lower without a real rain-trigger event', () => {
+      const dryWeather = { rainfall: 0.3, soilTemp: 55, airTemp: 55, season: 'fall', county: 'merrimack' };
+      const wetWeather = { rainfall: 1.5, soilTemp: 55, airTemp: 55, season: 'fall', county: 'merrimack' };
+      const dryProb = calculateProbability('oyster', dryWeather, 'Merrimack Valley');
+      const wetProb = calculateProbability('oyster', wetWeather, 'Merrimack Valley');
+      expect(wetProb).toBeGreaterThan(dryProb);
     });
   });
 });

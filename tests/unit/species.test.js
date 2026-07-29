@@ -200,6 +200,33 @@ describe('Species Module', () => {
       expect(speciesData.oyster.seasonMultiplier).toHaveProperty('winter');
       expect(speciesData.oyster.seasonMultiplier.winter).toBe(1.0);
     });
+
+    test('winecap should favor its bimodal spring/fall peaks, not summer', () => {
+      // Own phenologyNH.notes: "spring flush...then summer pause during heat,
+      // then fall flush...bimodal fruiting" — summer must not outscore spring/fall
+      const winecap = speciesData.winecap.seasonMultiplier;
+      expect(winecap.spring).toBeGreaterThan(winecap.summer);
+      expect(winecap.fall).toBeGreaterThan(winecap.summer);
+    });
+
+    test('jellyear should favor its bimodal spring/fall peaks over summer', () => {
+      // Own phenologyNH.notes: "Bimodal peak: spring (cool, wet) and fall (cool, wet)"
+      // — summer is not described as a peak season at all
+      const jellyear = speciesData.jellyear.seasonMultiplier;
+      expect(jellyear.spring).toBeGreaterThan(jellyear.summer);
+      expect(jellyear.fall).toBeGreaterThan(jellyear.summer);
+    });
+
+    test('boletusAtkinsonii should favor summer (one of the few summer-fruiting king boletes)', () => {
+      const species = speciesData.boletusAtkinsonii.seasonMultiplier;
+      expect(species.summer).toBeGreaterThan(species.fall);
+    });
+
+    test('every species seasonMultiplier should include an explicit winter value', () => {
+      Object.entries(speciesData).forEach(([key, species]) => {
+        expect(species.seasonMultiplier.winter, `${key} should have an explicit winter value`).toBeDefined();
+      });
+    });
   });
 
   describe('Regional Probability Validation', () => {
@@ -239,13 +266,17 @@ describe('Species Module', () => {
 
     test('boletusEdulis should favor White Mountains (conifer habitat)', () => {
       const boletus = speciesData.boletusEdulis.regions;
-      expect(boletus['White Mountains']).toBeGreaterThanOrEqual(0.9);
+      // Regional base capped to leave headroom under the 'scattered' abundance
+      // ceiling (0.85) rather than exceeding it before any multiplier applies
+      expect(boletus['White Mountains']).toBeGreaterThanOrEqual(0.75);
       expect(boletus['Seacoast']).toBeLessThan(boletus['White Mountains']);
     });
 
     test('maitake should favor Monadnock Region (oak habitat)', () => {
       const maitake = speciesData.maitake.regions;
-      expect(maitake['Monadnock Region']).toBeGreaterThanOrEqual(0.8);
+      // Regional base capped to leave headroom under the 'sparse' abundance
+      // ceiling (0.70) rather than exceeding it before any multiplier applies
+      expect(maitake['Monadnock Region']).toBeGreaterThanOrEqual(0.6);
     });
   });
 
@@ -327,7 +358,9 @@ describe('Species Module', () => {
     test('boletusSubcaerulescens should prefer conifer habitat', () => {
       const species = speciesData.boletusSubcaerulescens;
       expect(species.hostTrees).toContain('pine');
-      expect(species.regions['Great North Woods']).toBeGreaterThanOrEqual(0.8);
+      // Regional base capped to leave headroom under the 'scattered' abundance
+      // ceiling (0.85) rather than exceeding it before any multiplier applies
+      expect(species.regions['Great North Woods']).toBeGreaterThanOrEqual(0.7);
     });
 
     test('boletusVariipes should prefer hardwood habitat', () => {

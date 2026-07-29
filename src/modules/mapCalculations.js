@@ -336,11 +336,48 @@ function applySpeciesAdjustments(speciesKey, baseProbability, weather, season) {
             }
             break;
 
+        case 'beefsteak':
+            // Warm-season wound parasite — bonus when its own documented trigger
+            // (sustained summer/fall warmth + soaking rain) is actually met
+            if ((season === 'summer' || season === 'fall') &&
+                weather.soilTemp >= 65 && weather.soilTemp <= 80 && weather.rainfall > 1.5) {
+                adjustedProbability *= 1.15;
+            }
+            break;
+
         case 'greenrussula':
             // Summer fruiter in hot moist hardwoods
             if (season === 'summer' && weather.soilTemp >= 65 && weather.soilTemp <= 75 &&
                 weather.rainfall > 0.8) {
                 adjustedProbability *= 1.2;
+            }
+            break;
+
+        case 'winecap':
+            // Bimodal spring/fall fruiter — bonus only when substrate is actually
+            // passing through its optimal window with a real soaking rain, so it
+            // doesn't stay flatly high through the summer pause
+            if ((season === 'spring' || season === 'fall') &&
+                weather.soilTemp >= 60 && weather.soilTemp <= 75 && weather.rainfall > 1.5) {
+                adjustedProbability *= 1.3;
+            }
+            break;
+
+        case 'shaggymane':
+            // Bimodal spring/fall fruiter — fruits within 24-48h of a real rain event,
+            // needs less accumulated rain than winecap
+            if ((season === 'spring' || season === 'fall') &&
+                weather.soilTemp >= 50 && weather.soilTemp <= 68 && weather.rainfall > 1.0) {
+                adjustedProbability *= 1.3;
+            }
+            break;
+
+        case 'oyster':
+            // Wood-decay saprotroph — needs a genuine rain event to rehydrate
+            // colonized substrate; season timing is already reflected in
+            // seasonMultiplier (winter/fall high via P. ostreatus, summer low)
+            if (weather.rainfall > 1.0 && weather.soilTemp >= 40 && weather.soilTemp <= 75) {
+                adjustedProbability *= 1.25;
             }
             break;
     }
