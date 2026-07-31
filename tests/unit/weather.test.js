@@ -466,6 +466,24 @@ describe('Weather Module', () => {
       expect(text).toContain(`${counties.length - 2}/${counties.length}`);
     });
 
+    test('shows partial status when a failed county falls back to cached data (not swallowed as "✓ Live")', () => {
+      // Reproduces the bug where the cache-fallback path set error: null on a
+      // stale reading, which made getFetchSummary() count it as a live
+      // success even though the real-time fetch for that county failed.
+      const counties = Object.keys(countySamplePoints);
+      counties.forEach((county, i) => {
+        countyWeatherData[county] = i < 2
+          ? { rainfall: 1, soilTemp: 60, airTemp: 65, lastUpdated: new Date(), cached: true, error: null }
+          : { rainfall: 1, soilTemp: 60, airTemp: 65, lastUpdated: new Date() };
+      });
+
+      updateWeatherDisplay();
+
+      const text = document.getElementById('status-text').textContent;
+      expect(text).not.toMatch(/^✓ Live/);
+      expect(text).toContain(`${counties.length - 2}/${counties.length}`);
+    });
+
     test('unchecking Live Data immediately updates the status text (no desync)', () => {
       Object.keys(countySamplePoints).forEach(county => {
         countyWeatherData[county] = { rainfall: 1, soilTemp: 60, airTemp: 65, lastUpdated: new Date() };

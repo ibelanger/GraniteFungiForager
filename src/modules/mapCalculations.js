@@ -615,14 +615,9 @@ function generateRecommendations(county, species, probability, weather) {
  * Initialize map calculations module
  */
 export function initMapCalculations() {
-    // Set up species selection change handler
-    const speciesSelect = document.getElementById('species-select');
-    if (speciesSelect) {
-        speciesSelect.addEventListener('change', (e) => {
-            updateMap(e.target.value);
-        });
-    }
-    
+    // Species-select change handling lives in interactions.js's
+    // handleSpeciesChange() (which also calls updateMap()) — not duplicated here.
+
     // Set up season control change handler.
     // Note: rainfall/soil-temp/air-temp sliders already trigger updateMap()
     // via setupManualControls() in interactions.js — attaching listeners here

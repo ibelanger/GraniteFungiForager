@@ -461,7 +461,7 @@ function capitalizeCounty(county) {
 function getFetchSummary() {
     const total = Object.keys(countySamplePoints).length;
     const attempted = Object.keys(countyWeatherData).length;
-    const successful = Object.values(countyWeatherData).filter(d => d && !d.error).length;
+    const successful = Object.values(countyWeatherData).filter(d => d && !d.error && !d.cached).length;
     return { total, successful, complete: attempted >= total };
 }
 
@@ -690,28 +690,36 @@ export function getDetailedWeatherInfo(county) {
 /**
  * Initialize weather module
  */
-export function initWeather() {
+export function initWeather(onWeatherUpdate) {
     const autoWeatherCheckbox = document.getElementById('auto-weather');
     const refreshButton = document.getElementById('refresh-weather');
-    
+
+    const onUpdate = () => {
+        updateWeatherDisplay();
+        onWeatherUpdate?.();
+    };
+
     // Set up event listeners
     if (autoWeatherCheckbox) {
         autoWeatherCheckbox.addEventListener('change', toggleWeatherMode);
     }
-    
+
     if (refreshButton) {
         refreshButton.addEventListener('click', () => {
             console.log('🔄 Manual weather refresh triggered');
-            fetchWeatherData(null, updateWeatherDisplay);
+            fetchWeatherData(null, onUpdate);
         });
     }
-    
+
     // Initialize display
     toggleWeatherMode();
-    
-    // Initial weather fetch
+
+    // Initial weather fetch. Deliberately not awaited — interactions (species
+    // select, sliders, county clicks) must stay usable immediately rather than
+    // freezing until the Open-Meteo round trip completes. Staleness is instead
+    // handled by onUpdate re-running updateMap() once real data lands.
     console.log('🌤️ Initializing weather module with Open-Meteo API');
-    fetchWeatherData(null, updateWeatherDisplay);
+    fetchWeatherData(null, onUpdate);
 
     // Periodic auto-refresh is handled by app.js's setupAutoRefresh(), which
     // gates on this same auto-weather checkbox — kept in one place to avoid

@@ -1,4 +1,4 @@
-# 🍄 GraniteFungiForager v3.11.0
+# 🍄 GraniteFungiForager v3.11.1
 
 
 [![Tests](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml/badge.svg)](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml)
@@ -8,6 +8,15 @@
 
 ## 🌐 **LIVE APPLICATION**
 **Try it now:** https://ibelanger.github.io/GraniteFungiForager/
+
+## 🆕 **What's New in v3.11.1** (July 2026)
+
+### 🛠️ **Weather Status & Map Accuracy Fixes**
+Two correctness bugs found post-v3.11.0:
+- The map's hover tooltip could show a stale, inaccurate probability that didn't match the same species/county's number in the detail panel below it — the map's color/tooltip data wasn't being refreshed when live weather finished loading or auto-refreshed, only on direct interaction (species change, slider, button click). It now stays in sync automatically.
+- A county whose live weather fetch failed and silently fell back to cached data could still be counted toward "✓ Live" status, hiding the fact that its numbers weren't current.
+
+*Previous release notes in [CHANGELOG.md](./CHANGELOG.md)*
 
 ## 🆕 **What's New in v3.11.0** (July 2026)
 

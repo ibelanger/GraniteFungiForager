@@ -1,7 +1,7 @@
 // app.js - Main application controller and initialization
 
 import { initWeather } from './src/modules/weather.js';
-import { initMapCalculations } from './src/modules/mapCalculations.js';
+import { initMapCalculations, updateMap } from './src/modules/mapCalculations.js';
 import { initInteractions, initEnhancedMapInteractions } from './src/modules/interactions.js';
 
 // ML/Validation Infrastructure - Used by interactions.js for analytics and validation features
@@ -21,7 +21,7 @@ import { coverageAuditor } from './src/modules/speciesCoverageAudit.js'; // esli
  * Application configuration
  */
 const appConfig = {
-    version: '3.11.0', // keep in sync with package.json and the index.html footer
+    version: '3.11.1', // keep in sync with package.json and the index.html footer
     title: 'GraniteFungiForager - NH Tier 1 Mushroom Map',
     author: 'GraniteFungiForager',
     updateInterval: 300000, // 5 minutes for auto-refresh
@@ -74,7 +74,7 @@ class MushroomApp {
      */
     async initModules() {
         // Initialize weather module
-        await initWeather();
+        await initWeather(updateMap);
         console.log('Weather module initialized');
         
         // Initialize map calculations
@@ -269,7 +269,10 @@ class MushroomApp {
             const weatherModule = await import('./src/modules/weather.js');
             await weatherModule.fetchWeatherData(
                 () => console.log('Auto-refresh completed'),
-                weatherModule.updateWeatherDisplay
+                () => {
+                    weatherModule.updateWeatherDisplay();
+                    updateMap();
+                }
             );
             this.lastWeatherUpdate = new Date();
         } catch (error) {

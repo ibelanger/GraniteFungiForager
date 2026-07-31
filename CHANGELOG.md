@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.11.1] - 2026-07-31
+
+### Fixed
+- **Map tooltip out of sync with county detail panel** — the map's hover-tooltip color/probability data (`data-probability`/`data-species` attributes) was only written by `updateMap()`, which ran on initial load, species-select change, a slider move, or the "Update Map" button — but was never re-triggered when live weather data actually finished loading or auto-refreshed. A county's map tooltip could therefore freeze on a stale/default-weather-based probability indefinitely, while the detail panel below it always recalculated fresh from live weather on click, producing two different numbers for the same species/county (e.g. 9.0% on the map vs. 40.6% in the detail panel for the same county/species). `initWeather()` now accepts an `onWeatherUpdate` callback fired after every weather refresh (initial load, manual refresh button, periodic auto-refresh), which re-runs `updateMap()` so it self-corrects instead of staying frozen. Initial weather fetch remains non-blocking so species-select/slider/county-click interactivity doesn't freeze while waiting on the network (closes #84)
+- **"✓ Live" status could mask a cached-fallback county as a live success** — when a county's real-time fetch failed and fell back to the last cached reading, that fallback entry was stamped `error: null`, which made `getFetchSummary()` count it as a successful live fetch. The status line could show "✓ Live" even when one or more counties were silently serving stale cached data instead of current conditions. `getFetchSummary()` now also excludes `cached` entries from the successful count (refs #70)
+
+### Changed
+- Removed a redundant `species-select` `change` listener in `mapCalculations.js` — `interactions.js`'s `handleSpeciesChange()` already calls `updateMap()`, so every species change was recalculating the map twice
+
+### Technical Details
+- Tests: 552/554 passing, 2 skipped (2 new regression tests added, no regressions)
+
+### Files Modified
+- **MODIFIED:** `src/modules/weather.js` — `initWeather()` accepts and wires an `onWeatherUpdate` callback; `getFetchSummary()` excludes `cached` entries
+- **MODIFIED:** `app.js` — passes `updateMap` into `initWeather()`; auto-refresh's `onUpdate` callback also calls `updateMap()`
+- **MODIFIED:** `src/modules/mapCalculations.js` — removed duplicate `species-select` change listener
+- **MODIFIED:** `tests/unit/weather.test.js` — regression test for the cached-fallback status-masking bug
+
 ## [3.11.0] - 2026-07-30
 
 ### Added
