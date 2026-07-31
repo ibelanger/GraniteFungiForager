@@ -7,11 +7,15 @@ import { describe, test, expect, vi, beforeEach } from 'vitest';
 import {
   calculateSoilTemp,
   getCurrentSeason,
-  countyTowns,
+  countySamplePoints,
   currentWeatherData,
-  getWeatherData
+  getWeatherData,
+  median,
+  aggregateCountyWeather,
+  fetchWeatherData,
+  countyWeatherData
 } from '../../src/modules/weather.js';
-import { mockWeatherData, mockOpenMeteoResponse } from '../helpers/mockData.js';
+import { mockWeatherData, mockOpenMeteoResponse, mockOpenMeteoBatchResponse, createMockFetch } from '../helpers/mockData.js';
 
 describe('Weather Module', () => {
 
@@ -168,7 +172,7 @@ describe('Weather Module', () => {
     });
   });
 
-  describe('countyTowns', () => {
+  describe('countySamplePoints', () => {
 
     test('should contain all 10 NH counties', () => {
       const expectedCounties = [
@@ -176,39 +180,163 @@ describe('Weather Module', () => {
         'belknap', 'cheshire', 'hillsborough', 'strafford', 'rockingham'
       ];
 
-      const actualCounties = Object.keys(countyTowns);
+      const actualCounties = Object.keys(countySamplePoints);
       expect(actualCounties).toHaveLength(10);
       expectedCounties.forEach(county => {
         expect(actualCounties).toContain(county);
       });
     });
 
-    test('should have valid coordinates for each county', () => {
-      Object.entries(countyTowns).forEach(([county, data]) => {
-        expect(data).toHaveProperty('name');
-        expect(data).toHaveProperty('lat');
-        expect(data).toHaveProperty('lon');
-
-        // Validate NH latitude range (approximately 42.7 to 45.3)
-        expect(data.lat).toBeGreaterThan(42.5);
-        expect(data.lat).toBeLessThan(45.5);
-
-        // Validate NH longitude range (approximately -72.5 to -70.6)
-        expect(data.lon).toBeGreaterThan(-73);
-        expect(data.lon).toBeLessThan(-70);
+    test('should sample 3-5 points per county', () => {
+      Object.entries(countySamplePoints).forEach(([county, points]) => {
+        expect(Array.isArray(points), `${county} should be an array of points`).toBe(true);
+        expect(points.length, `${county} should have 3-5 sample points`).toBeGreaterThanOrEqual(3);
+        expect(points.length, `${county} should have 3-5 sample points`).toBeLessThanOrEqual(5);
       });
     });
 
-    test('should have unique town names for each county', () => {
-      const townNames = Object.values(countyTowns).map(d => d.name);
-      const uniqueNames = new Set(townNames);
-      expect(uniqueNames.size).toBe(townNames.length);
+    test('should have valid coordinates for every sample point', () => {
+      Object.entries(countySamplePoints).forEach(([county, points]) => {
+        points.forEach(point => {
+          expect(point).toHaveProperty('name');
+          expect(point).toHaveProperty('lat');
+          expect(point).toHaveProperty('lon');
+
+          // Validate NH latitude range (approximately 42.7 to 45.3)
+          expect(point.lat).toBeGreaterThan(42.5);
+          expect(point.lat).toBeLessThan(45.5);
+
+          // Validate NH longitude range (approximately -72.5 to -70.6)
+          expect(point.lon).toBeGreaterThan(-73);
+          expect(point.lon).toBeLessThan(-70);
+        });
+      });
     });
 
-    test('should have specific known county seats', () => {
-      expect(countyTowns.merrimack.name).toBe('Concord');
-      expect(countyTowns.hillsborough.name).toBe('Manchester');
-      expect(countyTowns.cheshire.name).toBe('Keene');
+    test('should have unique point names within each county', () => {
+      Object.entries(countySamplePoints).forEach(([county, points]) => {
+        const names = points.map(p => p.name);
+        const uniqueNames = new Set(names);
+        expect(uniqueNames.size, `${county} should not have duplicate point names`).toBe(names.length);
+      });
+    });
+
+    test('should have specific known anchor points', () => {
+      expect(countySamplePoints.merrimack[0].name).toBe('Concord');
+      expect(countySamplePoints.cheshire[0].name).toBe('Keene');
+      // Hillsborough's old anchor (42.9956,-71.4548) undercounted a real
+      // storm 4x vs the KMHT gauge — replaced with the corrected point
+      expect(countySamplePoints.hillsborough[0].lat).toBeCloseTo(42.9326, 3);
+      expect(countySamplePoints.hillsborough[0].lon).toBeCloseTo(-71.4358, 3);
+    });
+  });
+
+  describe('median', () => {
+
+    test('should return the middle value for an odd-length array', () => {
+      expect(median([1, 3, 2])).toBe(2);
+    });
+
+    test('should average the two middle values for an even-length array', () => {
+      expect(median([1, 2, 3, 4])).toBe(2.5);
+    });
+
+    test('should handle a single-element array', () => {
+      expect(median([5])).toBe(5);
+    });
+
+    test('should not depend on input order', () => {
+      expect(median([5, 1, 3])).toBe(median([1, 3, 5]));
+    });
+
+    test('should not mutate the input array', () => {
+      const input = [3, 1, 2];
+      median(input);
+      expect(input).toEqual([3, 1, 2]);
+    });
+
+    test('should throw on an empty array', () => {
+      expect(() => median([])).toThrow();
+    });
+  });
+
+  describe('aggregateCountyWeather', () => {
+    const points = [{ name: 'A' }, { name: 'B' }, { name: 'C' }];
+    const makePoint = (rainfall, airTemp, soilTemp) => ({
+      rainfall, airTemp, soilTemp, humidity: 70, currentPrecipitation: 0, soilMoisture: 0.3
+    });
+
+    test('should compute median and range across valid sample points', () => {
+      const result = aggregateCountyWeather(
+        [makePoint(0.2, 60, 55), makePoint(0.7, 65, 60), makePoint(1.4, 70, 65)],
+        points,
+        'fall'
+      );
+
+      expect(result.rainfall).toBe(0.7); // median of 0.2, 0.7, 1.4
+      expect(result.airTemp).toBe(65);
+      expect(result.soilTemp).toBe(60);
+      expect(result.rainfallRange).toEqual([0.2, 1.4]);
+      expect(result.soilTempRange).toEqual([55, 65]);
+      expect(result.airTempRange).toEqual([60, 70]);
+      expect(result.sampleCount).toBe(3);
+      expect(result.season).toBe('fall');
+      expect(result.town).toBe('A'); // anchor point's name
+    });
+
+    test('should aggregate from remaining points when one sample point is malformed', () => {
+      const result = aggregateCountyWeather(
+        [makePoint(0.5, 60, 55), null, makePoint(1.0, 64, 59)],
+        points
+      );
+      expect(result.sampleCount).toBe(2);
+      expect(result.rainfall).toBe(0.75); // median of 0.5, 1.0
+    });
+
+    test('should throw when every sample point is malformed', () => {
+      expect(() => aggregateCountyWeather([null, null, null], points)).toThrow();
+    });
+  });
+
+  describe('fetchWeatherData', () => {
+    beforeEach(() => {
+      // Clear any state from previous tests
+      Object.keys(countyWeatherData).forEach(k => delete countyWeatherData[k]);
+    });
+
+    test('should aggregate a successful batched response into rainfallRange/sampleCount', async () => {
+      global.fetch = createMockFetch(mockOpenMeteoBatchResponse);
+
+      await fetchWeatherData();
+
+      const hillsborough = countyWeatherData.hillsborough;
+      expect(hillsborough.error).toBeUndefined();
+      expect(hillsborough.rainfallRange).toBeDefined();
+      expect(hillsborough.sampleCount).toBe(mockOpenMeteoBatchResponse.length);
+    });
+
+    test('should set the standard error shape when the whole batch request fails', async () => {
+      global.fetch = createMockFetch({ error: true, reason: 'bad request' }, { ok: false, status: 400, statusText: 'Bad Request' });
+
+      await fetchWeatherData();
+
+      const hillsborough = countyWeatherData.hillsborough;
+      expect(hillsborough.rainfall).toBeNull();
+      expect(hillsborough.soilTemp).toBeNull();
+      expect(hillsborough.airTemp).toBeNull();
+      expect(hillsborough.hasData).toBe(false);
+      expect(hillsborough.error).toBeTruthy();
+    });
+
+    test('should still aggregate when one array entry is malformed', async () => {
+      const partiallyBadResponse = [mockOpenMeteoBatchResponse[0], {}, mockOpenMeteoBatchResponse[2]];
+      global.fetch = createMockFetch(partiallyBadResponse);
+
+      await fetchWeatherData();
+
+      const hillsborough = countyWeatherData.hillsborough;
+      expect(hillsborough.error).toBeUndefined();
+      expect(hillsborough.sampleCount).toBe(2);
     });
   });
 

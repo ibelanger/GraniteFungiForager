@@ -91,6 +91,37 @@ export const mockOpenMeteoResponse = {
 };
 
 /**
+ * Mock Open-Meteo batched multi-location response (array, one entry per
+ * sample point, matching real API behavior: location_id is absent on the
+ * first entry and present from index 1 onward). Rainfall totals are
+ * deliberately different across points (0.2" / 0.7" / 1.4") for non-trivial
+ * median/range aggregation assertions.
+ */
+export const mockOpenMeteoBatchResponse = [
+  {
+    ...mockOpenMeteoResponse,
+    current: { ...mockOpenMeteoResponse.current, temperature_2m: 64 },
+    daily: { rain_sum: [0.1], showers_sum: [0.05], precipitation_sum: [0.2] }
+  },
+  {
+    ...mockOpenMeteoResponse,
+    latitude: 43.1,
+    longitude: -71.4,
+    location_id: 1,
+    current: { ...mockOpenMeteoResponse.current, temperature_2m: 66 },
+    daily: { rain_sum: [0.4], showers_sum: [0.1], precipitation_sum: [0.7] }
+  },
+  {
+    ...mockOpenMeteoResponse,
+    latitude: 43.3,
+    longitude: -71.6,
+    location_id: 2,
+    current: { ...mockOpenMeteoResponse.current, temperature_2m: 68 },
+    daily: { rain_sum: [0.9], showers_sum: [0.2], precipitation_sum: [1.4] }
+  }
+];
+
+/**
  * Mock species data for testing probability calculations
  * Simplified versions of actual speciesData from species.js
  */

@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.11.0] - 2026-07-30
+
+### Added
+- **Multi-point county weather sampling** — each of the 10 NH counties now samples 3-4 geographically-diverse points instead of one hardcoded town coordinate, fetched via Open-Meteo's batched multi-location API (one request per county, same as before — total request count unchanged). A single coordinate could miss a county's real conditions by miles: Hillsborough's old anchor (Manchester city center) was ~4.4 miles from the nearest real gauge and undercounted a real storm by 4x (0.38" reported vs. 1.46" at the actual airport station) — both because of that distance and because Open-Meteo's gridded model smooths out localized summer convective storms a point gauge would catch. Sample points for counties with existing `publicLands.js` coordinates are anchored to those; sparse counties are supplemented with verified real town coordinates chosen for geographic/elevation spread (closes #66)
+- **Median aggregation + range display** — county-level rainfall/soil-temp/air-temp are now computed via median across sample points (robust to one point sitting on a missed or phantom storm cell) instead of a single reading. The "Current Conditions" display now shows the spread alongside the value, e.g. `0.28" (range 0.21"–0.77")`, so foragers see real local variability instead of false single-number precision
+
+### Technical Details
+- Tests: 540/542 passing (13 new tests: sample-point structure, `median()`, `aggregateCountyWeather()`, `fetchWeatherData()` integration including failure-mode coverage)
+- Verified against the live Open-Meteo API, not just mocks: confirmed batched multi-location requests return a positional JSON array (not a `location_id`-keyed one — `location_id` is absent on the first array entry), confirmed a single malformed coordinate fails the whole batch (not per-point), and confirmed real total request count stays at 10
+- Live spot-check this week showed Hillsborough's 4 sample points ranging 0.21"–0.77" rainfall — a ~3.7x spread within one county in a single week, direct evidence for the single-point sampling problem this fixes
+- Two follow-ups intentionally out of scope, filed as separate issues: exposing per-site weather on individual location cards (#66's own stated follow-up), and a pre-existing bug found during research where `getWeatherData()` never sets a `.county` field, silently no-opping the soil-pH and oak-region probability adjustments in production
+
+### Files Modified
+- **MODIFIED:** `src/modules/weather.js` — `countyTowns` → `countySamplePoints`; new `median()`/`aggregateCountyWeather()`/`parseSinglePointWeather()`; `fetchWeatherData()` rewritten for batched per-county requests; `getWeatherData()` passes through new range fields
+- **MODIFIED:** `src/modules/interactions.js` — "Current Conditions" display shows range alongside each metric
+- **MODIFIED:** `tests/unit/weather.test.js`, `tests/helpers/mockData.js` — new coverage + batched-response mock
+
 ## [3.10.2] - 2026-07-29
 
 ### Fixed

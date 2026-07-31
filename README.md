@@ -1,4 +1,4 @@
-# 🍄 GraniteFungiForager v3.10.2
+# 🍄 GraniteFungiForager v3.11.0
 
 
 [![Tests](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml/badge.svg)](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml)
@@ -8,6 +8,16 @@
 
 ## 🌐 **LIVE APPLICATION**
 **Try it now:** https://ibelanger.github.io/GraniteFungiForager/
+
+## 🆕 **What's New in v3.11.0** (July 2026)
+
+### 🌦️ **Multi-Point Weather Sampling**
+Each county now samples 3-4 geographically-diverse points instead of one town coordinate, aggregated via median with a visible range:
+- Fixes cases where a single sample point missed a real storm by miles — one county's old anchor was ~4.4 miles from the nearest real gauge and undercounted a real rainfall event by 4x
+- "Current Conditions" now shows the spread alongside the value, e.g. `0.28" (range 0.21"–0.77")`, so you can see how uniform (or patchy) conditions really are across the county
+- Total weather API requests unchanged — still one batched request per county
+
+*Previous release notes in [CHANGELOG.md](./CHANGELOG.md)*
 
 ## 🆕 **What's New in v3.10.2** (July 2026)
 

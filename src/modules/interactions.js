@@ -241,6 +241,27 @@ export function displaySpeciesInfo(speciesKey) {
 }
 
 /**
+ * Format a weather metric with its sample-point range, e.g. '0.6" (range 0.2"–1.4")'.
+ * Falls back to the plain value when no range is present (manual-mode weather
+ * has none) or when sample points agree closely enough that showing a range
+ * would just be redundant noise.
+ * @param {number|null} value - median value across sample points
+ * @param {[number, number]|undefined} range - [min, max] across sample points
+ * @param {string} unit - display unit, e.g. '°F' or '"'
+ * @param {number} decimals - decimal places to show
+ * @returns {string}
+ */
+function formatMetricWithRange(value, range, unit, decimals) {
+    if (value == null) return 'N/A';
+    const formatted = `${value.toFixed(decimals)}${unit}`;
+    if (!Array.isArray(range) || range.length !== 2) return formatted;
+    const [min, max] = range;
+    const noiseThreshold = decimals === 0 ? 1 : 0.05;
+    if (max - min < noiseThreshold) return formatted;
+    return `${formatted} (range ${min.toFixed(decimals)}${unit}–${max.toFixed(decimals)}${unit})`;
+}
+
+/**
  * Display county-specific information on main page
  * @param {string} county - County name
  */
@@ -332,15 +353,15 @@ export function displayCountyInfo(county, countyKey = null) {
                 <div class="conditions-grid">
                     <div class="condition-item">
                         <span class="condition-label">Soil Temperature:</span>
-                        <span class="condition-value">${countyInfo.weather.soilTemp || 'N/A'}°F</span>
+                        <span class="condition-value">${formatMetricWithRange(countyInfo.weather.soilTemp, countyInfo.weather.soilTempRange, '°F', 0)}</span>
                     </div>
                     <div class="condition-item">
                         <span class="condition-label">Rainfall (7 days):</span>
-                        <span class="condition-value">${countyInfo.weather.rainfall?.toFixed(2) || 'N/A'}"</span>
+                        <span class="condition-value">${formatMetricWithRange(countyInfo.weather.rainfall, countyInfo.weather.rainfallRange, '"', 2)}</span>
                     </div>
                     <div class="condition-item">
                         <span class="condition-label">Air Temperature:</span>
-                        <span class="condition-value">${countyInfo.weather.airTemp || 'N/A'}°F</span>
+                        <span class="condition-value">${formatMetricWithRange(countyInfo.weather.airTemp, countyInfo.weather.airTempRange, '°F', 0)}</span>
                     </div>
                 </div>
             </div>
