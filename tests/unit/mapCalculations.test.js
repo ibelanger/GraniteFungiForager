@@ -14,6 +14,7 @@ import {
   ABUNDANCE_CEILINGS
 } from '../../src/modules/mapCalculations.js';
 import { speciesData } from '../../src/modules/species.js';
+import { getWeatherData, countyWeatherData } from '../../src/modules/weather.js';
 import { mockWeatherData, mockCountyRegions } from '../helpers/mockData.js';
 
 describe('Map Calculations Module', () => {
@@ -606,6 +607,46 @@ describe('Map Calculations Module', () => {
         expect(calculatePHMultiplier(speciesKey, 'coos')).toBe(1.0);
         expect(calculatePHMultiplier(speciesKey, 'merrimack')).toBe(1.0);
       });
+    });
+  });
+
+  describe('getWeatherData().county wiring (#68)', () => {
+    beforeEach(() => {
+      document.body.innerHTML = '';
+      Object.keys(countyWeatherData).forEach(k => delete countyWeatherData[k]);
+    });
+
+    test('manual mode stamps the county being evaluated onto the returned weather object', () => {
+      // No #auto-weather checkbox in the DOM → getWeatherData() takes the
+      // manual-override branch, which previously omitted `county` entirely.
+      const weather = getWeatherData('coos');
+      expect(weather.county).toBe('coos');
+    });
+
+    test('live mode stamps the county being evaluated onto the returned weather object', () => {
+      document.body.innerHTML = '<input type="checkbox" id="auto-weather" checked>';
+      countyWeatherData.merrimack = { rainfall: 2.0, soilTemp: 60, airTemp: 65, lastUpdated: new Date() };
+
+      const weather = getWeatherData('merrimack');
+      expect(weather.county).toBe('merrimack');
+    });
+
+    test('pH multiplier now takes effect end-to-end through the real getWeatherData() path, not just a hand-built weather object', () => {
+      // morels: coos pH 4.8 is out of tolerance, cheshire pH 6.1 is in range —
+      // previously both would have gone through calculateProbability() with
+      // weather.county === undefined and produced identical pH multipliers.
+      const coosProb = calculateProbability('morels', getWeatherData('coos'), 'Great North Woods');
+      const cheshireProb = calculateProbability('morels', getWeatherData('cheshire'), 'Monadnock Region');
+      expect(cheshireProb).toBeGreaterThan(coosProb);
+    });
+
+    test('oak-region bonus now takes effect end-to-end for oak-mandatory species', () => {
+      // maitake (oakMandatory) should score higher in Merrimack Valley (oak-rich)
+      // than in the Great North Woods (conifer-dominant) — previously both
+      // always took the 0.8x "not oak-rich" branch regardless of true county.
+      const merrimackProb = calculateProbability('maitake', getWeatherData('merrimack'), 'Merrimack Valley');
+      const coosProb = calculateProbability('maitake', getWeatherData('coos'), 'Great North Woods');
+      expect(merrimackProb).toBeGreaterThan(coosProb);
     });
   });
 

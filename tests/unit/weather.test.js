@@ -13,7 +13,9 @@ import {
   median,
   aggregateCountyWeather,
   fetchWeatherData,
-  countyWeatherData
+  countyWeatherData,
+  updateWeatherDisplay,
+  toggleWeatherMode
 } from '../../src/modules/weather.js';
 import { mockWeatherData, mockOpenMeteoResponse, mockOpenMeteoBatchResponse, createMockFetch } from '../helpers/mockData.js';
 
@@ -293,6 +295,39 @@ describe('Weather Module', () => {
       expect(result.rainfall).toBe(0.75); // median of 0.5, 1.0
     });
 
+    test('should stamp the county identity onto the aggregated result (#68)', () => {
+      const result = aggregateCountyWeather(
+        [makePoint(0.2, 60, 55), makePoint(0.7, 65, 60)],
+        [{ name: 'A' }, { name: 'B' }],
+        'fall',
+        'rockingham'
+      );
+      expect(result.county).toBe('rockingham');
+    });
+
+    test('should default county to null when not provided', () => {
+      const result = aggregateCountyWeather([makePoint(0.2, 60, 55)], [{ name: 'A' }]);
+      expect(result.county).toBeNull();
+    });
+
+    test('should retain per-site readings positionally paired with points, skipping malformed entries (#67)', () => {
+      const sitePoints = [
+        { name: 'Site A', lat: 43.1, lon: -71.1 },
+        { name: 'Site B', lat: 43.2, lon: -71.2 },
+        { name: 'Site C', lat: 43.3, lon: -71.3 }
+      ];
+      const result = aggregateCountyWeather(
+        [makePoint(0.2, 60, 55), null, makePoint(1.4, 70, 65)],
+        sitePoints
+      );
+
+      expect(result.sites).toHaveLength(2);
+      expect(result.sites[0]).toEqual({ name: 'Site A', lat: 43.1, lon: -71.1, rainfall: 0.2, airTemp: 60, soilTemp: 55 });
+      // Site B (index 1, the null/malformed entry) must be skipped, not misaligned —
+      // Site C's reading should stay attached to "Site C", not shift into Site B's slot.
+      expect(result.sites[1]).toEqual({ name: 'Site C', lat: 43.3, lon: -71.3, rainfall: 1.4, airTemp: 70, soilTemp: 65 });
+    });
+
     test('should throw when every sample point is malformed', () => {
       expect(() => aggregateCountyWeather([null, null, null], points)).toThrow();
     });
@@ -383,6 +418,83 @@ describe('Weather Module', () => {
       expect(result.soilTemp).toBe(65);
       expect(result.airTemp).toBe(70);
       expect(result.season).toBe('summer');
+    });
+  });
+
+  describe('updateWeatherDisplay / toggleWeatherMode', () => {
+    beforeEach(() => {
+      Object.keys(countyWeatherData).forEach(k => delete countyWeatherData[k]);
+      currentWeatherData.rainfall = 2.0;
+      currentWeatherData.soilTemp = 65;
+      currentWeatherData.airTemp = 70;
+      currentWeatherData.lastUpdated = new Date();
+      currentWeatherData.error = null;
+
+      document.body.innerHTML = `
+        <div id="weather-status"><span id="status-text"></span></div>
+        <input type="checkbox" id="auto-weather" checked>
+        <div id="manual-controls"></div>
+        <div id="weather-display"></div>
+        <input type="range" id="rainfall" min="0" max="6" step="0.1" value="2.0">
+        <input type="range" id="soil-temp" min="35" max="85" step="1" value="65">
+        <input type="range" id="air-temp" min="35" max="95" step="1" value="70">
+      `;
+    });
+
+    test('shows "✓ Live" when every county fetch succeeded', () => {
+      Object.keys(countySamplePoints).forEach(county => {
+        countyWeatherData[county] = { rainfall: 1, soilTemp: 60, airTemp: 65, lastUpdated: new Date() };
+      });
+
+      updateWeatherDisplay();
+
+      expect(document.getElementById('status-text').textContent).toMatch(/^✓ Live/);
+    });
+
+    test('shows a partial-failure status instead of "✓ Live" when some counties failed', () => {
+      const counties = Object.keys(countySamplePoints);
+      counties.forEach((county, i) => {
+        countyWeatherData[county] = i < 2
+          ? { error: 'Request timed out', hasData: false }
+          : { rainfall: 1, soilTemp: 60, airTemp: 65, lastUpdated: new Date() };
+      });
+
+      updateWeatherDisplay();
+
+      const text = document.getElementById('status-text').textContent;
+      expect(text).not.toMatch(/^✓ Live/);
+      expect(text).toContain(`${counties.length - 2}/${counties.length}`);
+    });
+
+    test('unchecking Live Data immediately updates the status text (no desync)', () => {
+      Object.keys(countySamplePoints).forEach(county => {
+        countyWeatherData[county] = { rainfall: 1, soilTemp: 60, airTemp: 65, lastUpdated: new Date() };
+      });
+      updateWeatherDisplay();
+      expect(document.getElementById('status-text').textContent).toMatch(/^✓ Live/);
+
+      document.getElementById('auto-weather').checked = false;
+      toggleWeatherMode();
+
+      expect(document.getElementById('status-text').textContent).toBe('Manual Override');
+    });
+
+    test('seeds manual sliders from the selected county, not just the general reading', () => {
+      countyWeatherData.rockingham = { rainfall: 1.12, soilTemp: 58, airTemp: 62, lastUpdated: new Date() };
+      // General reading intentionally differs from Rockingham's, so a pass
+      // here proves the seed used the selected county, not the fallback.
+      currentWeatherData.rainfall = 0.5;
+      currentWeatherData.soilTemp = 70;
+      currentWeatherData.airTemp = 75;
+
+      updateWeatherDisplay('rockingham'); // simulate the user having clicked Rockingham
+
+      document.getElementById('auto-weather').checked = false;
+      toggleWeatherMode();
+
+      expect(document.getElementById('rainfall').value).toBe('1.1');
+      expect(document.getElementById('soil-temp').value).toBe('58');
+      expect(document.getElementById('air-temp').value).toBe('62');
     });
   });
 });

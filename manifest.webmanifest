@@ -1,0 +1,18 @@
+{
+  "name": "GraniteFungiForager - NH Tier 1 Mushroom Map",
+  "short_name": "GraniteFungiForager",
+  "description": "Interactive probability maps for foraging New Hampshire's DHHS Tier 1 wild mushroom species.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fdfaf5",
+  "theme_color": "#2d5016",
+  "icons": [
+    {
+      "src": "assets/granite-fungi-forager-logo.png",
+      "sizes": "2816x1536",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

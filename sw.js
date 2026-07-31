@@ -6,24 +6,30 @@ const CACHE_NAME = `${CACHE_VERSION}-static`;
 const DATA_CACHE_NAME = `${CACHE_VERSION}-data`;
 const WEATHER_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
+// Base path this service worker's scope actually lives under (e.g. '/' at the
+// domain root locally, or '/GraniteFungiForager/' on a GitHub Pages project
+// site) — assets are resolved against it so caching works regardless of
+// where the site is deployed.
+const BASE_PATH = new URL('.', self.location).pathname;
+
 // Assets to cache on install
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/app.js',
-  '/src/styles.css',
-  '/src/modules/species.js',
-  '/src/modules/weather.js',
-  '/src/modules/mapCalculations.js',
-  '/src/modules/interactions.js',
-  '/src/modules/authentication.js',
-  '/src/modules/publicLands.js',
-  '/src/modules/foragingReports.js',
-  '/src/modules/iNaturalistIntegration.js',
-  '/src/modules/speciesMapping.js',
-  '/src/modules/observationAnalysis.js',
-  '/src/modules/speciesCoverageAudit.js'
-];
+  '',
+  'index.html',
+  'app.js',
+  'src/styles.css',
+  'src/modules/species.js',
+  'src/modules/weather.js',
+  'src/modules/mapCalculations.js',
+  'src/modules/interactions.js',
+  'src/modules/authentication.js',
+  'src/modules/publicLands.js',
+  'src/modules/foragingReports.js',
+  'src/modules/iNaturalistIntegration.js',
+  'src/modules/speciesMapping.js',
+  'src/modules/observationAnalysis.js',
+  'src/modules/speciesCoverageAudit.js'
+].map(path => BASE_PATH + path);
 
 // IndexedDB configuration for offline foraging reports
 const DB_NAME = 'GraniteFungiForagerDB';
@@ -102,7 +108,7 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Static assets - Cache first with network update
-  if (STATIC_ASSETS.includes(url.pathname) || url.pathname.startsWith('/src/')) {
+  if (STATIC_ASSETS.includes(url.pathname) || url.pathname.startsWith(`${BASE_PATH}src/`)) {
     event.respondWith(cacheFirstStrategy(request, CACHE_NAME));
     return;
   }

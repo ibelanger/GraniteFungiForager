@@ -21,7 +21,7 @@ import { coverageAuditor } from './src/modules/speciesCoverageAudit.js'; // esli
  * Application configuration
  */
 const appConfig = {
-    version: '3.5.2',
+    version: '3.11.0', // keep in sync with package.json and the index.html footer
     title: 'GraniteFungiForager - NH Tier 1 Mushroom Map',
     author: 'GraniteFungiForager',
     updateInterval: 300000, // 5 minutes for auto-refresh
@@ -577,7 +577,7 @@ window.addEventListener('unhandledrejection', (event) => {
  * Service worker registration for offline capability (future enhancement)
  */
 if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
-    navigator.serviceWorker.register('/sw.js').then(() => {
+    navigator.serviceWorker.register('./sw.js', { scope: './' }).then(() => {
         console.log('Service worker registered');
     }).catch((error) => {
         console.log('Service worker registration failed:', error);

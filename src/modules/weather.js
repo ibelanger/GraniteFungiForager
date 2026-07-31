@@ -11,6 +11,14 @@ export let currentWeatherData = {
 
 export const countyWeatherData = {};
 
+// Tracks the last county the user actually looked at (via updateWeatherDisplay),
+// so manual-mode slider seeding and Live-mode redisplay use the right county's
+// data instead of always falling back to the general/Merrimack-anchored reading.
+let selectedCounty = null;
+
+const WEATHER_CACHE_KEY = 'gff-weather-cache-v1';
+const WEATHER_CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
+
 // County-to-sample-points mapping for Open-Meteo API. Each county samples
 // 3-4 geographically-diverse points (rather than one town) since a single
 // coordinate can miss a county's real conditions by miles — e.g. Hillsborough
@@ -187,10 +195,13 @@ function parseSinglePointWeather(pointData) {
  * @param {Array<Object|null>} perPointResults - parseSinglePointWeather() outputs, in sample-point order
  * @param {Array<{name: string}>} points - the county's sample points (for the display label)
  * @param {string} [season] - current season, defaults to getCurrentSeason()
+ * @param {string} [county] - lowercase county key this aggregate belongs to (e.g. 'coos') — stamped
+ *   onto the result so downstream consumers (pH/oak-region probability logic, per-site location
+ *   cards) have reliable county identity without depending on the outer countyWeatherData key (#68)
  * @returns {Object} aggregated county weather object
  * @throws {Error} if every sample point failed to parse
  */
-export function aggregateCountyWeather(perPointResults, points, season = getCurrentSeason()) {
+export function aggregateCountyWeather(perPointResults, points, season = getCurrentSeason(), county = null) {
     const valid = perPointResults.filter(r => r !== null);
     if (valid.length === 0) {
         throw new Error('No valid sample points returned usable data');
@@ -201,7 +212,19 @@ export function aggregateCountyWeather(perPointResults, points, season = getCurr
     const soilTemps = valid.map(r => r.soilTemp);
     const moistures = valid.map(r => r.soilMoisture).filter(v => v != null);
 
+    // Per-site breakdown, positionally paired with `points` (not `valid` —
+    // that's already been filtered and would misalign) — preserved so
+    // individual location cards can show their own site's reading rather
+    // than only the county-wide aggregate (#67).
+    const sites = points
+        .map((point, i) => {
+            const r = perPointResults[i];
+            return r ? { name: point.name, lat: point.lat, lon: point.lon, rainfall: r.rainfall, airTemp: r.airTemp, soilTemp: r.soilTemp } : null;
+        })
+        .filter(Boolean);
+
     return {
+        county,
         rainfall: median(rainfalls),
         airTemp: Math.round(median(airTemps)),
         soilTemp: Math.round(median(soilTemps)),
@@ -216,14 +239,95 @@ export function aggregateCountyWeather(perPointResults, points, season = getCurr
         rainfallRange: [Math.min(...rainfalls), Math.max(...rainfalls)],
         soilTempRange: [Math.min(...soilTemps), Math.max(...soilTemps)],
         airTempRange: [Math.min(...airTemps), Math.max(...airTemps)],
-        sampleCount: valid.length
+        sampleCount: valid.length,
+        sites
     };
+}
+
+/**
+ * Load the last persisted weather snapshot, if any and still fresh.
+ * @returns {{ savedAt: number, countyWeatherData: Object, currentWeatherData: Object }|null}
+ */
+function loadWeatherCache() {
+    try {
+        const raw = localStorage.getItem(WEATHER_CACHE_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!parsed?.savedAt || (Date.now() - parsed.savedAt) > WEATHER_CACHE_TTL_MS) return null;
+        return parsed;
+    } catch {
+        return null; // localStorage unavailable/corrupt — treat as no cache
+    }
+}
+
+/**
+ * Persist the current weather snapshot so a cold load (or a fetch that fails
+ * outright) has something better than blank/default values to show.
+ */
+function saveWeatherCache() {
+    try {
+        localStorage.setItem(WEATHER_CACHE_KEY, JSON.stringify({
+            savedAt: Date.now(),
+            countyWeatherData,
+            currentWeatherData
+        }));
+    } catch {
+        // Storage full/unavailable — non-fatal, just skip persistence
+    }
+}
+
+const RETRYABLE_STATUS = new Set([429, 500, 502, 503, 504]);
+const MAX_FETCH_ATTEMPTS = 3;
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function backoffDelay(attempt) {
+    return 400 * 2 ** (attempt - 1) + Math.random() * 150; // exponential + jitter
+}
+
+/**
+ * Fetch a county's batched Open-Meteo URL, retrying with backoff on 429/5xx
+ * and on transient network/timeout errors. Non-retryable HTTP errors (4xx
+ * other than 429) throw immediately on the first attempt.
+ */
+async function fetchWithRetry(url) {
+    let lastError;
+    for (let attempt = 1; attempt <= MAX_FETCH_ATTEMPTS; attempt++) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s per attempt
+        try {
+            const response = await fetch(url, { signal: controller.signal });
+            if (!response.ok) {
+                if (RETRYABLE_STATUS.has(response.status) && attempt < MAX_FETCH_ATTEMPTS) {
+                    await sleep(backoffDelay(attempt));
+                    continue;
+                }
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response;
+        } catch (error) {
+            lastError = error;
+            const isTransient = error.name === 'AbortError' || error instanceof TypeError;
+            if (isTransient && attempt < MAX_FETCH_ATTEMPTS) {
+                await sleep(backoffDelay(attempt));
+                continue;
+            }
+            throw error;
+        } finally {
+            clearTimeout(timeoutId);
+        }
+    }
+    throw lastError;
 }
 
 /**
  * Fetch weather data for all NH counties using Open-Meteo API, sampling
  * multiple points per county in one batched request and aggregating via
- * median (see aggregateCountyWeather).
+ * median (see aggregateCountyWeather). Retries transient failures with
+ * backoff and falls back to the last cached reading (per county) when a
+ * fetch fails outright — see fetchWithRetry/loadWeatherCache.
  * @param {Function} onComplete - Callback when weather fetch completes
  * @param {Function} onUpdate - Callback for UI updates
  */
@@ -231,7 +335,19 @@ export async function fetchWeatherData(onComplete, onUpdate) {
     const statusText = document.getElementById('status-text');
     const weatherStatus = document.getElementById('weather-status');
 
-    if (statusText) statusText.textContent = 'Loading weather data from Open-Meteo...';
+    const cacheSnapshot = loadWeatherCache();
+    const isFirstLoad = Object.keys(countyWeatherData).length === 0;
+    if (isFirstLoad && cacheSnapshot) {
+        Object.assign(countyWeatherData, cacheSnapshot.countyWeatherData);
+        currentWeatherData = { ...cacheSnapshot.currentWeatherData };
+        if (statusText) {
+            const cacheTime = new Date(cacheSnapshot.savedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            statusText.textContent = `Loading weather data from Open-Meteo... (showing cached data from ${cacheTime})`;
+        }
+        if (onUpdate) onUpdate();
+    } else if (statusText) {
+        statusText.textContent = 'Loading weather data from Open-Meteo...';
+    }
     if (weatherStatus) weatherStatus.setAttribute('aria-busy', 'true');
 
     const counties = Object.keys(countySamplePoints);
@@ -257,19 +373,7 @@ export async function fetchWeatherData(onComplete, onUpdate) {
             `timezone=America/New_York&past_days=7&forecast_days=1`;
 
         try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s per-county timeout
-            let response;
-            try {
-                response = await fetch(url, { signal: controller.signal });
-            } finally {
-                clearTimeout(timeoutId);
-            }
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-
+            const response = await fetchWithRetry(url);
             const data = await response.json();
             const dataArray = Array.isArray(data) ? data : [data]; // defensive normalization
 
@@ -278,7 +382,7 @@ export async function fetchWeatherData(onComplete, onUpdate) {
             // relied on for this mapping.
             const perPointResults = dataArray.map(parseSinglePointWeather);
             const season = getCurrentSeason();
-            countyWeatherData[county] = aggregateCountyWeather(perPointResults, points, season);
+            countyWeatherData[county] = aggregateCountyWeather(perPointResults, points, season, county);
 
             // Update current weather if this is the central county
             if (county === 'merrimack') {
@@ -296,35 +400,45 @@ export async function fetchWeatherData(onComplete, onUpdate) {
             const errorMessage = error.name === 'AbortError' ? 'Request timed out' : error.message;
             console.error(`❌ Weather fetch error for ${county} (${label}):`, errorMessage);
 
-            // Set error indicator instead of misleading fallback data
-            countyWeatherData[county] = {
-                rainfall: null,
-                airTemp: null,
-                soilTemp: null,
-                season: getCurrentSeason(),
-                lastUpdated: new Date(),
-                town: label,
-                error: errorMessage,
-                hasData: false
-            };
+            // Fall back to the last cached reading for this county, if fresh
+            // enough, rather than going straight to a bare error state.
+            const cachedEntry = cacheSnapshot?.countyWeatherData?.[county];
+            if (cachedEntry && !cachedEntry.error) {
+                countyWeatherData[county] = { ...cachedEntry, cached: true, error: null };
+                console.warn(`⚠️ Using cached weather for ${county} (live fetch failed: ${errorMessage})`);
+            } else {
+                // Set error indicator instead of misleading fallback data
+                countyWeatherData[county] = {
+                    rainfall: null,
+                    airTemp: null,
+                    soilTemp: null,
+                    season: getCurrentSeason(),
+                    lastUpdated: new Date(),
+                    town: label,
+                    error: errorMessage,
+                    hasData: false
+                };
+            }
         }
     });
 
     await Promise.all(fetchPromises);
-    
+
     // Update status with results
     const successfulFetches = Object.values(countyWeatherData).filter(data => !data?.error).length;
     const totalCounties = counties.length;
-    
+
     if (statusText) {
         statusText.textContent = `Weather data loaded (${successfulFetches}/${totalCounties} counties successful)`;
     }
     if (weatherStatus) weatherStatus.setAttribute('aria-busy', 'false');
-    
+
+    saveWeatherCache();
+
     // Call callbacks
     if (onUpdate) onUpdate();
     if (onComplete) onComplete();
-    
+
     console.log(`🌤️ Weather fetch complete: ${successfulFetches}/${totalCounties} counties successful`);
 }
 
@@ -336,6 +450,19 @@ export async function fetchWeatherData(onComplete, onUpdate) {
 function capitalizeCounty(county) {
     if (!county) return '';
     return county.charAt(0).toUpperCase() + county.slice(1);
+}
+
+/**
+ * Overall fetch completeness/success across all counties, so the status line
+ * can distinguish "fully live" from "live but some counties failed" instead
+ * of collapsing both into the same "✓ Live" string.
+ * @returns {{ total: number, successful: number, complete: boolean }}
+ */
+function getFetchSummary() {
+    const total = Object.keys(countySamplePoints).length;
+    const attempted = Object.keys(countyWeatherData).length;
+    const successful = Object.values(countyWeatherData).filter(d => d && !d.error).length;
+    return { total, successful, complete: attempted >= total };
 }
 
 /**
@@ -351,6 +478,7 @@ export function updateWeatherDisplay(county = null) {
 
     // Better county data lookup with debugging
     if (county) {
+        selectedCounty = county;
         console.log(`[updateWeatherDisplay] Looking for county: ${county}`);
         console.log(`[updateWeatherDisplay] Available counties:`, Object.keys(countyWeatherData));
 
@@ -372,13 +500,17 @@ export function updateWeatherDisplay(county = null) {
         if (error) {
             source = `⚠️ API Error`;
         } else {
-            source = '✓ Live';
+            const { total, successful, complete } = getFetchSummary();
+            source = (complete && successful < total) ? `⚠️ Partial (${successful}/${total})` : '✓ Live';
             if (lastUpdated) {
                 const date = new Date(lastUpdated);
                 source += ` • ${date.toLocaleTimeString([], {
                     hour: '2-digit',
                     minute: '2-digit'
                 })}`;
+            }
+            if (weather?.cached) {
+                source += ' • Cached';
             }
         }
 
@@ -431,6 +563,10 @@ export function getWeatherData(county = null) {
         
         // Return actual data without fallbacks to avoid misleading information
         return {
+            // The county being evaluated, regardless of which data source
+            // supplied the numbers above — pH/oak-region adjustments (#68)
+            // are properties of the county itself, not of the reading.
+            county: county || null,
             rainfall: weatherData.rainfall ?? null,
             soilTemp: weatherData.soilTemp ?? null,
             airTemp: weatherData.airTemp ?? null,
@@ -453,8 +589,12 @@ export function getWeatherData(county = null) {
         const soilTempSlider = document.getElementById('soil-temp');
         const airTempSlider = document.getElementById('air-temp');
         const seasonSelect = document.getElementById('season');
-        
+
         return {
+            // Manual mode still needs the county being evaluated: pH/oak-region
+            // multipliers apply regardless of whether the reading came from a
+            // live fetch or the manual sliders (#68).
+            county: county || null,
             rainfall: parseFloat(rainfallSlider?.value || 2.0),
             soilTemp: parseInt(soilTempSlider?.value || 65),
             airTemp: parseInt(airTempSlider?.value || 70),
@@ -469,12 +609,17 @@ export function getWeatherData(county = null) {
  * of jumping to fixed defaults.
  */
 function seedManualControlsFromLastWeather() {
-    if (!currentWeatherData.lastUpdated) return; // no live data fetched yet
+    // Prefer the county the user actually selected over the general/Merrimack-
+    // anchored reading, so Live→Manual starts from what they were looking at.
+    const selected = selectedCounty && countyWeatherData[selectedCounty];
+    const source = (selected && !selected.error) ? selected : currentWeatherData;
+
+    if (!source.lastUpdated) return; // no live data fetched yet
 
     const sliders = [
-        { id: 'rainfall', value: currentWeatherData.rainfall, decimals: 1 },
-        { id: 'soil-temp', value: currentWeatherData.soilTemp, decimals: 0 },
-        { id: 'air-temp', value: currentWeatherData.airTemp, decimals: 0 }
+        { id: 'rainfall', value: source.rainfall, decimals: 1 },
+        { id: 'soil-temp', value: source.soilTemp, decimals: 0 },
+        { id: 'air-temp', value: source.airTemp, decimals: 0 }
     ];
 
     sliders.forEach(({ id, value, decimals }) => {
@@ -500,11 +645,12 @@ export function toggleWeatherMode() {
     if (autoWeatherCheckbox?.checked) {
         if (manualControls) manualControls.style.display = 'none';
         if (weatherDisplay) weatherDisplay.style.display = 'block';
-        updateWeatherDisplay();
+        updateWeatherDisplay(selectedCounty);
     } else {
         if (manualControls) manualControls.style.display = 'block';
         if (weatherDisplay) weatherDisplay.style.display = 'none';
         seedManualControlsFromLastWeather();
+        updateWeatherDisplay(selectedCounty);
     }
 }
 
