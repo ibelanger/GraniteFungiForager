@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.12.0] - 2026-08-01
+
+### Added
+- **Per-site weather on location cards** — individual public-land location cards now show their own sample point's weather (rainfall/soil temp/air temp) when the location's GPS matches a county sample point, via new `findSiteWeather()` in `weather.js`, instead of only the county-wide aggregate (closes #67)
+- **Merged ConditionsCard** — the "Data Source" status widget and the county panel's "Current Conditions" block are now one always-populated card (`#conditions-card`), positioned in the left rail on desktop and directly under the map on mobile via CSS Grid areas (`display: contents` + `grid-template-areas`, no duplicated markup). Defaults to a genuine statewide median (new `getStatewideWeather()`) instead of the old Merrimack-aliased `currentWeatherData` fallback, and swaps to county-specific values on click (closes #82)
+- **Actual-vs-required chip pairing** — the species-info card's Soil Temp and Min Rain chips now show the current actual reading alongside the requirement, e.g. `66°F / 55-75°F ✓`, so a probability percentage doesn't have to be taken on faith (part of #82)
+- **Collapsible county-panel sections** — Top 5, Recommendations, General Information, Locations, and Community Data are now native `<details>/<summary>` sections; Top 5 and Recommendations open by default, the rest collapsed, so the panel no longer forces scrolling past everything to reach anything below the fold (closes #83)
+
+### Technical Details
+- Tests: 566/568 passing, 2 skipped (14 new tests added, no regressions)
+- Native `<details>/<summary>` chosen for collapsible sections over a custom button+ARIA implementation — free keyboard support (Enter/Space) and correct focus retention on toggle, verified via headless-browser check
+- Verified in a real browser (desktop 1280px + mobile 375px viewports) via Playwright: ConditionsCard placement, reactivity to county/species/manual-slider changes, and collapsible section default states
+
+### Files Modified
+- **MODIFIED:** src/modules/weather.js (+49/-0) - `findSiteWeather()`, `getStatewideWeather()`
+- **MODIFIED:** src/modules/interactions.js (+127/-50) - ConditionsCard rendering, actual-vs-required chip pairing, collapsible `<details>` sections, per-site weather on location cards
+- **MODIFIED:** app.js (+6/-2) - wire `refreshConditionsUI()` into weather-update callbacks
+- **MODIFIED:** index.html (+25/-23) - restructured controls markup for the merged ConditionsCard
+- **MODIFIED:** src/styles.css (+72/-6) - CSS Grid reorder for responsive ConditionsCard placement, collapsible section styling
+- **MODIFIED:** tests/unit/weather.test.js, tests/unit/interactions.test.js - coverage for all of the above
+
 ## [3.11.1] - 2026-07-31
 
 ### Fixed

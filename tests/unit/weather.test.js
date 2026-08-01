@@ -15,7 +15,9 @@ import {
   fetchWeatherData,
   countyWeatherData,
   updateWeatherDisplay,
-  toggleWeatherMode
+  toggleWeatherMode,
+  findSiteWeather,
+  getStatewideWeather
 } from '../../src/modules/weather.js';
 import { mockWeatherData, mockOpenMeteoResponse, mockOpenMeteoBatchResponse, createMockFetch } from '../helpers/mockData.js';
 
@@ -330,6 +332,64 @@ describe('Weather Module', () => {
 
     test('should throw when every sample point is malformed', () => {
       expect(() => aggregateCountyWeather([null, null, null], points)).toThrow();
+    });
+  });
+
+  describe('findSiteWeather (#67)', () => {
+    const sites = [
+      { name: 'Nash Stream', lat: 44.7089, lon: -71.4828, rainfall: 0.5, airTemp: 58, soilTemp: 52 },
+      { name: 'Gorham', lat: 44.3895, lon: -71.1814, rainfall: 1.1, airTemp: 62, soilTemp: 56 }
+    ];
+
+    test('matches a location GPS string to its sample point', () => {
+      expect(findSiteWeather('44.7089,-71.4828', sites)).toEqual(sites[0]);
+    });
+
+    test('matches within a small floating-point epsilon', () => {
+      expect(findSiteWeather('44.70891,-71.48281', sites)).toEqual(sites[0]);
+    });
+
+    test('returns null when no site is within tolerance', () => {
+      expect(findSiteWeather('10,10', sites)).toBeNull();
+    });
+
+    test('returns null for missing/malformed gps or sites', () => {
+      expect(findSiteWeather(null, sites)).toBeNull();
+      expect(findSiteWeather('not-a-coord', sites)).toBeNull();
+      expect(findSiteWeather('44.7089,-71.4828', undefined)).toBeNull();
+      expect(findSiteWeather('44.7089,-71.4828', [])).toBeNull();
+    });
+  });
+
+  describe('getStatewideWeather (#82)', () => {
+    beforeEach(() => {
+      Object.keys(countyWeatherData).forEach(k => delete countyWeatherData[k]);
+    });
+
+    test('returns null when no county data has loaded', () => {
+      expect(getStatewideWeather()).toBeNull();
+    });
+
+    test('medians across counties rather than aliasing a single one (e.g. Merrimack)', () => {
+      countyWeatherData.coos = { rainfall: 0.5, airTemp: 55, soilTemp: 50 };
+      countyWeatherData.merrimack = { rainfall: 2.0, airTemp: 65, soilTemp: 60 };
+      countyWeatherData.cheshire = { rainfall: 3.5, airTemp: 75, soilTemp: 70 };
+
+      const result = getStatewideWeather();
+      expect(result.rainfall).toBe(2.0); // median of [0.5, 2.0, 3.5]
+      expect(result.airTemp).toBe(65);
+      expect(result.soilTemp).toBe(60);
+      expect(result.sampleCount).toBe(3);
+      expect(result.rainfallRange).toEqual([0.5, 3.5]);
+    });
+
+    test('excludes errored counties from the aggregate', () => {
+      countyWeatherData.coos = { rainfall: 0.5, airTemp: 55, soilTemp: 50 };
+      countyWeatherData.grafton = { error: 'timeout', rainfall: null, airTemp: null, soilTemp: null };
+
+      const result = getStatewideWeather();
+      expect(result.sampleCount).toBe(1);
+      expect(result.rainfall).toBe(0.5);
     });
   });
 

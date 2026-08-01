@@ -1,4 +1,4 @@
-# 🍄 GraniteFungiForager v3.11.1
+# 🍄 GraniteFungiForager v3.12.0
 
 
 [![Tests](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml/badge.svg)](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml)
@@ -8,6 +8,16 @@
 
 ## 🌐 **LIVE APPLICATION**
 **Try it now:** https://ibelanger.github.io/GraniteFungiForager/
+
+## 🆕 **What's New in v3.12.0** (August 2026)
+
+### 📍 **Per-Site Weather, Merged Conditions Card, Collapsible County Panel**
+Three UI/data improvements building on the multi-point weather sampling work:
+- Individual location cards (public-land sites) now show their own sample point's weather — not just the county-wide median — when a GPS match exists, surfacing real intra-county variance down to the trailhead level
+- The "Data Source" status widget and the county detail panel's "Current Conditions" have been merged into one always-populated Conditions card, positioned in the left rail on desktop and directly under the map on mobile; it now defaults to a genuine statewide median instead of quietly reusing Merrimack's reading, and pairs each species' Soil Temp/Min Rain requirement against the actual current reading (e.g. `66°F / 55-75°F ✓`)
+- The county detail panel's sections are now independently collapsible, with Top 5 and Recommendations open by default so the most-used info is immediately visible without scrolling past everything else
+
+*Previous release notes in [CHANGELOG.md](./CHANGELOG.md)*
 
 ## 🆕 **What's New in v3.11.1** (July 2026)
 

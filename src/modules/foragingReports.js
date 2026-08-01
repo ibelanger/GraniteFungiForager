@@ -225,7 +225,7 @@ export class ForagingReportsManager {
     exportReports() {
         const exportData = {
             exportDate: new Date().toISOString(),
-            version: '3.11.1', // keep in sync with package.json, app.js appConfig, and the index.html footer
+            version: '3.12.0', // keep in sync with package.json, app.js appConfig, and the index.html footer
             totalReports: this.reports.length,
             accuracyStats: this.calculateAccuracyStats(),
             reports: this.reports.map(report => report.toJSON())

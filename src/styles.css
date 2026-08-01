@@ -217,25 +217,43 @@ header h1::after {
 }
 
 /* ==================== MAIN CONTENT LAYOUT ==================== */
+/* Named grid areas so the ConditionsCard (#82) can sit in a different visual
+ * position per breakpoint — left rail on desktop, directly under the map on
+ * mobile — without duplicating its markup. .controls-section below is
+ * display:contents so species/conditions/manual become direct grid items
+ * here rather than being trapped inside their own flex box. */
 .main-content {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-xl);
+    grid-template-areas:
+        "species"
+        "manual"
+        "map"
+        "conditions";
+    row-gap: var(--space-md);
+    column-gap: var(--space-xl);
     align-items: start;
 }
 
 @media (min-width: 1024px) {
     .main-content {
         grid-template-columns: 380px 1fr;
+        grid-template-areas:
+            "species map"
+            "conditions map"
+            "manual map";
     }
 }
 
 /* ==================== CONTROLS SECTION ==================== */
 .controls-section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
+    display: contents;
 }
+
+#species-picker-group { grid-area: species; }
+#conditions-card { grid-area: conditions; }
+#manual-controls { grid-area: manual; }
+.map-section { grid-area: map; }
 
 .control-group {
     background: var(--mycelium-white);
@@ -995,7 +1013,6 @@ input[type="checkbox"]:focus {
     font-style: italic;
 }
 
-.current-conditions,
 .recommendations,
 .general-info,
 .data-analytics,
@@ -1003,7 +1020,6 @@ input[type="checkbox"]:focus {
     margin-bottom: var(--space-md);
 }
 
-.current-conditions h4,
 .recommendations h4,
 .general-info h4,
 .data-analytics h4,
@@ -1011,6 +1027,56 @@ input[type="checkbox"]:focus {
     color: var(--forest-medium);
     margin-bottom: var(--space-sm);
     font-size: 1.1rem;
+}
+
+/* ==================== COLLAPSIBLE COUNTY SECTIONS (#83) ==================== */
+/* Native <details>/<summary> — free keyboard support (Enter/Space toggles),
+ * correct expanded/collapsed semantics for screen readers, and focus stays
+ * on the summary itself rather than jumping elsewhere on collapse. */
+.county-section {
+    background: var(--mushroom-cream);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(45, 80, 22, 0.1);
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+.county-section > summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.county-section > summary::-webkit-details-marker {
+    display: none;
+}
+
+.county-section > summary::before {
+    content: '▶';
+    font-size: 0.7em;
+    color: var(--forest-medium);
+    transition: transform var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.county-section[open] > summary::before {
+    transform: rotate(90deg);
+}
+
+.county-section > summary h4 {
+    margin-bottom: 0;
+}
+
+.county-section > summary:focus-visible {
+    outline: 2px solid var(--chanterelle-gold);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
+.county-section[open] > summary {
+    margin-bottom: var(--space-sm);
 }
 
 .conditions-grid {

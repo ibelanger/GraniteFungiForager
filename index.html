@@ -25,32 +25,34 @@
         <div class="main-content">
             <!-- Controls Section -->
             <div class="controls-section">
-                <div class="controls">
-                    <div class="control-group">
-                        <h3>Species Selection</h3>
-                        <label for="species-select">Choose Target Species:</label>
-                        <select id="species-select" aria-label="Select mushroom species">
-                            <!-- Populated by JavaScript -->
-                        </select>
+                <div class="control-group" id="species-picker-group">
+                    <h3>Species Selection</h3>
+                    <label for="species-select">Choose Target Species:</label>
+                    <select id="species-select" aria-label="Select mushroom species">
+                        <!-- Populated by JavaScript -->
+                    </select>
+                </div>
+
+                <!-- Merged Data Source + Current Conditions card (#82) -->
+                <div class="control-group control-group-compact conditions-card" id="conditions-card">
+                    <h3>Current Conditions</h3>
+                    <div class="data-source-row" id="weather-status" aria-live="polite">
+                        <span id="status-text">Loading...</span>
                     </div>
-                    
-                    <div class="control-group control-group-compact">
-                        <h3>Data Source</h3>
-                        <div class="data-source-row" id="weather-status" aria-live="polite">
-                            <span id="status-text">Loading...</span>
-                        </div>
-                        <div class="data-source-controls">
-                            <button class="update-btn-compact" id="refresh-weather" aria-label="Refresh weather data">
-                                Refresh
-                            </button>
-                            <label class="toggle-compact">
-                                <input type="checkbox" id="auto-weather" checked>
-                                <span>Live Data</span>
-                            </label>
-                        </div>
+                    <div class="conditions-grid" id="conditions-metrics">
+                        <!-- Populated by JavaScript: renderConditionsCard() -->
+                    </div>
+                    <div class="data-source-controls">
+                        <button class="update-btn-compact" id="refresh-weather" aria-label="Refresh weather data">
+                            Refresh
+                        </button>
+                        <label class="toggle-compact">
+                            <input type="checkbox" id="auto-weather" checked>
+                            <span>Live Data</span>
+                        </label>
                     </div>
                 </div>
-                
+
                 <!-- Manual Override Controls -->
                 <div class="control-group control-group-compact" id="manual-controls">
                     <h3>Manual Settings</h3>
@@ -229,7 +231,7 @@
                 Species information from <a href="https://www.mushroomexpert.com" target="_blank" rel="noopener">MushroomExpert.com</a>,
                 NH DHHS Tier 1 Species List</p>
                 <p><strong>Specialized Boletes Key:</strong> <a href="https://boletes.wpamushroomclub.org/" target="_blank" rel="noopener">WPA Mushroom Club</a></p>
-                <p>Built by GraniteFungiForager | v3.11.1 | <a href="https://github.com/ibelanger/GraniteFungiForager" target="_blank" rel="noopener">GitHub</a></p>
+                <p>Built by GraniteFungiForager | v3.12.0 | <a href="https://github.com/ibelanger/GraniteFungiForager" target="_blank" rel="noopener">GitHub</a></p>
             </div>
         </footer>
     </div>

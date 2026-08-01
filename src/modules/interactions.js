@@ -3,9 +3,14 @@
 import { speciesData, populateSpeciesDropdown } from './species.js';
 import { getCountyLandData, requestLocationAccess } from './publicLands.js';
 import { getCountyInfo, updateMap, getTopSpeciesForCounty } from './mapCalculations.js';
-import { updateWeatherDisplay } from './weather.js';
+import { updateWeatherDisplay, countyWeatherData, findSiteWeather, getWeatherData, getStatewideWeather } from './weather.js';
 import { reportsManager } from './foragingReports.js';
 import { observationAnalyzer } from './observationAnalysis.js';
+
+// The county the user last clicked (tracked here, not just in weather.js's
+// selectedCounty, since the ConditionsCard and species-info chips need to
+// know it too — set by displayCountyInfo, cleared by clearCountyInfo (#82).
+let currentCountyKey = null;
 
 /**
  * Build the "Ecology & Research Notes" expandable section from research-grade fields.
@@ -189,6 +194,17 @@ export function displaySpeciesInfo(speciesKey) {
         ? `<span class="fruiting-style-badge ${fsInfo.cls}" title="Fruiting abundance: ${species.fruitingStyle}">${fsInfo.icon} ${fsInfo.label}</span>`
         : '';
 
+    // Pair actual conditions against this species' requirements (#82) — makes
+    // a probability percentage self-explanatory instead of needing to be
+    // taken on faith. Absent until conditions data exists (pre-fetch).
+    const actual = getActualConditions();
+    const tempChipValue = (actual?.soilTemp != null)
+        ? `${actual.soilTemp}°F / ${species.tempRange[0]}-${species.tempRange[1]}°F ${(actual.soilTemp >= species.tempRange[0] && actual.soilTemp <= species.tempRange[1]) ? '✓' : '✗'}`
+        : `${species.tempRange[0]}-${species.tempRange[1]}°F`;
+    const rainChipValue = (actual?.rainfall != null)
+        ? `${actual.rainfall.toFixed(2)}" / ${species.moistureMin}" needed ${(actual.rainfall >= species.moistureMin) ? '✓' : '✗'}`
+        : `${species.moistureMin}"`;
+
     // Create compact species information HTML
     const infoHTML = `
         <div class="species-card">
@@ -207,12 +223,12 @@ export function displaySpeciesInfo(speciesKey) {
                     <div class="info-chip">
                         <span class="chip-icon">🌡️</span>
                         <span class="chip-label">Soil Temp</span>
-                        <span class="chip-value">${species.tempRange[0]}-${species.tempRange[1]}°F</span>
+                        <span class="chip-value">${tempChipValue}</span>
                     </div>
                     <div class="info-chip">
                         <span class="chip-icon">💧</span>
                         <span class="chip-label">Min Rain (7-10d)</span>
-                        <span class="chip-value">${species.moistureMin}"</span>
+                        <span class="chip-value">${rainChipValue}</span>
                     </div>
                 </div>
                 ${fruitingStyleHTML}
@@ -262,6 +278,60 @@ function formatMetricWithRange(value, range, unit, decimals) {
 }
 
 /**
+ * Get the weather reading the ConditionsCard/species chips should treat as
+ * "actual" right now: the selected county's live/manual reading once one has
+ * been clicked, otherwise a genuine statewide median (#82) — never the old
+ * Merrimack-aliased `currentWeatherData` default.
+ * @returns {Object|null}
+ */
+function getActualConditions() {
+    return currentCountyKey ? getWeatherData(currentCountyKey) : getStatewideWeather();
+}
+
+/**
+ * Render the merged Data Source + Current Conditions card (#82). Always
+ * populates the metric frame — falling back to 'N/A' via formatMetricWithRange
+ * rather than leaving the card blank — so it's never empty even before the
+ * first weather fetch completes or a county has been clicked.
+ */
+export function renderConditionsCard() {
+    const metricsEl = document.getElementById('conditions-metrics');
+    if (!metricsEl) return;
+
+    const weather = getActualConditions();
+
+    metricsEl.innerHTML = `
+        <div class="condition-item">
+            <span class="condition-label">Soil Temperature:</span>
+            <span class="condition-value">${formatMetricWithRange(weather?.soilTemp, weather?.soilTempRange, '°F', 0)}</span>
+        </div>
+        <div class="condition-item">
+            <span class="condition-label">Rainfall (7 days):</span>
+            <span class="condition-value">${formatMetricWithRange(weather?.rainfall, weather?.rainfallRange, '"', 2)}</span>
+        </div>
+        <div class="condition-item">
+            <span class="condition-label">Air Temperature:</span>
+            <span class="condition-value">${formatMetricWithRange(weather?.airTemp, weather?.airTempRange, '°F', 0)}</span>
+        </div>
+    `;
+}
+
+/**
+ * Refresh everything that depends on "current conditions": the ConditionsCard
+ * itself, and the selected species' Min Rain/Temp chips (which pair actual
+ * vs. required once conditions are known — #82). Call this whenever the
+ * conditions context changes: weather refresh, county click/clear, manual
+ * slider drag, or species change.
+ */
+export function refreshConditionsUI() {
+    renderConditionsCard();
+    const speciesSelect = document.getElementById('species-select');
+    if (speciesSelect?.value) {
+        displaySpeciesInfo(speciesSelect.value);
+    }
+}
+
+/**
  * Display county-specific information on main page
  * @param {string} county - County name
  */
@@ -285,7 +355,12 @@ export function displayCountyInfo(county, countyKey = null) {
         };
         countyKey = keyMap[county] || county.toLowerCase();
     }
-    
+
+    // Track the selected county so the ConditionsCard and species chips (#82)
+    // show this county's actual conditions instead of the statewide default.
+    currentCountyKey = countyKey;
+    refreshConditionsUI();
+
     // Find or create county info panel on main page
     let countyPanel = document.getElementById('county-info');
     if (!countyPanel) {
@@ -348,75 +423,63 @@ export function displayCountyInfo(county, countyKey = null) {
                 <h4>${countyInfo.species} Probability: ${(countyInfo.probability * 100).toFixed(1)}%</h4>
             </div>
 
-            <div class="current-conditions">
-                <h4>🌤️ Current Conditions</h4>
-                <div class="conditions-grid">
-                    <div class="condition-item">
-                        <span class="condition-label">Soil Temperature:</span>
-                        <span class="condition-value">${formatMetricWithRange(countyInfo.weather.soilTemp, countyInfo.weather.soilTempRange, '°F', 0)}</span>
-                    </div>
-                    <div class="condition-item">
-                        <span class="condition-label">Rainfall (7 days):</span>
-                        <span class="condition-value">${formatMetricWithRange(countyInfo.weather.rainfall, countyInfo.weather.rainfallRange, '"', 2)}</span>
-                    </div>
-                    <div class="condition-item">
-                        <span class="condition-label">Air Temperature:</span>
-                        <span class="condition-value">${formatMetricWithRange(countyInfo.weather.airTemp, countyInfo.weather.airTempRange, '°F', 0)}</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="top-species">
-                <h4>🏆 Top 5 Most Likely Species (Current Conditions)</h4>
+            <details class="county-section top-species" open>
+                <summary><h4>🏆 Top 5 Most Likely Species (Current Conditions)</h4></summary>
                 <div class="species-rankings">
                     ${topSpeciesHTML}
                 </div>
-            </div>
-            
-            <div class="recommendations">
-                <h4>💡 Recommendations</h4>
+            </details>
+
+            <details class="county-section recommendations" open>
+                <summary><h4>💡 Recommendations</h4></summary>
                 <ul>
                     ${countyInfo.recommendations.map(rec => `<li>${rec}</li>`).join('')}
                 </ul>
-            </div>
-            
+            </details>
+
             ${landData && landData.general ? `
-            <div class="general-info">
-                <h4>🏞️ General Information</h4>
+            <details class="county-section general-info">
+                <summary><h4>🏞️ General Information</h4></summary>
                 <ul>
                     <li><strong>Climate:</strong> ${landData.general.climate}</li>
                     <li><strong>Soils:</strong> ${landData.general.soils}</li>
                     <li><strong>Best Months:</strong> ${landData.general.bestMonths}</li>
                     <li><strong>Total Acres:</strong> ${landData.general.totalAcres}</li>
                 </ul>
-            </div>
+            </details>
             ` : ''}
-            
+
             ${landData && landData.landsBySpecies && !landData.authRequired ? `
-            <div class="locations-info">
-                <h4>📍 Specific Locations by Species</h4>
+            <details class="county-section locations-info">
+                <summary><h4>📍 Specific Locations by Species</h4></summary>
                 <div class="locations-grid">
                     ${Object.entries(landData.landsBySpecies).slice(0, 2).map(([species, locations]) => `
                         <div class="species-section">
                             <h5>🍄 ${species.charAt(0).toUpperCase() + species.slice(1)}</h5>
-                            ${locations.slice(0, 2).map(location => `
+                            ${locations.slice(0, 2).map(location => {
+                                const siteWeather = location.gps
+                                    ? findSiteWeather(location.gps, countyWeatherData[countyKey]?.sites)
+                                    : null;
+                                return `
                                 <div class="location-card">
                                     <h6>${location.name}</h6>
                                     ${location.gps ? `<p><strong>GPS:</strong> ${location.gps}</p>` : ''}
+                                    ${siteWeather ? `<p class="site-weather"><strong>Site Conditions:</strong> ${siteWeather.rainfall.toFixed(2)}" rain · ${siteWeather.soilTemp}°F soil · ${siteWeather.airTemp}°F air</p>` : ''}
                                     ${location.access ? `<p><strong>Access:</strong> ${location.access}</p>` : ''}
                                     ${location.timing ? `<p><strong>Best Timing:</strong> ${location.timing}</p>` : ''}
                                     ${location.note ? `<p class="location-notes">${location.note}</p>` : ''}
                                 </div>
-                            `).join('')}
+                            `;
+                            }).join('')}
                         </div>
                     `).join('')}
                 </div>
-            </div>
+            </details>
             ` : ''}
-            
+
             ${landData && landData.authRequired ? `
-            <div class="locations-info auth-required">
-                <h4>🔒 Detailed Location Information</h4>
+            <details class="county-section locations-info auth-required">
+                <summary><h4>🔒 Detailed Location Information</h4></summary>
                 <div class="auth-message">
                     <p><strong>Location data protected</strong></p>
                     <p>${landData.message}</p>
@@ -427,11 +490,11 @@ export function displayCountyInfo(county, countyKey = null) {
                         <p><small>🌱 <strong>Sustainability:</strong> Specific GPS coordinates and trail access information are protected to prevent over-harvesting and preserve these locations for future generations.</small></p>
                     </div>
                 </div>
-            </div>
+            </details>
             ` : ''}
-            
-            <div class="data-analytics">
-                <h4>📊 Community Data & Analytics</h4>
+
+            <details class="county-section data-analytics">
+                <summary><h4>📊 Community Data & Analytics</h4></summary>
                 <div class="analytics-actions">
                     <button class="data-btn" onclick="showForagingStats('${countyKey}', '${currentSpecies}')">
                         📊 View Success Statistics
@@ -443,7 +506,7 @@ export function displayCountyInfo(county, countyKey = null) {
                         📁 Export Community Data
                     </button>
                 </div>
-            </div>
+            </details>
         </div>
     `;
     
@@ -1451,9 +1514,13 @@ export function clearCountyInfo() {
     if (countyPanel) {
         countyPanel.style.display = 'none';
     }
-    
+
     // Reset weather display to general data
     updateWeatherDisplay();
+
+    // Back to the statewide default now that no county is selected (#82)
+    currentCountyKey = null;
+    refreshConditionsUI();
 }
 /**
  * Handle species selection change
@@ -1488,6 +1555,7 @@ export function setupManualControls() {
                 const value = parseFloat(e.target.value);
                 display.textContent = `${value.toFixed(control.decimals)}${control.unit}`;
                 updateMap(); // Update map in real-time
+                refreshConditionsUI(); // Manual sliders change "actual" conditions too (#82)
             });
         }
     });
@@ -1563,9 +1631,18 @@ export function initInteractions() {
     // Setup update button
     const updateButton = document.getElementById('update-map');
     if (updateButton) {
-        updateButton.addEventListener('click', () => updateMap());
+        updateButton.addEventListener('click', () => {
+            updateMap();
+            refreshConditionsUI();
+        });
     }
-    
+
+    // Populate the ConditionsCard immediately with whatever's available
+    // (statewide default, likely N/A until the first weather fetch lands) so
+    // it's never blank (#82) — weather.js's initWeather callback refreshes it
+    // again once real data arrives.
+    renderConditionsCard();
+
     // Make functions globally available for onclick handlers
     window.closeCountyModal = closeCountyModal;
     window.displayCountyInfo = displayCountyInfo;

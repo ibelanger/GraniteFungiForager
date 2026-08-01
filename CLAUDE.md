@@ -8,7 +8,7 @@ This file provides quick reference guidance for Claude Code when working with th
 
 ## Project Overview
 
-**GraniteFungiForager v3.11.1** is a client-side web application providing interactive probability maps for foraging New Hampshire's DHHS Tier 1 wild mushroom species. Combines real-time weather data with mycological research to calculate county-specific foraging probabilities. Features offline capability, ML-powered accuracy improvement, and conservation-focused location protection.
+**GraniteFungiForager v3.12.0** is a client-side web application providing interactive probability maps for foraging New Hampshire's DHHS Tier 1 wild mushroom species. Combines real-time weather data with mycological research to calculate county-specific foraging probabilities. Features offline capability, ML-powered accuracy improvement, and conservation-focused location protection.
 
 **Live:** https://ibelanger.github.io/GraniteFungiForager/
 
@@ -24,12 +24,12 @@ npm run dev              # Local server (http://localhost:8000)
 npm start                # Production server
 
 # Testing
-npm test                 # Run all 554 tests
+npm test                 # Run all 568 tests
 npm run test:watch       # Watch mode (re-run on changes)
 npm run test:ui          # Interactive test UI
 npm run test:coverage    # Generate coverage reports
 
-# Status: 552/554 passing, 2 skipped (100% pass rate on testable code)
+# Status: 566/568 passing, 2 skipped (100% pass rate on testable code)
 ```
 
 ---
@@ -61,7 +61,7 @@ GraniteFungiForager/
 │   └── ml/
 │       └── accuracy-improvement-pipeline.js
 ├── tests/
-│   ├── unit/            # 8 test files (554 tests)
+│   ├── unit/            # 8 test files (568 tests)
 │   ├── helpers/         # Mock data
 │   └── README.md
 ├── docs/
@@ -240,6 +240,7 @@ reportsManager.addReport(reportData);
 
 ## Version History (Recent)
 
+- **v3.12.0** (Aug 2026) - Per-site weather cards, merged ConditionsCard, collapsible county panel: location cards show their own sample point's weather when GPS matches (#67); "Data Source" + "Current Conditions" merged into one always-populated card with a genuine statewide-median default and actual-vs-required species chip pairing (#82); county panel sections (Top 5, Recommendations, General Info, Locations, Community) are now collapsible via native `<details>`, Top 5/Recommendations open by default (#83); 568 tests
 - **v3.11.1** (Jul 2026) - Weather status & map accuracy fixes: map tooltip could show a stale probability out of sync with the county detail panel (map never re-rendered after live/auto-refreshed weather data landed); "✓ Live" status could mask a county that silently fell back to cached data as a live success; 554 tests
 - **v3.11.0** (Jul 2026) - Multi-point county weather sampling: 3-4 geographically-diverse points per county instead of one town coordinate, median aggregation, range display in Current Conditions; 542 tests
 - **v3.10.2** (Jul 2026) - Probability model data audit: fixed winecap/shaggymane/oyster structural over-prediction bug, 18 species seasonMultiplier corrections, 22 missing winter values, 11 regional-base ceiling rebalances; 529 tests

@@ -655,6 +655,34 @@ export function toggleWeatherMode() {
 }
 
 /**
+ * Genuine statewide aggregate across every county's current reading, for the
+ * ConditionsCard's default (no-county-selected) view. Deliberately distinct
+ * from `currentWeatherData`, which only ever mirrors Merrimack's reading and
+ * would mislabel that single county's data as a statewide figure (#82).
+ * @returns {{rainfall: number, airTemp: number, soilTemp: number, rainfallRange: [number,number], airTempRange: [number,number], soilTempRange: [number,number], season: string, sampleCount: number}|null}
+ *   null when no county data has loaded yet
+ */
+export function getStatewideWeather() {
+    const valid = Object.values(countyWeatherData).filter(d => d && !d.error && d.rainfall != null);
+    if (valid.length === 0) return null;
+
+    const rainfalls = valid.map(d => d.rainfall);
+    const airTemps = valid.map(d => d.airTemp);
+    const soilTemps = valid.map(d => d.soilTemp);
+
+    return {
+        rainfall: median(rainfalls),
+        airTemp: Math.round(median(airTemps)),
+        soilTemp: Math.round(median(soilTemps)),
+        rainfallRange: [Math.min(...rainfalls), Math.max(...rainfalls)],
+        airTempRange: [Math.min(...airTemps), Math.max(...airTemps)],
+        soilTempRange: [Math.min(...soilTemps), Math.max(...soilTemps)],
+        season: getCurrentSeason(),
+        sampleCount: valid.length
+    };
+}
+
+/**
  * Get detailed weather information for a specific county
  * @param {string} county - County name
  * @returns {Object} Detailed weather information
@@ -685,6 +713,27 @@ export function getDetailedWeatherInfo(county) {
             dataSource: 'Open-Meteo API'
         }
     };
+}
+
+/**
+ * Find the sample-point reading nearest a location's GPS coordinate, so a
+ * specific public-land site can show its own weather instead of only the
+ * county-wide aggregate (#67). Coordinates are compared with a small epsilon
+ * rather than string equality since `gps` strings and sample-point literals
+ * aren't guaranteed identical formatting/precision.
+ * @param {string} gps - location's "lat,lon" string from publicLands.js
+ * @param {Array<{name: string, lat: number, lon: number, rainfall: number, airTemp: number, soilTemp: number}>} [sites]
+ *   - a county's per-site readings, e.g. countyWeatherData[county].sites
+ * @returns {{name: string, lat: number, lon: number, rainfall: number, airTemp: number, soilTemp: number}|null}
+ */
+export function findSiteWeather(gps, sites) {
+    if (!gps || !Array.isArray(sites) || sites.length === 0) return null;
+
+    const [lat, lon] = gps.split(',').map(Number);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+
+    const EPSILON = 0.001; // ~350ft at NH's latitude — well within "same sample point"
+    return sites.find(s => Math.abs(s.lat - lat) < EPSILON && Math.abs(s.lon - lon) < EPSILON) || null;
 }
 
 /**
