@@ -1760,7 +1760,7 @@ export function initEnhancedMapInteractions() {
             'rockingham': 'Rockingham County'
         };
         const countyName = countyDisplayNames[countyKey] || countyKey;
-        county.setAttribute('aria-label', `View ${countyName} county recommendations`);
+        county.setAttribute('aria-label', `View ${countyName} recommendations`);
     });
 }
 
