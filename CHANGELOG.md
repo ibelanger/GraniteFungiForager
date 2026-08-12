@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.12.1] - 2026-08-12
+
+### Fixed
+- **Map legend never rendered** — `updateLegend()` looked for `#map-legend`, which didn't exist anywhere in `index.html`, so it silently no-opped on every call. Added the container; the legend (5-item Very Low → Very High swatch/label list) now renders next to the map on species selection (closes #76)
+- **Two conflicting map color palettes** — the SVG's authored county `fill` attributes (a green ramp) were always overwritten by `updateMap()`'s brown/gold/green probability scale the moment a species was selected, leaving the authored colors dead weight. Replaced the authored fills with the same neutral placeholder `updateMap()` already uses pre-selection, so `getProbabilityColor()` is the map's single source of truth (closes #77)
+- **Dead `#county-modal`** — the modal was never opened (`display` was only ever set to `'none'`); county detail has always rendered inline via `displayCountyInfo()`. Removed the dead markup, `closeCountyModal()`, the dead branch in the `authStateChanged` listener, and the county-modal references in `app.js`'s resize/keyboard handlers (closes #78)
+- **Sticky species card only auto-compacted below 768px** — `displayCountyInfo()`'s auto-collapse was gated by a one-shot `matchMedia('(max-width: 768px)')` check, so on desktop `#species-info` stayed fully expanded permanently once populated. Replaced it with an `IntersectionObserver` watching the map card, so the species card auto-compacts/expands as the map scrolls in and out of view at any viewport width; a manual toggle now sets a persistent override so it isn't fought by the observer across county clicks (closes #79)
+- **County-label / probability-badge text failed WCAG AA contrast on gold fills** — forced white text (`!important` + shadow) measured ~1.4-2.2:1 on goldenrod/gold county fills against a 4.5:1 requirement. Added `getProbabilityTextColor()` pairing each probability tier with a WCAG AA-legible text color (white only for the darkest "Very Low" brown tier, dark text for every lighter tier), wired into both the map's county-label text and the county panel's probability badges (closes #80)
+- **Duplicated "county" in county aria-labels** — `countyDisplayNames` values already end in "County" (e.g. "Coos County"), but the aria-label template appended a second, lowercase "county", producing "View Coos County county recommendations". Every county's aria-label now reads correctly (closes #81)
+- **`getWeatherData()` never set `weather.county`** — found already fixed in the working tree from a prior pass (pH-multiplier and oak-region bonus logic now correctly vary by county); verified and closed (closes #68)
+
+### Technical Details
+- Tests: 571/573 passing, 2 skipped (new coverage for the auto-compact observer and WCAG contrast pairing)
+- Closes epic #69
+
+### Files Modified
+- **MODIFIED:** index.html - map-legend container, neutral SVG county fills, removed dead county-modal markup
+- **MODIFIED:** app.js - removed dead county-modal resize/keyboard handling and the now-unused `centerModal()` helper
+- **MODIFIED:** src/modules/interactions.js - fixed aria-label template, scroll-based species-card auto-compact, WCAG-paired probability-badge text color, removed `closeCountyModal()` and its dead branch
+- **MODIFIED:** src/modules/mapCalculations.js - added `getProbabilityTextColor()`, wired into `updateMap()`'s county-label coloring
+- **MODIFIED:** src/styles.css - dropped `!important` on `.probability-badge` color so JS can set it per-tier
+- **MODIFIED:** tests/unit/interactions.test.js, tests/unit/mapCalculations.test.js, tests/README.md
+
 ## [3.12.0] - 2026-08-01
 
 ### Added

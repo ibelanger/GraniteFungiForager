@@ -295,12 +295,6 @@ class MushroomApp {
             map.style.width = '100%';
             map.style.height = 'auto';
         }
-        
-        // Adjust modal positioning
-        const modal = document.getElementById('county-modal');
-        if (modal && modal.style.display === 'block') {
-            this.centerModal(modal);
-        }
     }
     
     /**
@@ -328,14 +322,6 @@ class MushroomApp {
      * Handle keyboard shortcuts
      */
     handleKeyboard(event) {
-        // ESC key - close modal
-        if (event.key === 'Escape') {
-            const modal = document.getElementById('county-modal');
-            if (modal && modal.style.display === 'block') {
-                window.closeCountyModal();
-            }
-        }
-        
         // R key - refresh weather (Ctrl+R or Cmd+R)
         if (event.key === 'r' && (event.ctrlKey || event.metaKey)) {
             event.preventDefault();
@@ -349,17 +335,6 @@ class MushroomApp {
                 speciesSelect.selectedIndex = event.key - 1;
                 speciesSelect.dispatchEvent(new Event('change'));
             }
-        }
-    }
-    
-    /**
-     * Center modal in viewport
-     */
-    centerModal(modal) {
-        const modalContent = modal.querySelector('.county-details');
-        if (modalContent) {
-            modalContent.style.marginTop = '2rem';
-            modalContent.style.marginBottom = '2rem';
         }
     }
     

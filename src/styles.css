@@ -947,8 +947,9 @@ input[type="checkbox"]:focus {
     border-radius: 50px;
     font-weight: 700;
     font-size: 0.9rem;
-    /* Force white text for readability on all background colors */
-    color: var(--mycelium-white) !important;
+    /* Default; JS sets an inline color per probability tier (#80) so text
+       stays WCAG AA-legible on light gold/green fills, not just dark ones */
+    color: var(--mycelium-white);
     /* Multiple shadows for maximum contrast and depth */
     text-shadow:
         0 1px 3px rgba(0, 0, 0, 0.8),

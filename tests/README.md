@@ -253,7 +253,7 @@ Tests user interaction handling:
 Tests ARIA attributes and system setup:
 - Modal accessibility (aria-hidden, aria-labelledby, role attributes)
 - Form validation (required fields, readonly attributes)
-- Global function exposure (window.closeCountyModal, etc.)
+- Global function exposure (window.displayCountyInfo, etc.)
 - `initInteractions()` - 5 tests (dropdown initialization, event wiring)
 
 **Note:** 2 tests are properly skipped (`.skip`) due to jsdom limitations - these test event listener attachment which jsdom cannot verify. The functionality works correctly in real browsers.

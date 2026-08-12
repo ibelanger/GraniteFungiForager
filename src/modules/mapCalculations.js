@@ -399,6 +399,18 @@ export function getProbabilityColor(probability) {
 }
 
 /**
+ * Get the WCAG AA-legible text color to pair with getProbabilityColor()'s
+ * fill for the same probability (#80). Only the brown "Very Low" tier is
+ * dark enough for white text (~6.8:1); every lighter tier needs dark text
+ * (~6.4-10.2:1) since white on gold/light-green fails AA (as low as ~1.35:1).
+ * @param {number} probability - Probability value (0-1)
+ * @returns {string} CSS color value
+ */
+export function getProbabilityTextColor(probability) {
+    return probability < 0.2 ? '#fdfaf5' : '#1A2F1A';
+}
+
+/**
  * Update map colors based on current species and conditions
  * @param {string} selectedSpecies - Currently selected species
  */
@@ -413,29 +425,41 @@ export function updateMap(selectedSpecies = null) {
             if (mapElement) {
                 // Set neutral gray color when no species selected
                 mapElement.style.fill = '#f0f0f0';
-                
+
                 // Clear tooltip data
                 mapElement.removeAttribute('data-probability');
                 mapElement.removeAttribute('data-species');
+
+                // Revert county-label text color to its CSS default (#80)
+                const labelElement = mapElement.nextElementSibling;
+                if (labelElement?.classList.contains('county-label')) {
+                    labelElement.style.fill = '';
+                }
             }
         });
         return;
     }
-    
+
     // Update each county
     Object.entries(countyRegions).forEach(([county, region]) => {
         // Get county-specific weather if available
         const countyWeather = getWeatherData(county);
-        
+
         // Calculate probability
         const probability = calculateProbability(currentSpecies, countyWeather, region);
-        
+
         // Get map element (county is already lowercase from countyRegions keys)
         const mapElement = document.querySelector(`[data-county="${county}"]`);
         if (mapElement) {
             const color = getProbabilityColor(probability);
             mapElement.style.fill = color;
-            
+
+            // Pair the fill with a WCAG AA-legible label text color (#80)
+            const labelElement = mapElement.nextElementSibling;
+            if (labelElement?.classList.contains('county-label')) {
+                labelElement.style.fill = getProbabilityTextColor(probability);
+            }
+
             // Update tooltip data
             mapElement.setAttribute('data-probability', (probability * 100).toFixed(1));
             mapElement.setAttribute('data-species', currentSpecies);

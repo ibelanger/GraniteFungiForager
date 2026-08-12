@@ -8,6 +8,7 @@ import {
   calculateProbability,
   calculatePHMultiplier,
   getProbabilityColor,
+  getProbabilityTextColor,
   getCountyInfo,
   getTopSpeciesForCounty,
   countyRegions,
@@ -402,6 +403,45 @@ describe('Map Calculations Module', () => {
       testValues.forEach(prob => {
         const color = getProbabilityColor(prob);
         expect(color).toMatch(hexColorRegex);
+      });
+    });
+  });
+
+  describe('getProbabilityTextColor (#80)', () => {
+    // WCAG AA contrast ratio helper (same formula as the manual audit that
+    // found this bug): relative luminance -> (L1+0.05)/(L2+0.05).
+    const contrastRatio = (hexA, hexB) => {
+      const toRGB = (hex) => {
+        const n = hex.replace('#', '');
+        return [0, 2, 4].map(i => parseInt(n.slice(i, i + 2), 16));
+      };
+      const relLuminance = (hex) => {
+        const [r, g, b] = toRGB(hex).map(c => {
+          const s = c / 255;
+          return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      };
+      const [l1, l2] = [relLuminance(hexA), relLuminance(hexB)].sort((a, b) => b - a);
+      return (l1 + 0.05) / (l2 + 0.05);
+    };
+
+    test('returns white text only for the brown "very low" tier', () => {
+      expect(getProbabilityTextColor(0.0)).toBe('#fdfaf5');
+      expect(getProbabilityTextColor(0.19)).toBe('#fdfaf5');
+    });
+
+    test('returns dark text for every other tier (goldenrod through lime-green)', () => {
+      [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].forEach(probability => {
+        expect(getProbabilityTextColor(probability)).toBe('#1A2F1A');
+      });
+    });
+
+    test('every probability tier pairs a fill and text color that meets WCAG AA (>=4.5:1)', () => {
+      [0, 0.1, 0.25, 0.45, 0.65, 0.85, 1.0].forEach(probability => {
+        const fill = getProbabilityColor(probability);
+        const text = getProbabilityTextColor(probability);
+        expect(contrastRatio(fill, text)).toBeGreaterThanOrEqual(4.5);
       });
     });
   });

@@ -2,7 +2,7 @@
 
 import { speciesData, populateSpeciesDropdown } from './species.js';
 import { getCountyLandData, requestLocationAccess } from './publicLands.js';
-import { getCountyInfo, updateMap, getTopSpeciesForCounty } from './mapCalculations.js';
+import { getCountyInfo, updateMap, getTopSpeciesForCounty, getProbabilityTextColor } from './mapCalculations.js';
 import { updateWeatherDisplay, countyWeatherData, findSiteWeather, getWeatherData, getStatewideWeather } from './weather.js';
 import { reportsManager } from './foragingReports.js';
 import { observationAnalyzer } from './observationAnalysis.js';
@@ -11,6 +11,57 @@ import { observationAnalyzer } from './observationAnalysis.js';
 // selectedCounty, since the ConditionsCard and species-info chips need to
 // know it too — set by displayCountyInfo, cleared by clearCountyInfo (#82).
 let currentCountyKey = null;
+
+// Sticky species-card auto-compact (#79): null = no manual choice yet, so the
+// scroll observer drives state; true/false once the user hits the collapse
+// button, and that choice persists across county clicks (the observer backs off).
+let speciesCardUserOverride = null;
+let speciesCardObserver = null;
+
+/**
+ * Apply expanded/compact visual state to the species card without touching
+ * the user's manual-override flag — used by both the manual toggle and the
+ * scroll-driven auto-compact observer.
+ * @param {boolean} compact
+ */
+function setSpeciesCardCompact(compact) {
+    const card = document.getElementById('species-info');
+    if (!card) return;
+    card.classList.toggle('compact', compact);
+
+    const btn = card.querySelector('.species-collapse-btn');
+    if (!btn) return;
+
+    btn.setAttribute('aria-expanded', !compact);
+    if (compact) {
+        btn.innerHTML = '<span aria-hidden="true">▲</span> <span class="collapse-text">Expand</span>';
+        btn.setAttribute('aria-label', 'Expand species information');
+    } else {
+        btn.innerHTML = '<span aria-hidden="true">▼</span> <span class="collapse-text">Collapse</span>';
+        btn.setAttribute('aria-label', 'Collapse species information');
+    }
+}
+
+/**
+ * Set up (once) an IntersectionObserver watching the map card so the sticky
+ * species card auto-compacts once the map scrolls out of view, at any
+ * viewport width — replaces the old mobile-only one-shot check (#79).
+ */
+function setupSpeciesCardAutoCompact() {
+    if (speciesCardObserver || typeof IntersectionObserver === 'undefined') return;
+
+    const mapContainer = document.querySelector('.map-container');
+    if (!mapContainer) return;
+
+    speciesCardObserver = new IntersectionObserver(([entry]) => {
+        // Once the user has manually expanded/collapsed the card, respect
+        // that choice instead of fighting it on every scroll/county click.
+        if (speciesCardUserOverride !== null) return;
+        setSpeciesCardCompact(!entry.isIntersecting);
+    }, { threshold: 0 });
+
+    speciesCardObserver.observe(mapContainer);
+}
 
 /**
  * Build the "Ecology & Research Notes" expandable section from research-grade fields.
@@ -519,27 +570,9 @@ export function displayCountyInfo(county, countyKey = null) {
     // Update weather display for this county (use countyKey for weather data)
     updateWeatherDisplay(countyKey);
 
-    // Auto-collapse species card on mobile when county is clicked
-    // This ensures both species name AND county probability are visible
-    if (window.matchMedia('(max-width: 768px)').matches) {
-        const speciesCard = document.getElementById('species-info');
-        if (speciesCard && !speciesCard.classList.contains('compact')) {
-            window.toggleSpeciesCard();
-        }
-    }
-}
-
-/**
- * Close county information modal
- */
-export function closeCountyModal() {
-    const modal = document.getElementById('county-modal');
-    if (modal) {
-        modal.style.display = 'none';
-    }
-    
-    // Reset weather display to general data
-    updateWeatherDisplay();
+    // Auto-compact the species card based on scroll position, at any
+    // viewport width (#79). Idempotent — only sets up the observer once.
+    setupSpeciesCardAutoCompact();
 }
 
 /**
@@ -1644,7 +1677,6 @@ export function initInteractions() {
     renderConditionsCard();
 
     // Make functions globally available for onclick handlers
-    window.closeCountyModal = closeCountyModal;
     window.displayCountyInfo = displayCountyInfo;
     window.openForagingReport = openForagingReport;
     window.closeForagingReport = closeForagingReport;
@@ -1671,22 +1703,11 @@ window.toggleSpeciesCard = function() {
     const card = document.getElementById('species-info');
     if (!card) return;
 
-    const isCompact = card.classList.toggle('compact');
-    const btn = card.querySelector('.species-collapse-btn');
-
-    if (!btn) return;
-
-    // Update ARIA state for accessibility
-    btn.setAttribute('aria-expanded', !isCompact);
-
-    // Update button content and label
-    if (isCompact) {
-        btn.innerHTML = '<span aria-hidden="true">▲</span> <span class="collapse-text">Expand</span>';
-        btn.setAttribute('aria-label', 'Expand species information');
-    } else {
-        btn.innerHTML = '<span aria-hidden="true">▼</span> <span class="collapse-text">Collapse</span>';
-        btn.setAttribute('aria-label', 'Collapse species information');
-    }
+    const isCompact = !card.classList.contains('compact');
+    // Manual toggles take priority over the auto-compact observer (#79) and
+    // persist across subsequent county clicks.
+    speciesCardUserOverride = isCompact;
+    setSpeciesCardCompact(isCompact);
 };
 
 // Add to your existing interactions.js module
@@ -1760,7 +1781,7 @@ export function initEnhancedMapInteractions() {
             'rockingham': 'Rockingham County'
         };
         const countyName = countyDisplayNames[countyKey] || countyKey;
-        county.setAttribute('aria-label', `View ${countyName} county recommendations`);
+        county.setAttribute('aria-label', `View ${countyName} recommendations`);
     });
 }
 
@@ -1837,19 +1858,20 @@ function getTopSpeciesHTML(countyKey) {
         return topSpecies.map((species, index) => {
         const rank = index + 1;
         const probabilityPercent = (species.probability * 100).toFixed(1);
+        const badgeTextColor = getProbabilityTextColor(species.probability);
         const rankEmoji = getRankEmoji(rank);
-        
+
         // Create condition indicators
         const tempMatch = species.currentTemp >= species.tempRange[0] && species.currentTemp <= species.tempRange[1];
         const moistureMatch = species.currentMoisture >= species.moistureMin;
         const seasonMultiplier = species.seasonMultiplier[species.currentSeason] || 0;
-        
+
         return `
-            <div class="species-rank-item" onclick="selectSpeciesFromRanking('${species.key}')" 
+            <div class="species-rank-item" onclick="selectSpeciesFromRanking('${species.key}')"
                  style="border-left: 4px solid ${species.color}; cursor: pointer;">
                 <div class="rank-header">
                     <span class="rank-number">${rankEmoji} #${rank}</span>
-                    <span class="probability-badge" style="background-color: ${species.color};">
+                    <span class="probability-badge" style="background-color: ${species.color}; color: ${badgeTextColor};">
                         ${probabilityPercent}%
                     </span>
                 </div>
@@ -1906,45 +1928,22 @@ window.selectSpeciesFromRanking = function(speciesKey) {
  * Listen for authentication state changes to refresh county displays
  */
 document.addEventListener('authStateChanged', function() {
-    // Check both county-info panel (main page) and county-modal (modal view)
     const countyPanel = document.getElementById('county-info');
-    const countyModal = document.getElementById('county-modal');
-    
-    let targetElement = null;
-    let isModal = false;
-    
-    // Check if county info panel is visible
+
     if (countyPanel && countyPanel.style.display !== 'none') {
-        targetElement = countyPanel;
-        isModal = false;
-    } 
-    // Check if county modal is visible
-    else if (countyModal && countyModal.style.display !== 'none') {
-        targetElement = countyModal.querySelector('#county-modal-content');
-        isModal = true;
-    }
-    
-    if (targetElement) {
         // Extract county name from the displayed content
-        const countyTitle = targetElement.querySelector('h3');
-        
+        const countyTitle = countyPanel.querySelector('h3');
+
         if (countyTitle) {
             const countyText = countyTitle.textContent;
             const currentSpecies = document.getElementById('species-select')?.value;
-            
+
             // Re-show the county information with updated authentication status
             const match = countyText.match(/📍 (.+?) Information|Information for (.+)/);
-            
+
             if (match && currentSpecies) {
                 const countyDisplayName = match[1] || match[2];
-                
-                if (isModal) {
-                    // For modal, we need to trigger the modal display logic
-                    window.displayCountyInfo(countyDisplayName, null);
-                } else {
-                    // For main page panel, just refresh
-                    window.displayCountyInfo(countyDisplayName, null);
-                }
+                window.displayCountyInfo(countyDisplayName, null);
             }
         }
     }

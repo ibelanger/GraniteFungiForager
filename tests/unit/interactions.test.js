@@ -5,7 +5,6 @@ import { describe, test, expect, beforeEach, vi, afterEach } from 'vitest';
 import {
     displaySpeciesInfo,
     displayCountyInfo,
-    closeCountyModal,
     handleCountyClick,
     openForagingReport,
     closeForagingReport,
@@ -173,6 +172,7 @@ vi.mock('../../src/modules/mapCalculations.js', () => ({
         ]
     })),
     updateMap: vi.fn(),
+    getProbabilityTextColor: vi.fn((probability) => probability < 0.2 ? '#fdfaf5' : '#1A2F1A'),
     getTopSpeciesForCounty: vi.fn(() => [
         {
             key: 'morels',
@@ -712,6 +712,105 @@ describe('Interactions Module', () => {
         });
     });
 
+    describe('species card auto-compact (#79)', () => {
+        let observedCallback;
+        let observeSpy;
+        let disconnectSpy;
+        let freshDisplayCountyInfo;
+        let freshToggleSpeciesCard;
+
+        beforeEach(async () => {
+            observedCallback = null;
+            observeSpy = vi.fn();
+            disconnectSpy = vi.fn();
+            global.IntersectionObserver = vi.fn(function (callback) {
+                observedCallback = callback;
+                this.observe = observeSpy;
+                this.unobserve = vi.fn();
+                this.disconnect = disconnectSpy;
+            });
+
+            // #79's observer is set up once per module instance (module-level
+            // state), so each test gets a fresh module to test setup in isolation.
+            vi.resetModules();
+            const fresh = await import('../../src/modules/interactions.js');
+            freshDisplayCountyInfo = fresh.displayCountyInfo;
+            freshToggleSpeciesCard = () => window.toggleSpeciesCard();
+        });
+
+        afterEach(() => {
+            delete global.IntersectionObserver;
+        });
+
+        const setUpDom = () => {
+            const speciesSelect = createSpeciesSelect('morels');
+            document.body.appendChild(speciesSelect);
+
+            const speciesInfo = document.createElement('div');
+            speciesInfo.id = 'species-info';
+            const btn = document.createElement('button');
+            btn.className = 'species-collapse-btn';
+            speciesInfo.appendChild(btn);
+            document.body.appendChild(speciesInfo);
+
+            const mapContainer = document.createElement('div');
+            mapContainer.className = 'map-container';
+            document.body.appendChild(mapContainer);
+
+            return { speciesInfo, mapContainer };
+        };
+
+        test('observes the map card and compacts/expands the species card as it scrolls in and out of view', () => {
+            const { speciesInfo, mapContainer } = setUpDom();
+
+            freshDisplayCountyInfo('Coos County', 'coos');
+
+            expect(observeSpy).toHaveBeenCalledWith(mapContainer);
+
+            observedCallback([{ isIntersecting: false }]);
+            expect(speciesInfo.classList.contains('compact')).toBe(true);
+
+            observedCallback([{ isIntersecting: true }]);
+            expect(speciesInfo.classList.contains('compact')).toBe(false);
+        });
+
+        test('applies at desktop widths too, not just below 768px', () => {
+            const { speciesInfo } = setUpDom();
+            window.matchMedia = vi.fn().mockReturnValue({ matches: false });
+
+            freshDisplayCountyInfo('Coos County', 'coos');
+            observedCallback([{ isIntersecting: false }]);
+
+            expect(speciesInfo.classList.contains('compact')).toBe(true);
+        });
+
+        test('a manual toggle takes priority and persists across county clicks, undisturbed by the observer', () => {
+            const { speciesInfo } = setUpDom();
+
+            freshDisplayCountyInfo('Coos County', 'coos');
+
+            freshToggleSpeciesCard(); // user manually collapses
+            expect(speciesInfo.classList.contains('compact')).toBe(true);
+
+            // Observer reports the map back in view — must not override the manual choice
+            observedCallback([{ isIntersecting: true }]);
+            expect(speciesInfo.classList.contains('compact')).toBe(true);
+
+            // Selecting another county must not re-trigger the old one-shot auto-toggle either
+            freshDisplayCountyInfo('Grafton County', 'grafton');
+            expect(speciesInfo.classList.contains('compact')).toBe(true);
+        });
+
+        test('only sets up one observer even across multiple county clicks', () => {
+            setUpDom();
+
+            freshDisplayCountyInfo('Coos County', 'coos');
+            freshDisplayCountyInfo('Grafton County', 'grafton');
+
+            expect(global.IntersectionObserver).toHaveBeenCalledTimes(1);
+        });
+    });
+
     describe('ConditionsCard (#82)', () => {
         afterEach(() => {
             Object.keys(countyWeatherData).forEach(k => delete countyWeatherData[k]);
@@ -771,23 +870,6 @@ describe('Interactions Module', () => {
             // both satisfy requirements, so should show a checkmark pairing.
             expect(infoPanel.innerHTML).toContain('60°F / 50-70°F ✓');
             expect(infoPanel.innerHTML).toContain('2.00" / 1"');
-        });
-    });
-
-    describe('closeCountyModal', () => {
-        test('should hide county modal', () => {
-            const modal = document.createElement('div');
-            modal.id = 'county-modal';
-            modal.style.display = 'block';
-            document.body.appendChild(modal);
-
-            closeCountyModal();
-
-            expect(modal.style.display).toBe('none');
-        });
-
-        test('should handle missing modal gracefully', () => {
-            expect(() => closeCountyModal()).not.toThrow();
         });
     });
 
@@ -1263,7 +1345,6 @@ describe('Interactions Module', () => {
         test('should make functions globally available', () => {
             initInteractions();
 
-            expect(window.closeCountyModal).toBeDefined();
             expect(window.displayCountyInfo).toBeDefined();
             expect(window.openForagingReport).toBeDefined();
             expect(window.closeForagingReport).toBeDefined();

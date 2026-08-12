@@ -93,61 +93,63 @@
         <!-- Clean Grid Layout: No Overlapping Counties -->
         
         <!-- Row 1: COOS (spans 3 columns, centered) -->
-        <rect class="county" data-county="coos" fill="#4CAF50" 
+        <rect class="county" data-county="coos" fill="#f0f0f0" 
               x="170" y="5" width="110" height="85" rx="12"/>
         <text class="county-label" x="225" y="55">COOS</text>
         <text class="geo-icon forest-icon" x="200" y="40">🌲</text>
         <text class="geo-icon mountain-icon" x="250" y="40">🏔️</text>
         
         <!-- Row 2: GRAFTON | BELKNAP | CARROLL -->
-        <rect class="county" data-county="grafton" fill="#66BB6A"
+        <rect class="county" data-county="grafton" fill="#f0f0f0"
               x="20" y="110" width="130" height="70" rx="12"/>
         <text class="county-label" x="85" y="150">GRAFTON</text>
         <text class="geo-icon mountain-icon" x="120" y="135">🏔️</text>
         
-        <rect class="county" data-county="belknap" fill="#A5D6A7"
+        <rect class="county" data-county="belknap" fill="#f0f0f0"
               x="170" y="110" width="110" height="70" rx="12"/>
         <text class="county-label" x="225" y="150">BELKNAP</text>
         <text class="geo-icon lake-icon" x="245" y="135">🌊</text>
         
-        <rect class="county" data-county="carroll" fill="#81C784"
+        <rect class="county" data-county="carroll" fill="#f0f0f0"
               x="300" y="110" width="130" height="70" rx="12"/>
         <text class="county-label" x="365" y="150">CARROLL</text>
         <text class="geo-icon mountain-icon" x="340" y="135">🏔️</text>
         
         <!-- Row 3: SULLIVAN | MERRIMACK | STRAFFORD -->
-        <rect class="county" data-county="sullivan" fill="#DCEDC8"
+        <rect class="county" data-county="sullivan" fill="#f0f0f0"
               x="20" y="200" width="130" height="70" rx="12"/>
         <text class="county-label" x="85" y="240">SULLIVAN</text>
         <text class="geo-icon forest-icon" x="60" y="225">🌲</text>
         
-        <rect class="county" data-county="merrimack" fill="#C8E6C9"
+        <rect class="county" data-county="merrimack" fill="#f0f0f0"
               x="170" y="200" width="110" height="70" rx="12"/>
         <text class="county-label" x="225" y="240">MERRIMACK</text>
         <text class="geo-icon forest-icon" x="205" y="225">🌲</text>
         
-        <rect class="county" data-county="strafford" fill="#C8E6C9"
+        <rect class="county" data-county="strafford" fill="#f0f0f0"
               x="300" y="200" width="130" height="70" rx="12"/>
         <text class="county-label" x="365" y="240">STRAFFORD</text>
         <text class="geo-icon forest-icon" x="340" y="225">🌲</text>
         
         <!-- Row 4: CHESHIRE | HILLSBOROUGH | ROCKINGHAM -->
-        <rect class="county" data-county="cheshire" fill="#E8F5E8"
+        <rect class="county" data-county="cheshire" fill="#f0f0f0"
               x="20" y="290" width="130" height="70" rx="12"/>
         <text class="county-label" x="85" y="330">CHESHIRE</text>
         <text class="geo-icon forest-icon" x="60" y="315">🌲</text>
         
-        <rect class="county" data-county="hillsborough" fill="#F1F8E9"
+        <rect class="county" data-county="hillsborough" fill="#f0f0f0"
               x="170" y="290" width="110" height="70" rx="12"/>
         <text class="county-label" x="225" y="330">HILLSBOROUGH</text>
         <text class="geo-icon city-icon" x="235" y="315">🏙️</text>
         
-        <rect class="county" data-county="rockingham" fill="#A5D6A7"
+        <rect class="county" data-county="rockingham" fill="#f0f0f0"
               x="300" y="290" width="130" height="70" rx="12"/>
         <text class="county-label" x="365" y="330">ROCKINGHAM</text>
         <text class="geo-icon coast-icon" x="400" y="315">🌊</text>
     </svg>
-    
+
+    <div id="map-legend" class="legend"></div>
+
         Click any county for detailed foraging recommendations
     </p>
 </div>
@@ -158,15 +160,7 @@
                 </div>
             </div>
         </div>
-        
-        <!-- County Detail Modal -->
-        <div id="county-modal" class="modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
-            <div class="modal-overlay"></div>
-            <div id="county-modal-content" class="modal-content">
-                <!-- Populated by JavaScript -->
-            </div>
-        </div>
-        
+
         <!-- Footer -->
         <footer class="footer">
             <div class="disclaimer">

@@ -1,4 +1,4 @@
-# 🍄 GraniteFungiForager v3.12.0
+# 🍄 GraniteFungiForager v3.12.1
 
 
 [![Tests](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml/badge.svg)](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml)
@@ -8,6 +8,17 @@
 
 ## 🌐 **LIVE APPLICATION**
 **Try it now:** https://ibelanger.github.io/GraniteFungiForager/
+
+## 🆕 **What's New in v3.12.1** (August 2026)
+
+### 🩹 **Structural Cleanup & Accessibility Fixes**
+Closes epic #69 — the post-multi-point-sampling audit's remaining structural and accessibility findings:
+- Map legend now renders (its container element was missing entirely)
+- Removed the dead authored SVG color palette that was always overwritten at runtime
+- Removed the dead `#county-modal` (county detail has always rendered inline)
+- Sticky species card now auto-compacts on scroll at every viewport width, not just mobile
+- County-label and probability-badge text now meets WCAG AA contrast (4.5:1+) on gold/goldenrod map fills
+- Fixed a duplicated "county" word in county aria-labels
 
 ## 🆕 **What's New in v3.12.0** (August 2026)
 
