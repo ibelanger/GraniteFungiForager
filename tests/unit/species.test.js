@@ -800,6 +800,51 @@ describe('Species Module', () => {
       expect(speciesData.lobster.hostFrequencies).toBeDefined();
       expect(speciesData.lobster.hostTreeFrequencies).toBeUndefined();
     });
+
+    test('matsutake soilPH should be narrowed to NH hemlock-stand range (4.5-5.6)', () => {
+      expect(speciesData.matsutake.soilPH.min).toBe(4.5);
+      expect(speciesData.matsutake.soilPH.max).toBe(5.6);
+    });
+
+    test('matsutake should have soilComposition for shiro formation', () => {
+      const comp = speciesData.matsutake.soilComposition;
+      expect(comp).toBeDefined();
+      expect(comp.texture).toBe('sandy-loam');
+      expect(comp.drainage).toBe('well-drained');
+    });
+
+    test('matsutake should have habitatRequirements.shiroConditions', () => {
+      const shiro = speciesData.matsutake.habitatRequirements?.shiroConditions;
+      expect(shiro).toBeDefined();
+      expect(shiro.minimumStandAge).toBeGreaterThan(0);
+      expect(shiro.canopyClosure).toBeGreaterThan(0);
+      expect(shiro.canopyClosure).toBeLessThanOrEqual(1);
+    });
+
+    test('morels should have soilComposition preferring loam/silt-loam', () => {
+      const comp = speciesData.morels.soilComposition;
+      expect(comp).toBeDefined();
+      expect(comp.preferredTexture).toContain('loam');
+      expect(comp.preferredTexture).toContain('silt-loam');
+    });
+
+    test('morels nhCountySoilProfile should rank Sullivan/Cheshire above Coos/Carroll', () => {
+      const profile = speciesData.morels.nhCountySoilProfile;
+      expect(profile).toBeDefined();
+      expect(profile.sullivan.suitability).toBe('high');
+      expect(profile.cheshire.suitability).toBe('high');
+      expect(profile.coos.suitability).toBe('very low');
+      expect(profile.carroll.suitability).toBe('very low');
+      expect(profile.sullivan.avgPH).toBeGreaterThan(profile.coos.avgPH);
+    });
+
+    test('morels habitatModifiers should document floodplain/burn bonuses as not yet engine-applied', () => {
+      const mods = speciesData.morels.habitatModifiers;
+      expect(mods).toBeDefined();
+      expect(mods.floodplain.multiplier).toBeGreaterThan(1.0);
+      expect(mods.recentBurn.multiplier).toBeGreaterThan(1.0);
+      expect(mods.appliedInEngine).toBe(false);
+    });
   });
 
   describe('fruitingStyle field', () => {

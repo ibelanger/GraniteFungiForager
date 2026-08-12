@@ -37,6 +37,12 @@ const NH_COUNTY_SOIL_PH = {
     'strafford':    { avgPH: 5.7, texture: 'loam' }
 };
 
+// Note: morel county bonuses (e.g. Connecticut River valley) are intentionally NOT
+// applied as a separate flat multiplier here — calculatePHMultiplier() below already
+// captures this via species.soilPH vs county avgPH (Sullivan/Cheshire pH 6.0-6.1 is
+// closer to morel's optimal 6.5 than Coos/Carroll's 4.8-5.1). A second flat bonus
+// would double-count the same soil-pH signal.
+
 /**
  * Calculate soil pH probability multiplier for a species in a given county.
  * Returns 1.0 when pH data is absent (graceful fallback).

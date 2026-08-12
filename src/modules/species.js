@@ -32,6 +32,37 @@ export const speciesData = {
             bestNHAreas: 'Connecticut River valley (less acidic, loamier soils)',
             confidence: 'High'
         },
+        soilComposition: {
+            preferredTexture: ['loam', 'silt-loam'],
+            notes: 'Loam and silty-loam strongly preferred; clay soils waterlog and suppress fruiting; sandy soils tend to run too acidic for morel pH requirements',
+            confidence: 'Medium',
+            source: 'Mihail 2014 McIlvainea 23:53-60'
+        },
+        nhCountySoilProfile: {
+            sullivan:     { avgPH: 6.0, texture: 'silt-loam', suitability: 'high' },
+            cheshire:     { avgPH: 6.1, texture: 'silt-loam', suitability: 'high' },
+            hillsborough: { avgPH: 5.6, texture: 'loam', suitability: 'moderate' },
+            strafford:    { avgPH: 5.7, texture: 'loam', suitability: 'moderate' },
+            coos:         { avgPH: 4.8, texture: 'sandy-loam', suitability: 'very low' },
+            carroll:      { avgPH: 5.1, texture: 'sandy-loam', suitability: 'very low' },
+            notes: 'Connecticut River valley (Sullivan, Cheshire) alluvial soils are calcium-buffered by upland geology, running pH 6.0-7.0 vs the sub-6.0 granite-derived soils typical elsewhere in NH',
+            confidence: 'Medium',
+            source: 'USDA NRCS Web Soil Survey NH county aggregates'
+        },
+        habitatModifiers: {
+            floodplain: {
+                multiplier: 1.4,
+                notes: 'Floodplain soils buffered to pH 6.0-7.0 by calcium carried down from upland geology'
+            },
+            recentBurn: {
+                multiplier: 2.0,
+                windowYears: [1, 2],
+                notes: 'Pyrophilous ("fire morel") fruiting is well-documented, concentrated in year 1 post-fire and tapering by year 2; NH context would be recent White Mountains burn areas',
+                source: 'Pilz et al. 2004 - Ecology and management of morel harvesting'
+            },
+            appliedInEngine: false,
+            engineNotes: 'Not yet applied by calculateProbability()/applySpeciesAdjustments() in mapCalculations.js — the probability engine has no site-level signal for floodplain proximity or burn history (only county-level weather). Wiring this requires a location/site data pipeline that does not exist yet.'
+        },
         precipitationWindow: {
             correlationPeriod: 30,
             significantRainEvent: 0.4,
@@ -1888,11 +1919,29 @@ export const speciesData = {
         },
         soilPH: {
             min: 4.5,
-            max: 6.0,
+            max: 5.6,
             optimal: 5.0,
             inside_shiro: { min: 4.5, max: 5.5 },
-            notes: 'Active fungal colony zone (shiro)',
+            notes: 'Range narrowed to 4.5-5.6 to match New England hemlock-stand soil surveys (typically pH 4.8-5.6), tighter than the general T. matsutake literature range of 4.5-6.0',
             confidence: 'High'
+        },
+        soilComposition: {
+            texture: 'sandy-loam',
+            drainage: 'well-drained',
+            organicMatter: 'low',
+            notes: 'Shiro forms in exposed mineral soil 5-20cm deep; inhibited by thick organic/duff horizons (>3cm) that block mineral soil contact',
+            confidence: 'Medium',
+            source: 'Ogawa 1978 - Ecology of Tricholoma matsutake in Japan; shiro mineral-soil-layer studies'
+        },
+        habitatRequirements: {
+            shiroConditions: {
+                minimumStandAge: 60,
+                canopyClosure: 0.70,
+                disturbanceFreeYears: 15,
+                hostDensityPerAcre: 30,
+                notes: 'Established shiro networks require mature, undisturbed stands; specific thresholds are estimated from general ectomycorrhizal-fungus succession patterns, not directly cited to a NH-specific study',
+                confidence: 'Low (estimated)'
+            }
         },
         precipitationWindow: {
             min: 3,
