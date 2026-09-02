@@ -1,0 +1,28 @@
+# Cloudflare Pages HTTP response headers
+# https://developers.cloudflare.com/pages/configuration/headers/
+#
+# Security headers applied globally; cache rules tuned for PWA correctness.
+# The service worker and manifest must never be served stale — browsers use
+# them to decide whether to update the installed PWA.
+
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(self), camera=(), microphone=()
+
+# Service worker: always fetch fresh so PWA updates are never blocked
+/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# Manifest: short TTL so icon/name changes propagate quickly
+/manifest.webmanifest
+  Cache-Control: no-cache
+  Content-Type: application/manifest+json
+
+# Static assets: long TTL — Cloudflare Pages busts these per deployment
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/src/styles.css
+  Cache-Control: public, max-age=86400

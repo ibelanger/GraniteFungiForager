@@ -293,6 +293,12 @@ Before committing:
 - Deploy workflow auto-deploys to GitHub Pages on push to `main`
 - Coverage reports retained for 30 days
 
+**Cloudflare Pages (dual-deploy, see [#86](https://github.com/ibelanger/GraniteFungiForager/issues/86)):**
+- Connected to the same repo; deploys independently on every push to `main`
+- No build step — serves from repo root identical to GitHub Pages
+- `_headers` file (repo root) controls security headers and cache-control rules
+- Serves production custom domain; GitHub Pages URL remains live as fallback
+
 **Status:** [![Tests](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml/badge.svg)](https://github.com/ibelanger/GraniteFungiForager/actions/workflows/test.yml)
 
 For details, trigger the `cicd-guide` skill or see `.github/workflows/`.
